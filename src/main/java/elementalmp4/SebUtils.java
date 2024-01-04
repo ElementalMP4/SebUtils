@@ -31,6 +31,7 @@ public class SebUtils extends JavaPlugin {
         logger.info("Registering commands");
         getCommand("nickname").setExecutor(new SetNicknameCommand());
         getCommand("namecolour").setExecutor(new SetColourCommand());
+        getCommand("namecolour").setTabCompleter(new ColourTabCompleter());
         getCommand("sethome").setExecutor(new SetHomeCommand());
         getCommand("home").setExecutor(new HomeCommand());
         getCommand("delhome").setExecutor(new DeleteHomeCommand());

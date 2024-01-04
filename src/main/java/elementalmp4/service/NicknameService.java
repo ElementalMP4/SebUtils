@@ -21,15 +21,15 @@ public class NicknameService {
         COLOURS.put("darkgreen", "2");
         COLOURS.put("darkaqua", "3");
         COLOURS.put("darkred", "4");
-        COLOURS.put("darkpurple", "5");
-        COLOURS.put("gold", "6");
+        COLOURS.put("purple", "5");
+        COLOURS.put("orange", "6");
         COLOURS.put("gray", "7");
         COLOURS.put("darkgray", "8");
         COLOURS.put("blue", "9");
         COLOURS.put("green", "a");
         COLOURS.put("aqua", "b");
         COLOURS.put("red", "c");
-        COLOURS.put("lightpurple", "d");
+        COLOURS.put("pink", "d");
         COLOURS.put("yellow", "e");
         COLOURS.put("white", "f");
         COLOURS.put("magic", "k");
