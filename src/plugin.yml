@@ -1,0 +1,42 @@
+api-version: "1.20"
+name: SebUtils
+author: ElementalMP4
+version: '1.0.0'
+main: main.java.elementalmp4.SebUtils
+description: Useful stuff, brought to you by Seb
+prefix: SebUtils
+commands:
+  sethome:
+    description: "Sets your home to the current location"
+    usage: "/sethome"
+    aliases:
+      - "sh"
+  home:
+    description: "Takes you to your home"
+    usage: "/home"
+    aliases:
+      - "h"
+  delhome:
+    description: "Deletes your home"
+    usage: "/delhome"
+    aliases:
+      - "dh"
+  tpa:
+    description: "Ask to teleport to another player"
+    usage: "/tpa playername"
+  tpaccept:
+    description: "Let another player teleport to you"
+    usage: "/tpaccept"
+  tpdeny:
+    description: "Do not allow another user to teleport to you"
+    usage: "/tpdeny"
+  namecolour:
+    description: "Set your name colour"
+    usage: "/namecolour colour"
+    aliases:
+      - "nc"
+  nickname:
+    description: "Set a nickname"
+    usage: "/nickname name"
+    aliases:
+      - "nick"
