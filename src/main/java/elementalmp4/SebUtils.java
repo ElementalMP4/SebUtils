@@ -9,13 +9,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.logging.Logger;
 
 public class SebUtils extends JavaPlugin {
+
+    private static JavaPlugin plugin;
     private static Logger logger;
     private static DatabaseService databaseService;
 
     @Override
     public void onEnable() {
         logger = getLogger();
-        JavaPlugin plugin = getPlugin(SebUtils.class);
+        plugin = getPlugin(SebUtils.class);
         logger.info("Starting...");
 
         if (!plugin.getDataFolder().exists()) {
@@ -32,6 +34,10 @@ public class SebUtils extends JavaPlugin {
         getCommand("sethome").setExecutor(new SetHomeCommand());
         getCommand("home").setExecutor(new HomeCommand());
         getCommand("delhome").setExecutor(new DeleteHomeCommand());
+        getCommand("tpa").setExecutor(new TeleportCommand());
+        getCommand("tpahere").setExecutor(new TeleportHereCommand());
+        getCommand("tpaccept").setExecutor(new TeleportAcceptCommand());
+        getCommand("tpdeny").setExecutor(new TeleportDenyCommand());
 
         logger.info("Registering listeners");
         getServer().getPluginManager().registerEvents(new ChatInterceptor(), this);
@@ -42,6 +48,10 @@ public class SebUtils extends JavaPlugin {
 
     public static Logger getPluginLogger() {
         return logger;
+    }
+
+    public static JavaPlugin getPlugin() {
+        return plugin;
     }
 
     public static DatabaseService getDatabaseService() {

@@ -44,7 +44,7 @@ public class HomeService {
             Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement();
             ResultSet rs = stmt.executeQuery("SELECT world, pos_x, pos_y, pos_z FROM user_homes WHERE username = '%s';".formatted(player.getName()));
             if (rs.next()) {
-                World world = SebUtils.getPlugin(SebUtils.class).getServer().getWorld(rs.getString("world"));
+                World world = SebUtils.getPlugin().getServer().getWorld(rs.getString("world"));
                 int x = rs.getInt("pos_x");
                 int y = rs.getInt("pos_y");
                 int z = rs.getInt("pos_z");

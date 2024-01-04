@@ -24,6 +24,9 @@ commands:
   tpa:
     description: "Ask to teleport to another player"
     usage: "/tpa playername"
+  tpahere:
+    description: "Ask to teleport another player to you"
+    usage: "/tpahere playername"
   tpaccept:
     description: "Let another player teleport to you"
     usage: "/tpaccept"
