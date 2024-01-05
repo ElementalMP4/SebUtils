@@ -17,13 +17,13 @@ public class TeleportCommand implements CommandExecutor {
         if (playerOpt.isEmpty()) return true;
         Player player = playerOpt.get();
 
-        commandSender.sendMessage(ChatColor.YELLOW + "Teleport request sent to " + ChatColor.RED + player.getName());
+        commandSender.sendMessage(ChatColor.GOLD + "Teleport request sent to " + ChatColor.RED + player.getName());
         player.sendMessage(
-                ChatColor.YELLOW + commandSender.getName()
+                ChatColor.GOLD + commandSender.getName()
                         + ChatColor.RED + " would like to teleport to your location. Accept with "
-                        + ChatColor.YELLOW + "/tpaccept "
+                        + ChatColor.GOLD + "/tpaccept "
                         + ChatColor.RED + "or deny with "
-                        + ChatColor.YELLOW + "/tpdeny "
+                        + ChatColor.GOLD + "/tpdeny "
                         + ChatColor.RED + " - This request will expire in 60 seconds");
         TeleportService.createNewTeleportRequest(new TeleportRequest(((Player) commandSender), player, player.getName()));
         return true;

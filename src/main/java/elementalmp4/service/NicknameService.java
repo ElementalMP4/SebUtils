@@ -8,12 +8,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class NicknameService {
 
     private static final Map<String, String> COLOURS = new HashMap<>();
+    private static final List<String> RAINBOW_ORDER = List.of("red", "orange", "yellow", "green", "blue", "purple", "pink");
 
     static {
         COLOURS.put("black", "0");
@@ -37,6 +39,7 @@ public class NicknameService {
         COLOURS.put("strikethrough", "m");
         COLOURS.put("italic", "o");
         COLOURS.put("underline", "n");
+        COLOURS.put("rainbow", "");
     }
 
     public static Set<String> getColourNamesList() {
@@ -45,8 +48,25 @@ public class NicknameService {
 
     public static void adaptMessageNickname(AsyncPlayerChatEvent event) {
         String playerName = event.getPlayer().getName();
-        String modifiedPlayerName = getUserColour(playerName) + getUserNickname(playerName) + ChatColor.RESET;
+        String userColour = getUserColour(playerName);
+        String nickname = getUserNickname(playerName);
+        String modifiedPlayerName = applyColour(userColour, nickname) + ChatColor.RESET;
         event.setFormat(modifiedPlayerName + ": %2$s");
+    }
+
+    private static String applyColour(String userColour, String nickname) {
+        if (userColour.equals("rainbow")) {
+            StringBuilder rainbowNameBuilder = new StringBuilder();
+            int index = 0;
+            for (String nameChar : nickname.split("")) {
+                if (index == RAINBOW_ORDER.size()) index = 0;
+                rainbowNameBuilder.append(getColourByName(RAINBOW_ORDER.get(index))).append(nameChar);
+                index++;
+            }
+            return rainbowNameBuilder.toString();
+        } else {
+            return getColourByName(userColour) + nickname;
+        }
     }
 
     private static String getUserNickname(String playerName) {
@@ -67,8 +87,7 @@ public class NicknameService {
             Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement();
             ResultSet rs = stmt.executeQuery("SELECT colourName FROM chat_customisation WHERE username = '%s'".formatted(playerName));
             while (rs.next()) {
-                String colourCode = COLOURS.get(rs.getString("colourName"));
-                return ChatColor.getByChar(colourCode).toString();
+                return rs.getString("colourName");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -102,5 +121,13 @@ public class NicknameService {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static String getColourByName(String name) {
+        return name.equals("rainbow") ? "rainbow" : ChatColor.getByChar(COLOURS.get(name)).toString();
+    }
+
+    public static ChatColor getColourByNameAsChatColour(String name) {
+        return name.equals("rainbow") ? ChatColor.WHITE : ChatColor.getByChar(COLOURS.get(name));
     }
 }
