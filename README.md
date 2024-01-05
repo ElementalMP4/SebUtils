@@ -2,6 +2,10 @@
 
 Lightweight commands to make a vanilla paper server a bit more friendly, without the need for enormous and complicated plugins and APIs
 
+# Installing
+
+Either download this repo and compile it yourself using maven (requires Java 17) - or download the latest release from the [releases tab](https://github.com/ElementalMP4/PaperUtils/releases/)
+
 # Commands
 
 All permissions are granted by default, but can be customised if required. Using a plugin such as LuckPerms is recommended for this.
