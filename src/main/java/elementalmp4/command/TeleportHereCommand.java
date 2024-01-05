@@ -13,7 +13,7 @@ import java.util.Optional;
 public class TeleportHereCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
-        Optional<Player> playerOpt = TeleportRequest.validateTeleportRequest(commandSender, args);
+        Optional<Player> playerOpt = TeleportService.validateTeleportRequest(commandSender, args);
         if (playerOpt.isEmpty()) return true;
         Player player = playerOpt.get();
 
