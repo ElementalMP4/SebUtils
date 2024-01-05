@@ -1,6 +1,7 @@
 package main.java.elementalmp4.service;
 
 import main.java.elementalmp4.SebUtils;
+import main.java.elementalmp4.utils.ConsoleColours;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -30,8 +31,8 @@ public class DatabaseService {
     private void migrate() {
         for (String migration : MIGRATIONS.keySet()) {
             try {
-                SebUtils.getPluginLogger().info("Running migration " + migration);
-                connection.createStatement().executeUpdate(MIGRATIONS.get(migration));
+                int ret = connection.createStatement().executeUpdate(MIGRATIONS.get(migration));
+                if (ret != 0) SebUtils.getPluginLogger().info(ConsoleColours.YELLOW + "Ran migration " + migration);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

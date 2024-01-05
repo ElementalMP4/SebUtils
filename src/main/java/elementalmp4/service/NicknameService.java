@@ -1,6 +1,7 @@
 package main.java.elementalmp4.service;
 
 import main.java.elementalmp4.SebUtils;
+import main.java.elementalmp4.utils.ConsoleColours;
 import org.bukkit.ChatColor;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
@@ -108,7 +109,7 @@ public class NicknameService {
         try {
             Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement();
             stmt.executeUpdate("INSERT INTO chat_customisation VALUES ('%s', '%s', 'white');".formatted(name, name));
-            SebUtils.getPluginLogger().info("Added user " + name);
+            SebUtils.getPluginLogger().info(ConsoleColours.YELLOW + "Added user " + name);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
