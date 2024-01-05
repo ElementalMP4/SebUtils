@@ -10,7 +10,7 @@ Either download this repo and compile it yourself using maven (requires Java 17)
 
 All permissions are granted by default, but can be customised if required. Using a plugin such as LuckPerms is recommended for this.
 
-## Homes
+## Homes
 
 **Permission** `sebutils.homes`
 
