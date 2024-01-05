@@ -1,6 +1,5 @@
 package main.java.elementalmp4.command;
 
-import main.java.elementalmp4.SebUtils;
 import main.java.elementalmp4.service.TeleportService;
 import main.java.elementalmp4.utils.TeleportRequest;
 import org.bukkit.ChatColor;
@@ -9,29 +8,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Optional;
+
 public class TeleportHereCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
-        if (TeleportService.userIsAlreadyWaiting(commandSender.getName())) {
-            commandSender.sendMessage(ChatColor.RED + "You cannot send a teleport request whilst you have pending incoming or outgoing teleport requests");
-            return true;
-        }
-
-        if (args.length == 0) {
-            commandSender.sendMessage(ChatColor.RED + "You must specify another player!");
-            return true;
-        }
-
-        Player player = SebUtils.getPlugin().getServer().getPlayer(args[0]);
-        if (player == null) {
-            commandSender.sendMessage(ChatColor.RED + "Player could not be found!");
-            return true;
-        }
-
-        if (player.getName().equals(commandSender.getName())) {
-            commandSender.sendMessage(ChatColor.RED + "You cannot teleport to yourself!");
-            return true;
-        }
+        Optional<Player> playerOpt = TeleportRequest.validateTeleportRequest(commandSender, args);
+        if (playerOpt.isEmpty()) return true;
+        Player player = playerOpt.get();
 
         commandSender.sendMessage(ChatColor.YELLOW + "Teleport request sent to " + ChatColor.RED + player.getName());
         player.sendMessage(
@@ -42,5 +26,6 @@ public class TeleportHereCommand implements CommandExecutor {
                         + ChatColor.YELLOW + "/tpdeny "
                         + ChatColor.RED + " - This request will expire in 60 seconds");
         TeleportService.createNewTeleportRequest(new TeleportRequest(player, ((Player) commandSender), player.getName()));
-        return true;    }
+        return true;
+    }
 }
