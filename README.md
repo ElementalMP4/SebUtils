@@ -16,9 +16,10 @@ All permissions are granted by default, but can be customised if required. Using
 
 | Command  | Aliases | Description                         |
 |----------|-----|-----------------------------------------|
-| /home    | /h  | Takes you to your home location         |
-| /sethome | /sh | Sets your home to your current location |
-| /delhome | /dh | Deletes your home                       |
+| /home    | /h  | Takes you to a home location            |
+| /sethome | /sh | Sets a home to your current location    |
+| /delhome | /dh | Deletes a home                          |
+| /homes | none | Lists your home locations                |
 
 ## Teleportation
 
