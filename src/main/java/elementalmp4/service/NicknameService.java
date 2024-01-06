@@ -71,8 +71,7 @@ public class NicknameService {
     }
 
     private static String getUserNickname(String playerName) {
-        try {
-            Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement();
+        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
             ResultSet rs = stmt.executeQuery("SELECT nickname FROM chat_customisation WHERE username = '%s'".formatted(playerName));
             while (rs.next()) {
                 return rs.getString("nickname");
@@ -84,8 +83,7 @@ public class NicknameService {
     }
 
     private static String getUserColour(String playerName) {
-        try {
-            Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement();
+        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
             ResultSet rs = stmt.executeQuery("SELECT colourName FROM chat_customisation WHERE username = '%s'".formatted(playerName));
             while (rs.next()) {
                 return rs.getString("colourName");
@@ -97,8 +95,7 @@ public class NicknameService {
     }
 
     public static void updateNickname(String name, String nickname) {
-        try {
-            Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement();
+        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
             stmt.executeUpdate("UPDATE chat_customisation SET nickname = '%s' WHERE username = '%s';".formatted(nickname, name));
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -106,8 +103,7 @@ public class NicknameService {
     }
 
     public static void addUser(String name) {
-        try {
-            Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement();
+        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
             stmt.executeUpdate("INSERT INTO chat_customisation VALUES ('%s', '%s', 'white');".formatted(name, name));
             SebUtils.getPluginLogger().info(ConsoleColours.YELLOW + "Added user " + name);
         } catch (SQLException e) {
@@ -116,8 +112,7 @@ public class NicknameService {
     }
 
     public static void updateColour(String name, String colour) {
-        try {
-            Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement();
+        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
             stmt.executeUpdate("UPDATE chat_customisation SET colourName = '%s' WHERE username = '%s';".formatted(colour, name));
         } catch (SQLException e) {
             throw new RuntimeException(e);
