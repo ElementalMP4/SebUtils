@@ -5,6 +5,7 @@ import main.java.elementalmp4.utils.ConsoleColours;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.LinkedHashMap;
 
 public class DatabaseService {
@@ -44,5 +45,13 @@ public class DatabaseService {
 
     public Connection getConnection() {
         return connection;
+    }
+
+    public void close() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -72,6 +72,7 @@ public class SebUtils extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        databaseService.close();
         logger.info("Stopped.");
     }
 }
