@@ -16,6 +16,8 @@ public class DatabaseService {
     static {
         MIGRATIONS.put("nicknames", "CREATE TABLE IF NOT EXISTS chat_customisation (username TEXT, nickname TEXT, colourName TEXT);");
         MIGRATIONS.put("homes", "CREATE TABLE IF NOT EXISTS user_homes (username TEXT, world TEXT, pos_x INTEGER, pos_y INTEGER, pos_z INTEGER);");
+        MIGRATIONS.put("add home names", "ALTER TABLE user_homes ADD COLUMN IF NOT EXISTS home_name TEXT;");
+        MIGRATIONS.put("set empty home names", "UPDATE user_homes SET home_name = 'default' WHERE home_name IS NULL");
     }
 
     public DatabaseService(String pluginFolderPath) {
@@ -31,9 +33,10 @@ public class DatabaseService {
     private void migrate() {
         for (String migration : MIGRATIONS.keySet()) {
             try {
-                int ret = connection.createStatement().executeUpdate(MIGRATIONS.get(migration));
-                if (ret != 0) SebUtils.getPluginLogger().info(ConsoleColours.YELLOW + "Ran migration " + migration);
+                connection.createStatement().executeUpdate(MIGRATIONS.get(migration));
+                SebUtils.getPluginLogger().info(ConsoleColours.YELLOW + "Ran migration '" + migration + "'");
             } catch (Exception e) {
+                SebUtils.getPluginLogger().severe(e.getMessage());
                 throw new RuntimeException(e);
             }
         }

@@ -38,7 +38,6 @@ public class SebUtils extends JavaPlugin {
         logger.info(ConsoleColours.YELLOW + "Registering commands");
         getCommand("nickname").setExecutor(new SetNicknameCommand());
         getCommand("namecolour").setExecutor(new SetColourCommand());
-        getCommand("namecolour").setTabCompleter(new ColourTabCompleter());
         getCommand("sethome").setExecutor(new SetHomeCommand());
         getCommand("home").setExecutor(new HomeCommand());
         getCommand("delhome").setExecutor(new DeleteHomeCommand());
@@ -46,6 +45,11 @@ public class SebUtils extends JavaPlugin {
         getCommand("tpahere").setExecutor(new TeleportHereCommand());
         getCommand("tpaccept").setExecutor(new TeleportAcceptCommand());
         getCommand("tpdeny").setExecutor(new TeleportDenyCommand());
+        getCommand("homes").setExecutor(new HomesCommand());
+
+        getCommand("namecolour").setTabCompleter(new ColourTabCompleter());
+        getCommand("home").setTabCompleter(new HomesTabCompleter());
+        getCommand("delhome").setTabCompleter(new HomesTabCompleter());
 
         logger.info(ConsoleColours.YELLOW + "Registering listeners");
         getServer().getPluginManager().registerEvents(new ChatInterceptor(), this);

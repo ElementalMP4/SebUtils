@@ -28,6 +28,10 @@ commands:
     permission: "sebutils.homes"
     aliases:
       - "h"
+  homes:
+    description: "List all your homes"
+    usage: "/homes"
+    permission: "sebutils.homes"
   delhome:
     description: "Deletes your home"
     usage: "/delhome"
