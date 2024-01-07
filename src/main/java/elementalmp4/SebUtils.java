@@ -3,6 +3,7 @@ package main.java.elementalmp4;
 import main.java.elementalmp4.command.*;
 import main.java.elementalmp4.listener.ChatInterceptor;
 import main.java.elementalmp4.listener.PlayerJoinListener;
+import main.java.elementalmp4.listener.PlayerMoveListener;
 import main.java.elementalmp4.service.DatabaseService;
 import main.java.elementalmp4.utils.ConsoleColours;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -54,6 +55,7 @@ public class SebUtils extends JavaPlugin {
         logger.info(ConsoleColours.YELLOW + "Registering listeners");
         getServer().getPluginManager().registerEvents(new ChatInterceptor(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerMoveListener(), this);
 
         logger.info(ConsoleColours.GREEN + "Ready!");
     }

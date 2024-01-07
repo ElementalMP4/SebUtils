@@ -111,6 +111,16 @@ public class NicknameService {
         }
     }
 
+    public static boolean userConfigExists(String username) {
+        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
+            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM chat_customisation WHERE username = '%s';"
+                    .formatted(username));
+            return !rs.isClosed();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static void updateColour(String name, String colour) {
         try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
             stmt.executeUpdate("UPDATE chat_customisation SET colourName = '%s' WHERE username = '%s';".formatted(colour, name));
