@@ -47,11 +47,4 @@ public class DatabaseService {
         return connection;
     }
 
-    public void close() {
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
