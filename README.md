@@ -12,7 +12,27 @@ Lightweight commands to make a vanilla paper server a bit more friendly, without
 
 # Installing
 
-Either download this repo and compile it yourself using maven (requires Java 17) - or download the latest release from the [releases tab](https://github.com/ElementalMP4/PaperUtils/releases/)
+Either download this repo and compile it yourself - or download the latest release from the [releases tab](https://github.com/ElementalMP4/PaperUtils/releases/)
+
+## Compiling with Maven
+
+You'll need:
+- Java 17
+- Maven
+
+Then:
+1. Clone this repository 
+```
+git clone https://github.com/ElementalMP4/PaperUtils
+```
+2. Build with Maven
+```
+mvn clean package
+```
+3. Move the SebUtils jar to your server's plugins directory
+```
+mv target/SebUtils.*.jar /path/to/server/plugins/
+```
 
 # Commands
 
