@@ -9,7 +9,15 @@ public class PlayerMoveListener implements Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        AfkService.updatePlayerMovement(event.getPlayer().getName());
+        if (playerHasMoved(event)) {
+            AfkService.updatePlayerMovement(event.getPlayer().getName());
+        }
+    }
+
+    private boolean playerHasMoved(PlayerMoveEvent e) {
+        return e.getTo().getBlockX() != e.getFrom().getBlockX()
+                || e.getTo().getBlockY() != e.getFrom().getBlockY()
+                || e.getTo().getBlockZ() != e.getFrom().getBlockZ();
     }
 
 }
