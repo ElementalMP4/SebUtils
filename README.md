@@ -1,6 +1,14 @@
 # PaperUtils
 
-Lightweight commands to make a vanilla paper server a bit more friendly, without the need for enormous and complicated plugins and APIs
+Lightweight commands to make a vanilla paper server a bit more friendly, without the need for enormous and complicated plugins and APIs and permissions and all that shebang. The bare essentials, and what I usually find myself requiring when I want to start a server for friends.
+
+## What it do
+
+- AFK messages (After 10 minutes of inactivity)
+- Homes (multiple per user)
+- Teleportation
+- Chat nicknames and colours
+- Simple permissions
 
 # Installing
 
