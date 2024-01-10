@@ -12,7 +12,7 @@ public class AllowTntCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
         if (args.length == 0) {
-            boolean tntEnabled = Boolean.parseBoolean(GlobalConfigService.getOrDefault("tnt_explodes", "true"));
+            boolean tntEnabled = GlobalConfigService.getOrDefault("tnt_explodes", true);
             commandSender.sendMessage("TNT is currently " + format(tntEnabled));
             return true;
         }

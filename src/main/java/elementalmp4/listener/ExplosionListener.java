@@ -22,6 +22,6 @@ public class ExplosionListener implements Listener {
     }
 
     private boolean tntDisabled() {
-        return !Boolean.parseBoolean(GlobalConfigService.getOrDefault("tnt_explodes", "true"));
+        return !GlobalConfigService.getOrDefault("tnt_explodes", true);
     }
 }

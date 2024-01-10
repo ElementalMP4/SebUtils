@@ -22,6 +22,10 @@ public class GlobalConfigService {
         }
     }
 
+    public static boolean getOrDefault(String key, boolean def) {
+        return Boolean.parseBoolean(getOrDefault(key, String.valueOf(def)));
+    }
+
     public static void set(String key, String value) {
         try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
             stmt.executeUpdate("DELETE FROM global_config WHERE config_item = '%s';".formatted(key));
