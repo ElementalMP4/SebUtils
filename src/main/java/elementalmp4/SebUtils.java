@@ -1,7 +1,11 @@
 package main.java.elementalmp4;
 
 import main.java.elementalmp4.command.*;
+import main.java.elementalmp4.completer.BooleanTabCompleter;
+import main.java.elementalmp4.completer.ColourTabCompleter;
+import main.java.elementalmp4.completer.HomesTabCompleter;
 import main.java.elementalmp4.listener.ChatInterceptor;
+import main.java.elementalmp4.listener.ExplosionListener;
 import main.java.elementalmp4.listener.PlayerJoinListener;
 import main.java.elementalmp4.listener.PlayerMoveListener;
 import main.java.elementalmp4.service.DatabaseService;
@@ -47,15 +51,19 @@ public class SebUtils extends JavaPlugin {
         getCommand("tpaccept").setExecutor(new TeleportAcceptCommand());
         getCommand("tpdeny").setExecutor(new TeleportDenyCommand());
         getCommand("homes").setExecutor(new HomesCommand());
+        getCommand("allowtnt").setExecutor(new AllowTntCommand());
 
+        logger.info(ConsoleColours.YELLOW + "Registering autofill");
         getCommand("namecolour").setTabCompleter(new ColourTabCompleter());
         getCommand("home").setTabCompleter(new HomesTabCompleter());
         getCommand("delhome").setTabCompleter(new HomesTabCompleter());
+        getCommand("allowtnt").setTabCompleter(new BooleanTabCompleter());
 
         logger.info(ConsoleColours.YELLOW + "Registering listeners");
         getServer().getPluginManager().registerEvents(new ChatInterceptor(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerMoveListener(), this);
+        getServer().getPluginManager().registerEvents(new ExplosionListener(), this);
 
         logger.info(ConsoleColours.GREEN + "Ready!");
     }

@@ -5,7 +5,6 @@ import main.java.elementalmp4.utils.ConsoleColours;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.LinkedHashMap;
 
 public class DatabaseService {
@@ -19,6 +18,7 @@ public class DatabaseService {
         MIGRATIONS.put("homes", "CREATE TABLE IF NOT EXISTS user_homes (username TEXT, world TEXT, pos_x INTEGER, pos_y INTEGER, pos_z INTEGER);");
         MIGRATIONS.put("add home names", "ALTER TABLE user_homes ADD COLUMN IF NOT EXISTS home_name TEXT;");
         MIGRATIONS.put("set empty home names", "UPDATE user_homes SET home_name = 'default' WHERE home_name IS NULL");
+        MIGRATIONS.put("global config", "CREATE TABLE IF NOT EXISTS global_config (config_item TEXT, config_value TEXT);");
     }
 
     public DatabaseService(String pluginFolderPath) {

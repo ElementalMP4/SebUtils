@@ -15,6 +15,9 @@ permissions:
   sebutils.nicknames:
     description: "Allows players to use the nickname and namecolour commands"
     default: true
+  sebutils.admin:
+    description: "Allows players access to admin commands"
+    default: "op"
 commands:
   sethome:
     description: "Sets your home to the current location"
@@ -66,3 +69,7 @@ commands:
     permission: "sebutils.nicknames"
     aliases:
       - "nick"
+  allowtnt:
+    description: "Enable or disable TNT explosions"
+    usage: "/allowtnt true/false"
+    permission: "sebutils.admin"
