@@ -18,7 +18,7 @@ public class AfkStatus {
 
     public void updateTime() {
         this.lastActivityTime = System.currentTimeMillis();
-        if (this.isAfk)  {
+        if (this.isAfk) {
             this.isAfk = false;
             sendReturnMessage();
         }

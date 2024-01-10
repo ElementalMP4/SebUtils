@@ -9,8 +9,6 @@ import java.util.LinkedHashMap;
 
 public class DatabaseService {
 
-    private final Connection connection;
-
     private static final LinkedHashMap<String, String> MIGRATIONS = new LinkedHashMap<>();
 
     static {
@@ -20,6 +18,8 @@ public class DatabaseService {
         MIGRATIONS.put("set empty home names", "UPDATE user_homes SET home_name = 'default' WHERE home_name IS NULL");
         MIGRATIONS.put("global config", "CREATE TABLE IF NOT EXISTS global_config (config_item TEXT, config_value TEXT);");
     }
+
+    private final Connection connection;
 
     public DatabaseService(String pluginFolderPath) {
         try {

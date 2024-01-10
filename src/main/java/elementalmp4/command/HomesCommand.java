@@ -25,5 +25,5 @@ public class HomesCommand implements CommandExecutor {
         }
         return true;
     }
-    
+
 }

@@ -8,6 +8,7 @@ import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 
 public class ExplosionListener implements Listener {
+
     @EventHandler
     public void onEntityExplodeEvent(ExplosionPrimeEvent e) {
         if (tntDisabled() && e.getEntityType().equals(EntityType.MINECART_TNT)) e.setCancelled(true);

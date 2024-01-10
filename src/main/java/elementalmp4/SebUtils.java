@@ -20,6 +20,18 @@ public class SebUtils extends JavaPlugin {
     private static Logger logger;
     private static DatabaseService databaseService;
 
+    public static Logger getPluginLogger() {
+        return logger;
+    }
+
+    public static JavaPlugin getPlugin() {
+        return plugin;
+    }
+
+    public static DatabaseService getDatabaseService() {
+        return databaseService;
+    }
+
     @Override
     public void onEnable() {
         logger = getLogger();
@@ -66,18 +78,6 @@ public class SebUtils extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ExplosionListener(), this);
 
         logger.info(ConsoleColours.GREEN + "Ready!");
-    }
-
-    public static Logger getPluginLogger() {
-        return logger;
-    }
-
-    public static JavaPlugin getPlugin() {
-        return plugin;
-    }
-
-    public static DatabaseService getDatabaseService() {
-        return databaseService;
     }
 
     @Override
