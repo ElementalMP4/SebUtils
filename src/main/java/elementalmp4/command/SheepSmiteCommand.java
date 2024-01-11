@@ -9,12 +9,12 @@ import org.bukkit.command.CommandSender;
 
 import java.util.Set;
 
-public class AllowTntCommand implements CommandExecutor {
+public class SheepSmiteCommand implements CommandExecutor {
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
+    public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
         if (args.length == 0) {
-            boolean tntEnabled = GlobalConfigService.getAsBoolean(GlobalConfig.TNT_EXPLODES);
-            commandSender.sendMessage("TNT is currently " + format(tntEnabled));
+            boolean tntEnabled = GlobalConfigService.getAsBoolean(GlobalConfig.SHEEP_SMITE);
+            commandSender.sendMessage("Sheep will currently " + format(tntEnabled));
             return true;
         }
 
@@ -23,12 +23,12 @@ public class AllowTntCommand implements CommandExecutor {
             return true;
         }
 
-        GlobalConfigService.set(GlobalConfig.TNT_EXPLODES, args[0]);
-        commandSender.sendMessage("TNT is now " + format(Boolean.parseBoolean(args[0])));
+        GlobalConfigService.set(GlobalConfig.SHEEP_SMITE, args[0]);
+        commandSender.sendMessage("Sheep will now " + format(Boolean.parseBoolean(args[0])));
         return true;
     }
 
     private String format(boolean enabled) {
-        return (enabled ? ChatColor.GREEN + "enabled" : ChatColor.RED + "disabled");
+        return (enabled ? ChatColor.GREEN + "be smited" : ChatColor.RED + "not be smited");
     }
 }

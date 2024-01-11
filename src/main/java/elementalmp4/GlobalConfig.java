@@ -1,0 +1,25 @@
+package main.java.elementalmp4;
+
+public enum GlobalConfig {
+
+    TNT_EXPLODES("tnt_explodes", "true"),
+    COWS_EXPLODE("cows_explode", "false"),
+    SHEEP_SMITE("sheep_smite", "false");
+
+    private final String key;
+    private final String defaultValue;
+
+    GlobalConfig(String key, String defaultValue) {
+        this.key = key;
+        this.defaultValue = defaultValue;
+    }
+
+    public String getKey() {
+        return this.key;
+    }
+
+    public String getDefaultValue() {
+        return this.defaultValue;
+    }
+
+}

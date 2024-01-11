@@ -63,6 +63,8 @@ public class SebUtils extends JavaPlugin {
         getCommand("allowtnt").setExecutor(new AllowTntCommand());
         getCommand("listhomes").setExecutor(new ListHomesCommand());
         getCommand("cowsexplode").setExecutor(new CowsExplodeCommand());
+        getCommand("sheepsmite").setExecutor(new SheepSmiteCommand());
+        getCommand("showconfig").setExecutor(new ShowConfigCommand());
 
         logger.info(ConsoleColours.YELLOW + "Registering autofill");
         getCommand("namecolour").setTabCompleter(new ColourTabCompleter());
@@ -70,13 +72,14 @@ public class SebUtils extends JavaPlugin {
         getCommand("delhome").setTabCompleter(new HomesTabCompleter());
         getCommand("allowtnt").setTabCompleter(new BooleanTabCompleter());
         getCommand("cowsexplode").setTabCompleter(new BooleanTabCompleter());
+        getCommand("sheepsmite").setTabCompleter(new BooleanTabCompleter());
 
         logger.info(ConsoleColours.YELLOW + "Registering listeners");
         getServer().getPluginManager().registerEvents(new ChatInterceptor(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerMoveListener(), this);
         getServer().getPluginManager().registerEvents(new ExplosionListener(), this);
-        getServer().getPluginManager().registerEvents(new CowMilkListener(), this);
+        getServer().getPluginManager().registerEvents(new AnimalInteractionListener(), this);
 
         logger.info(ConsoleColours.GREEN + "Ready!");
     }

@@ -1,6 +1,7 @@
 package main.java.elementalmp4.command;
 
 import main.java.elementalmp4.service.GlobalConfigService;
+import main.java.elementalmp4.GlobalConfig;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,7 +13,7 @@ public class CowsExplodeCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
         if (args.length == 0) {
-            boolean tntEnabled = GlobalConfigService.getOrDefault("cows_explode", true);
+            boolean tntEnabled = GlobalConfigService.getAsBoolean(GlobalConfig.COWS_EXPLODE);
             commandSender.sendMessage("Cows will currently " + format(tntEnabled));
             return true;
         }
@@ -22,7 +23,7 @@ public class CowsExplodeCommand implements CommandExecutor {
             return true;
         }
 
-        GlobalConfigService.set("cows_explode", args[0]);
+        GlobalConfigService.set(GlobalConfig.COWS_EXPLODE, args[0]);
         commandSender.sendMessage("Cows will now " + format(Boolean.parseBoolean(args[0])));
         return true;
     }
