@@ -80,3 +80,13 @@ recommended for this.
 |-------------|---------|--------------------------|
 | /namecolour | /nc     | Set your nickname colour |
 | /nickname   | /nick   | Set your chat nickname   |
+
+## Admin Commands
+
+| Command      | Aliases | Description                                 |
+|--------------|---------|---------------------------------------------|
+| /allowtnt    | none    | Toggle TNT explosion damage                 |
+| /listhomes   | none    | Show a user's homes                         |
+| /showconfig  | /sconf  | Show the plugin configuration               |
+| /cowsexplode | none    | Toggle whether cows explode once milked     |
+| /sheepsmite  | none    | Toggle whether sheep get smited when shaved |
