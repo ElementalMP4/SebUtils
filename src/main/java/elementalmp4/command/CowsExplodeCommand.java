@@ -12,7 +12,7 @@ public class CowsExplodeCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
         if (args.length == 0) {
-            boolean tntEnabled = GlobalConfigService.getOrDefault("tnt_explodes", true);
+            boolean tntEnabled = GlobalConfigService.getOrDefault("cows_explode", true);
             commandSender.sendMessage("Cows will currently " + format(tntEnabled));
             return true;
         }
