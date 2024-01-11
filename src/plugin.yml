@@ -43,11 +43,11 @@ commands:
       - "dh"
   tpa:
     description: "Ask to teleport to another player"
-    usage: "/tpa playername"
+    usage: "/tpa [player]"
     permission: "sebutils.tpa"
   tpahere:
     description: "Ask to teleport another player to you"
-    usage: "/tpahere playername"
+    usage: "/tpahere [player]"
     permission: "sebutils.tpa"
   tpaccept:
     description: "Let another player teleport to you"
@@ -59,17 +59,25 @@ commands:
     permission: "sebutils.tpa"
   namecolour:
     description: "Set your name colour"
-    usage: "/namecolour colour"
+    usage: "/namecolour [colour]"
     permission: "sebutils.nicknames"
     aliases:
       - "nc"
   nickname:
     description: "Set a nickname"
-    usage: "/nickname name"
+    usage: "/nickname [name]"
     permission: "sebutils.nicknames"
     aliases:
       - "nick"
   allowtnt:
     description: "Enable or disable TNT explosions"
-    usage: "/allowtnt true/false"
+    usage: "/allowtnt [true/false]"
+    permission: "sebutils.admin"
+  listhomes:
+    description: "Shows a user's homes"
+    usage: "/listhomes [player]"
+    permission: "sebutils.admin"
+  cowsexplode:
+    description: "Toggle whether cows explode when milked"
+    usage: "/cowsexplode [true/false]"
     permission: "sebutils.admin"
