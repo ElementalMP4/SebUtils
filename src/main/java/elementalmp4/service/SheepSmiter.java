@@ -8,7 +8,7 @@ public class SheepSmiter {
     public static void trySmiteSheep(PlayerShearEntityEvent e) {
         if (GlobalConfigService.getAsBoolean(GlobalConfig.SHEEP_SMITE)) {
             e.getPlayer().getWorld().strikeLightning(e.getEntity().getLocation());
-            ((Sheep)e.getEntity()).setHealth(0);
+            ((Sheep) e.getEntity()).setHealth(0);
         }
     }
 }

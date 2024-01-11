@@ -1,7 +1,7 @@
 package main.java.elementalmp4.command;
 
-import main.java.elementalmp4.service.GlobalConfigService;
 import main.java.elementalmp4.GlobalConfig;
+import main.java.elementalmp4.service.GlobalConfigService;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

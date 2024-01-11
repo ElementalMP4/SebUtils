@@ -1,12 +1,11 @@
 package main.java.elementalmp4.service;
 
-import main.java.elementalmp4.SebUtils;
 import main.java.elementalmp4.GlobalConfig;
+import main.java.elementalmp4.SebUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
