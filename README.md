@@ -1,4 +1,4 @@
-# PaperUtils
+# SebUtils
 
 Lightweight commands to make a vanilla paper server a bit more friendly, without the need for enormous and complicated
 plugins and APIs and permissions and all that shebang. The bare essentials, and what I usually find myself requiring
@@ -10,12 +10,13 @@ when I want to start a server for friends.
 - Homes (multiple per user)
 - Teleportation
 - Chat nicknames and colours
+- Disabling TNT
 - Simple permissions
 
 # Installing
 
 Either download this repo and compile it yourself - or download the latest release from
-the [releases tab](https://github.com/ElementalMP4/PaperUtils/releases/)
+the [releases tab](https://github.com/ElementalMP4/SebUtils/releases/)
 
 ## Compiling with Maven
 
@@ -29,7 +30,7 @@ Then:
 1. Clone this repository
 
 ```
-git clone https://github.com/ElementalMP4/PaperUtils
+git clone https://github.com/ElementalMP4/SebUtils
 ```
 
 2. Build with Maven
