@@ -19,10 +19,7 @@ public class CowMilkListener implements Listener {
             return;
         if (!(player.getInventory().getItemInMainHand().getType().equals(Material.BUCKET)))
             return;
-
-        e.setCancelled(true);
         CowExploder.tryExplodeCow(e);
-
     }
 
 }
