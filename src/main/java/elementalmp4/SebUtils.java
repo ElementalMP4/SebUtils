@@ -7,8 +7,7 @@ import main.java.elementalmp4.command.homes.HomesCommand;
 import main.java.elementalmp4.command.homes.SetHomeCommand;
 import main.java.elementalmp4.command.nicknames.SetColourCommand;
 import main.java.elementalmp4.command.nicknames.SetNicknameCommand;
-import main.java.elementalmp4.command.plots.DeletePlotCommand;
-import main.java.elementalmp4.command.plots.PlotsCommand;
+import main.java.elementalmp4.command.plots.*;
 import main.java.elementalmp4.command.tpa.TeleportAcceptCommand;
 import main.java.elementalmp4.command.tpa.TeleportCommand;
 import main.java.elementalmp4.command.tpa.TeleportDenyCommand;
@@ -16,6 +15,7 @@ import main.java.elementalmp4.command.tpa.TeleportHereCommand;
 import main.java.elementalmp4.completer.BooleanTabCompleter;
 import main.java.elementalmp4.completer.ColourTabCompleter;
 import main.java.elementalmp4.completer.HomesTabCompleter;
+import main.java.elementalmp4.completer.PermitCompleter;
 import main.java.elementalmp4.listener.*;
 import main.java.elementalmp4.service.DatabaseService;
 import main.java.elementalmp4.utils.ConsoleColours;
@@ -79,6 +79,9 @@ public class SebUtils extends JavaPlugin {
         getCommand("showconfig").setExecutor(new ShowConfigCommand());
         getCommand("plots").setExecutor(new PlotsCommand());
         getCommand("deleteplot").setExecutor(new DeletePlotCommand());
+        getCommand("plot").setExecutor(new PlotCommand());
+        getCommand("grantpermit").setExecutor(new GrantPermitCommand());
+        getCommand("revokepermit").setExecutor(new RevokePermitCommand());
 
         logger.info(ConsoleColours.YELLOW + "Registering autofill");
         getCommand("namecolour").setTabCompleter(new ColourTabCompleter());
@@ -87,6 +90,8 @@ public class SebUtils extends JavaPlugin {
         getCommand("allowtnt").setTabCompleter(new BooleanTabCompleter());
         getCommand("cowsexplode").setTabCompleter(new BooleanTabCompleter());
         getCommand("sheepsmite").setTabCompleter(new BooleanTabCompleter());
+        getCommand("grantpermit").setTabCompleter(new PermitCompleter());
+        getCommand("revokepermit").setTabCompleter(new PermitCompleter());
 
         logger.info(ConsoleColours.YELLOW + "Registering listeners");
         getServer().getPluginManager().registerEvents(new ChatInterceptor(), this);

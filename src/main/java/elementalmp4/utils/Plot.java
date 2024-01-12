@@ -11,6 +11,7 @@ public class Plot {
     private final int y_b;
     private final int plotId;
     private final String world;
+    private final String owner;
 
     public Plot(ResultSet rs) throws SQLException {
         x_a = rs.getInt("bound_x_a");
@@ -19,11 +20,16 @@ public class Plot {
         y_b = rs.getInt("bound_y_b");
         world = rs.getString("world");
         plotId = rs.getInt("plot_id");
+        owner = rs.getString("owner");
     }
 
     public String getWorld() {
         return world;
     }
+
+    public String getOwner() {
+        return owner;
+    };
 
     public int getXA() {
         return x_a;

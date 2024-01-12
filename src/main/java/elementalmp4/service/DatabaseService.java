@@ -16,7 +16,8 @@ public class DatabaseService {
         MIGRATIONS.put("add home names", "ALTER TABLE user_homes ADD COLUMN IF NOT EXISTS home_name TEXT;");
         MIGRATIONS.put("set empty home names", "UPDATE user_homes SET home_name = 'default' WHERE home_name IS NULL");
         MIGRATIONS.put("global config", "CREATE TABLE IF NOT EXISTS global_config (config_item TEXT, config_value TEXT);");
-        MIGRATIONS.put("block locker", "CREATE TABLE IF NOT EXISTS block_locker (plot_id BIGINT AUTO_INCREMENT, owner TEXT, world TEXT, bound_x_a INTEGER, bound_y_a INTEGER, bound_x_b INTEGER, bound_y_b INTEGER);");
+        MIGRATIONS.put("block locker", "CREATE TABLE IF NOT EXISTS block_locker (plot_id BIGINT PRIMARY KEY AUTO_INCREMENT, owner TEXT, world TEXT, bound_x_a INTEGER, bound_y_a INTEGER, bound_x_b INTEGER, bound_y_b INTEGER);");
+        MIGRATIONS.put("plot sharing", "CREATE TABLE IF NOT EXISTS plot_permissions (plot_id BIGINT, player TEXT, FOREIGN KEY (plot_id) REFERENCES block_locker(plot_id) ON DELETE CASCADE);");
     }
 
     private final Connection connection;

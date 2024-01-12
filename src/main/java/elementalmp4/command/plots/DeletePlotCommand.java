@@ -15,7 +15,7 @@ public class DeletePlotCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         Location loc = ((Player) commandSender).getLocation();
-        Optional<Plot> deletedPlot = PlotService.deletePlotIfInside(command.getName(), loc.getWorld().getName(), loc.getBlockX(), loc.getBlockZ());
+        Optional<Plot> deletedPlot = PlotService.deletePlotIfInside(commandSender.getName(), loc.getWorld().getName(), loc.getBlockX(), loc.getBlockZ());
 
         if (deletedPlot.isPresent()) {
             commandSender.sendMessage(ChatColor.GREEN + "Deleted plot " + ChatColor.YELLOW + deletedPlot.get().getId());

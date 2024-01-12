@@ -104,4 +104,23 @@ commands:
     permission: "sebutils.plots"
     aliases:
       - "delplot"
-
+  plot:
+    description: "See if the block you are currently standing on is in a plot"
+    usage: "/plot"
+    permission: "sebutils.plots"
+  grantpermit:
+    description: "Allow another player to access your plot"
+    usage: "/grantpermit [player] [plot ID]"
+    aliases:
+      - "gperm"
+    permission: "sebutils.plots"
+  revokepermit:
+    description: "Revokes a plot permit from a player on your plot"
+    usage: "/revokepermit [player] [plot ID]"
+    aliases:
+      - "rperm"
+    permission: "sebutils.plots"
+  permits:
+    description: "Views the permits for a plot"
+    usage: "/permits [plot ID]"
+    permission: "sebutils.plots"
