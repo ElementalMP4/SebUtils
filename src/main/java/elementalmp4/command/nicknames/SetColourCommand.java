@@ -1,4 +1,4 @@
-package main.java.elementalmp4.command;
+package main.java.elementalmp4.command.nicknames;
 
 import main.java.elementalmp4.service.NicknameService;
 import org.bukkit.ChatColor;

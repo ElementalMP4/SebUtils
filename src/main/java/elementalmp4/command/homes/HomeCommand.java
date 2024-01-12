@@ -1,4 +1,4 @@
-package main.java.elementalmp4.command;
+package main.java.elementalmp4.command.homes;
 
 import main.java.elementalmp4.service.HomeService;
 import org.bukkit.ChatColor;

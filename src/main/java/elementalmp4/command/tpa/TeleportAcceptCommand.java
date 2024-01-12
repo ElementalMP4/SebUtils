@@ -1,4 +1,4 @@
-package main.java.elementalmp4.command;
+package main.java.elementalmp4.command.tpa;
 
 import main.java.elementalmp4.service.TeleportService;
 import org.bukkit.ChatColor;

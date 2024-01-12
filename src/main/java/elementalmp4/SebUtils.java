@@ -1,6 +1,18 @@
 package main.java.elementalmp4;
 
-import main.java.elementalmp4.command.*;
+import main.java.elementalmp4.command.admin.*;
+import main.java.elementalmp4.command.homes.DeleteHomeCommand;
+import main.java.elementalmp4.command.homes.HomeCommand;
+import main.java.elementalmp4.command.homes.HomesCommand;
+import main.java.elementalmp4.command.homes.SetHomeCommand;
+import main.java.elementalmp4.command.nicknames.SetColourCommand;
+import main.java.elementalmp4.command.nicknames.SetNicknameCommand;
+import main.java.elementalmp4.command.plots.DeletePlotCommand;
+import main.java.elementalmp4.command.plots.PlotsCommand;
+import main.java.elementalmp4.command.tpa.TeleportAcceptCommand;
+import main.java.elementalmp4.command.tpa.TeleportCommand;
+import main.java.elementalmp4.command.tpa.TeleportDenyCommand;
+import main.java.elementalmp4.command.tpa.TeleportHereCommand;
 import main.java.elementalmp4.completer.BooleanTabCompleter;
 import main.java.elementalmp4.completer.ColourTabCompleter;
 import main.java.elementalmp4.completer.HomesTabCompleter;
@@ -65,6 +77,8 @@ public class SebUtils extends JavaPlugin {
         getCommand("cowsexplode").setExecutor(new CowsExplodeCommand());
         getCommand("sheepsmite").setExecutor(new SheepSmiteCommand());
         getCommand("showconfig").setExecutor(new ShowConfigCommand());
+        getCommand("plots").setExecutor(new PlotsCommand());
+        getCommand("deleteplot").setExecutor(new DeletePlotCommand());
 
         logger.info(ConsoleColours.YELLOW + "Registering autofill");
         getCommand("namecolour").setTabCompleter(new ColourTabCompleter());
@@ -80,6 +94,7 @@ public class SebUtils extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerMoveListener(), this);
         getServer().getPluginManager().registerEvents(new ExplosionListener(), this);
         getServer().getPluginManager().registerEvents(new AnimalInteractionListener(), this);
+        getServer().getPluginManager().registerEvents(new PlotListener(), this);
 
         logger.info(ConsoleColours.GREEN + "Ready!");
     }

@@ -18,6 +18,9 @@ permissions:
   sebutils.admin:
     description: "Allows players access to admin commands"
     default: "op"
+  sebutils.plots:
+    description: "Allows players to create and delete plots"
+    default: true
 commands:
   sethome:
     description: "Sets your home to the current location"
@@ -91,3 +94,14 @@ commands:
     aliases:
       - "sconf"
     permission: "sebutils.admin"
+  plots:
+    description: "Shows all your plot locations"
+    usage: "/plots"
+    permission: "sebutils.plots"
+  deleteplot:
+    description: "Delete the plot you are currently standing in"
+    usage: "/deleteplot"
+    permission: "sebutils.plots"
+    aliases:
+      - "delplot"
+

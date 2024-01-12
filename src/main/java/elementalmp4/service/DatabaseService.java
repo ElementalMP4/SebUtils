@@ -1,7 +1,6 @@
 package main.java.elementalmp4.service;
 
 import main.java.elementalmp4.SebUtils;
-import main.java.elementalmp4.utils.ConsoleColours;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,6 +16,7 @@ public class DatabaseService {
         MIGRATIONS.put("add home names", "ALTER TABLE user_homes ADD COLUMN IF NOT EXISTS home_name TEXT;");
         MIGRATIONS.put("set empty home names", "UPDATE user_homes SET home_name = 'default' WHERE home_name IS NULL");
         MIGRATIONS.put("global config", "CREATE TABLE IF NOT EXISTS global_config (config_item TEXT, config_value TEXT);");
+        MIGRATIONS.put("block locker", "CREATE TABLE IF NOT EXISTS block_locker (plot_id BIGINT AUTO_INCREMENT, owner TEXT, world TEXT, bound_x_a INTEGER, bound_y_a INTEGER, bound_x_b INTEGER, bound_y_b INTEGER);");
     }
 
     private final Connection connection;
@@ -35,9 +35,8 @@ public class DatabaseService {
         for (String migration : MIGRATIONS.keySet()) {
             try {
                 connection.createStatement().executeUpdate(MIGRATIONS.get(migration));
-                SebUtils.getPluginLogger().info(ConsoleColours.YELLOW + "Ran migration '" + migration + "'");
             } catch (Exception e) {
-                SebUtils.getPluginLogger().severe(e.getMessage());
+                SebUtils.getPluginLogger().severe("Failed to run migration " + migration + " - " + e.getMessage());
                 throw new RuntimeException(e);
             }
         }
