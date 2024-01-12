@@ -56,6 +56,10 @@ public class GlobalConfigService {
         return Boolean.parseBoolean(getValue(config));
     }
 
+    public static int getAsInteger(GlobalConfig config) {
+        return Integer.parseInt(getValue(config));
+    }
+
     public static void set(GlobalConfig config, String value) {
         try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
             stmt.executeUpdate("UPDATE global_config SET config_value = '%s' WHERE config_item = '%s'".formatted(value, config.getKey()));

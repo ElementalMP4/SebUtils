@@ -4,7 +4,8 @@ public enum GlobalConfig {
 
     TNT_EXPLODES("tnt_explodes", "true"),
     COWS_EXPLODE("cows_explode", "false"),
-    SHEEP_SMITE("sheep_smite", "false");
+    SHEEP_SMITE("sheep_smite", "false"),
+    PLOT_MAX_SIZE("plot_max_size", "10000");
 
     private final String key;
     private final String defaultValue;

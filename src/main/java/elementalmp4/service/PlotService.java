@@ -1,9 +1,11 @@
 package main.java.elementalmp4.service;
 
+import main.java.elementalmp4.GlobalConfig;
 import main.java.elementalmp4.SebUtils;
 import main.java.elementalmp4.utils.Plot;
 import main.java.elementalmp4.utils.PlotCreateRequest;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.sql.ResultSet;
@@ -105,7 +107,7 @@ public class PlotService {
 
     public static Optional<Plot> deletePlotIfInside(String player, String world, int x, int y) {
         try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
-            ResultSet rs = stmt.executeQuery(createSql(FIND_BOUNDS_CONTAINING_POINT_NOT_OWNED, x, y, player, world));
+            ResultSet rs = stmt.executeQuery(createSql(FIND_BOUNDS_CONTAINING_POINT_OWNED, x, y, player, world));
             if (rs.next()) {
                 Plot p = new Plot(rs);
                 stmt.executeUpdate("DELETE FROM block_locker WHERE plot_id = %d".formatted(rs.getInt("plot_id")));
@@ -131,11 +133,8 @@ public class PlotService {
             PlotCreateRequest request = requests.get(e.getPlayer().getName());
             boolean plotIsValid = request.addSecondPoint(e.getClickedBlock().getX(), e.getClickedBlock().getZ());
             if (plotIsValid) {
-                Optional<String> possibleCollisionOwner = tryCreatePlot(request);
-                if (possibleCollisionOwner.isPresent()) {
-                    e.getPlayer().sendMessage(ChatColor.RED + "Your plot overlaps " + ChatColor.GOLD
-                            + possibleCollisionOwner.get() + ChatColor.RED + "'s plot");
-                } else {
+                if (canCreatePlot(request, e.getPlayer())) {
+                    createPlot(request);
                     e.getPlayer().sendMessage(ChatColor.GREEN + "Created plot from " + ChatColor.YELLOW +
                             request.getXA() + " " + request.getYA() + ChatColor.GREEN + " to " + ChatColor.YELLOW +
                             request.getXB() + " " + request.getYB());
@@ -156,27 +155,54 @@ public class PlotService {
         }
     }
 
-    private static Optional<String> tryCreatePlot(PlotCreateRequest r) {
+    public static boolean canCreatePlot(PlotCreateRequest r, Player p) {
+        //Check for overlaps
         List<List<Integer>> permutations = List.of(
                 List.of(r.getXA(), r.getYA()),
                 List.of(r.getXA(), r.getYB()),
                 List.of(r.getXB(), r.getYA()),
                 List.of(r.getXB(), r.getYB())
         );
-
+        
         for (List<Integer> permutation : permutations) {
             Optional<String> blockOwner = blockIsOwned(r.getPlayer(), permutation.get(0), permutation.get(1), r.getWorld());
-            if (blockOwner.isPresent()) return blockOwner;
+            if (blockOwner.isPresent()) {
+                p.sendMessage(ChatColor.RED + "Your plot overlaps " + ChatColor.GOLD
+                        + blockOwner.get() + ChatColor.RED + "'s plot");
+                return false;
+            }
         }
 
+        //Check plot size
+        int maxPlotSize = GlobalConfigService.getAsInteger(GlobalConfig.PLOT_MAX_SIZE);
+        int newPlotSize = Plot.getPlotArea(r);
+
+        if (newPlotSize > maxPlotSize) {
+            p.sendMessage(ChatColor.RED + "This plot exceeds the maximum plot size of " + ChatColor.GOLD + maxPlotSize + " blocks");
+            return false;
+        }
+
+        //Check cumulative plot size
+        List<Plot> plots = getUserPlots(p.getName());
+        int totalPlotSize = newPlotSize;
+        for (Plot plot : plots) {
+            totalPlotSize += Plot.getPlotArea(plot);
+            if (totalPlotSize > maxPlotSize) {
+                p.sendMessage(ChatColor.RED + "This plot, along with your existing plots, will exceed the maximum plot size of " + ChatColor.GOLD + maxPlotSize + " blocks");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static void createPlot(PlotCreateRequest r) {
         try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
             stmt.executeUpdate("INSERT INTO block_locker(owner, world, bound_x_a, bound_y_a, bound_x_b, bound_y_b) VALUES ('%s', '%s', %d, %d, %d, %d)"
                     .formatted(r.getPlayer(), r.getWorld(), r.getXA(), r.getYA(), r.getXB(), r.getYB()));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-        return Optional.empty();
     }
 
     public static List<Plot> getUserPlots(String player) {

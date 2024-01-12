@@ -21,7 +21,7 @@ public class PlotsCommand implements CommandExecutor {
             out.add(ChatColor.RED + commandSender.getName() + "'s Plots");
             for (Plot plot : plots) {
                 out.add(ChatColor.RED.toString() + plot.getId()
-                        + " - " + ChatColor.YELLOW + plot.getXA() + " " + plot.getYA() + ChatColor.AQUA
+                        + ") " + ChatColor.YELLOW + plot.getXA() + " " + plot.getYA() + ChatColor.AQUA
                         + " > " + ChatColor.YELLOW + plot.getXB() + " " + plot.getYB() + ChatColor.AQUA
                         + " - " + ChatColor.GOLD +  plot.getWorld());
             }

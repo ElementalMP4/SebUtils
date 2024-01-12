@@ -44,4 +44,20 @@ public class Plot {
     public int getId() {
         return plotId;
     }
+
+    public static int getPlotArea(int x_a, int y_a, int x_b, int y_b) {
+        return determineDifference(x_a, x_b) * determineDifference(y_a, y_b);
+    }
+
+    private static int determineDifference(int a, int b) {
+        return a > b ? a - b : b - a;
+    }
+
+    public static int getPlotArea(Plot p) {
+        return getPlotArea(p.getXA(), p.getYA(), p.getXB(), p.getYB());
+    }
+
+    public static int getPlotArea(PlotCreateRequest p) {
+        return getPlotArea(p.getXA(), p.getYA(), p.getXB(), p.getYB());
+    }
 }
