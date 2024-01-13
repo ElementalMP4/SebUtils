@@ -18,7 +18,9 @@ public class DeletePlotCommand implements CommandExecutor {
         Optional<Plot> deletedPlot = PlotService.deletePlotIfInside(commandSender.getName(), loc.getWorld().getName(), loc.getBlockX(), loc.getBlockZ());
 
         if (deletedPlot.isPresent()) {
-            commandSender.sendMessage(ChatColor.GREEN + "Deleted plot " + ChatColor.YELLOW + deletedPlot.get().getId());
+            commandSender.sendMessage(ChatColor.GREEN + "Deleted plot " + ChatColor.YELLOW + deletedPlot.get().getId()
+                    + ChatColor.GREEN + " - Freed up " + ChatColor.YELLOW + Plot.getPlotArea(deletedPlot.get())
+                    + ChatColor.GREEN + " blocks");
         } else {
             commandSender.sendMessage(ChatColor.RED + "You are not standing inside one of your plots!");
         }

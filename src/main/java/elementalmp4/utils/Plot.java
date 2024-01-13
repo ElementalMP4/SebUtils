@@ -52,11 +52,9 @@ public class Plot {
     }
 
     public static int getPlotArea(int x_a, int y_a, int x_b, int y_b) {
-        return determineDifference(x_a, x_b) * determineDifference(y_a, y_b);
-    }
-
-    private static int determineDifference(int a, int b) {
-        return a > b ? a - b : b - a;
+        int length = Math.abs(x_b - x_a) + 1;
+        int width = Math.abs(y_b - y_a) + 1;
+        return length * width;
     }
 
     public static int getPlotArea(Plot p) {

@@ -176,9 +176,8 @@ public class PlotService {
             if (plotIsValid) {
                 if (canCreatePlot(request, e.getPlayer())) {
                     createPlot(request);
-                    e.getPlayer().sendMessage(ChatColor.GREEN + "Created plot from " + ChatColor.YELLOW +
-                            request.getXA() + " " + request.getYA() + ChatColor.GREEN + " to " + ChatColor.YELLOW +
-                            request.getXB() + " " + request.getYB());
+                    e.getPlayer().sendMessage(ChatColor.GREEN + "Created plot! Used " + ChatColor.YELLOW +
+                            Plot.getPlotArea(request) + ChatColor.GREEN + " blocks");
                 }
             } else {
                 e.getPlayer().sendMessage(ChatColor.RED + "Your plot is invalid! Try making it larger");

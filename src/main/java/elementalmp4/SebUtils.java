@@ -82,6 +82,7 @@ public class SebUtils extends JavaPlugin {
         getCommand("plot").setExecutor(new PlotCommand());
         getCommand("grantpermit").setExecutor(new GrantPermitCommand());
         getCommand("revokepermit").setExecutor(new RevokePermitCommand());
+        getCommand("permits").setExecutor(new PermitsCommand());
 
         logger.info(ConsoleColours.YELLOW + "Registering autofill");
         getCommand("namecolour").setTabCompleter(new ColourTabCompleter());
@@ -92,6 +93,7 @@ public class SebUtils extends JavaPlugin {
         getCommand("sheepsmite").setTabCompleter(new BooleanTabCompleter());
         getCommand("grantpermit").setTabCompleter(new PermitCompleter());
         getCommand("revokepermit").setTabCompleter(new PermitCompleter());
+        getCommand("permits").setTabCompleter(new PermitCompleter());
 
         logger.info(ConsoleColours.YELLOW + "Registering listeners");
         getServer().getPluginManager().registerEvents(new ChatInterceptor(), this);
