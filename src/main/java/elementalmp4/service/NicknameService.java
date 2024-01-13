@@ -115,7 +115,7 @@ public class NicknameService {
         try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
             ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM chat_customisation WHERE username = '%s';"
                     .formatted(username));
-            return !rs.isClosed();
+            return rs.next();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

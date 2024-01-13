@@ -36,7 +36,7 @@ public class HomeService {
         try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
             ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM user_homes WHERE username = '%s' AND home_name = '%s';"
                     .formatted(username, homeName));
-            return !rs.isClosed();
+            return rs.next();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

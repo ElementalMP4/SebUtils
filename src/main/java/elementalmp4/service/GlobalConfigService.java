@@ -16,7 +16,7 @@ public class GlobalConfigService {
             try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
                 ResultSet rs = stmt.executeQuery("SELECT config_value FROM global_config WHERE config_item = '%s';"
                         .formatted(config.getKey()));
-                if (rs.isClosed()) {
+                if (!rs.next()) {
                     stmt.executeUpdate("INSERT INTO global_config VALUES ('%s', '%s');".formatted(config.getKey(), config.getDefaultValue()));
                 }
             } catch (SQLException e) {
