@@ -18,7 +18,7 @@ public class DeletePlotCommand implements CommandExecutor {
             return true;
         }
 
-        Optional<Integer> id = Converter.tryStringToInt(args[1]);
+        Optional<Integer> id = Converter.tryStringToInt(args[0]);
         if (id.isEmpty()) {
             commandSender.sendMessage(ChatColor.RED + "Plot ID must be a valid number!");
             return true;
