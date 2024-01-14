@@ -99,8 +99,8 @@ commands:
     usage: "/plots"
     permission: "sebutils.plots"
   deleteplot:
-    description: "Delete the plot you are currently standing in"
-    usage: "/deleteplot"
+    description: "Delete a plot by its plot ID"
+    usage: "/deleteplot [plot ID]"
     permission: "sebutils.plots"
     aliases:
       - "delplot"

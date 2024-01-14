@@ -15,6 +15,7 @@ import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class PlotService {
 
@@ -44,35 +45,6 @@ public class PlotService {
                         AND {{input_pos_y}} >= bound_y_a
                     )
                 ) AND owner != '{{username}}'
-                AND world = '{{world}}';
-            """;
-
-    private static final String FIND_BOUNDS_CONTAINING_POINT_OWNED = """
-            SELECT
-                *
-            FROM
-                block_locker
-            WHERE
-                (
-                    (
-                        {{input_pos_x}} <= bound_x_a
-                        AND {{input_pos_x}} >= bound_x_b
-                    )
-                    OR (
-                        {{input_pos_x}} <= bound_x_b
-                        AND {{input_pos_x}} >= bound_x_a
-                    )
-                )
-                AND (
-                    (
-                        {{input_pos_y}} <= bound_y_a
-                        AND {{input_pos_y}} >= bound_y_b
-                    )
-                    OR (
-                        {{input_pos_y}} <= bound_y_b
-                        AND {{input_pos_y}} >= bound_y_a
-                    )
-                ) AND owner = '{{username}}'
                 AND world = '{{world}}';
             """;
 
@@ -146,16 +118,9 @@ public class PlotService {
         }
     }
 
-    public static Optional<Plot> deletePlotIfInside(String player, String world, int x, int y) {
+    public static void deletePlot(int id) {
         try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
-            ResultSet rs = stmt.executeQuery(createSql(FIND_BOUNDS_CONTAINING_POINT_OWNED, x, y, player, world));
-            if (rs.next()) {
-                Plot p = new Plot(rs);
-                stmt.executeUpdate("DELETE FROM block_locker WHERE plot_id = %d".formatted(rs.getInt("plot_id")));
-                return Optional.of(p);
-            } else {
-                return Optional.empty();
-            }
+            stmt.executeUpdate("DELETE FROM block_locker WHERE plot_id = %d".formatted(id));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -266,5 +231,12 @@ public class PlotService {
             throw new RuntimeException(e);
         }
         return Optional.empty();
+    }
+
+    public static List<String> getPlotIdList(String player) {
+        return PlotService.getUserPlots(player).stream()
+                .map(Plot::getId)
+                .map(String::valueOf)
+                .collect(Collectors.toList());
     }
 }

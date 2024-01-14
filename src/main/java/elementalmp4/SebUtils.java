@@ -12,10 +12,7 @@ import main.java.elementalmp4.command.tpa.TeleportAcceptCommand;
 import main.java.elementalmp4.command.tpa.TeleportCommand;
 import main.java.elementalmp4.command.tpa.TeleportDenyCommand;
 import main.java.elementalmp4.command.tpa.TeleportHereCommand;
-import main.java.elementalmp4.completer.BooleanTabCompleter;
-import main.java.elementalmp4.completer.ColourTabCompleter;
-import main.java.elementalmp4.completer.HomesTabCompleter;
-import main.java.elementalmp4.completer.PermitCompleter;
+import main.java.elementalmp4.completer.*;
 import main.java.elementalmp4.listener.*;
 import main.java.elementalmp4.service.DatabaseService;
 import main.java.elementalmp4.utils.ConsoleColours;
@@ -93,7 +90,8 @@ public class SebUtils extends JavaPlugin {
         getCommand("sheepsmite").setTabCompleter(new BooleanTabCompleter());
         getCommand("grantpermit").setTabCompleter(new PermitCompleter());
         getCommand("revokepermit").setTabCompleter(new PermitCompleter());
-        getCommand("permits").setTabCompleter(new PermitCompleter());
+        getCommand("permits").setTabCompleter(new PlotCompleter());
+        getCommand("deleteplot").setTabCompleter(new PlotCompleter());
 
         logger.info(ConsoleColours.YELLOW + "Registering listeners");
         getServer().getPluginManager().registerEvents(new ChatInterceptor(), this);
