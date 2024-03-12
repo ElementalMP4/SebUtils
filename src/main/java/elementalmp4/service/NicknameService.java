@@ -113,9 +113,9 @@ public class NicknameService {
 
     public static boolean userConfigExists(String username) {
         try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
-            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM chat_customisation WHERE username = '%s';"
+            ResultSet rs = stmt.executeQuery("SELECT username FROM chat_customisation WHERE username = '%s';"
                     .formatted(username));
-            return rs.next();
+            return rs.isBeforeFirst();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
