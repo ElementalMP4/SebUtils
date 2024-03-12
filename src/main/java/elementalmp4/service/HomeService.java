@@ -34,9 +34,9 @@ public class HomeService {
 
     public static boolean userHasHome(String username, String homeName) {
         try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
-            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM user_homes WHERE username = '%s' AND home_name = '%s';"
+            ResultSet rs = stmt.executeQuery("SELECT username FROM user_homes WHERE username = '%s' AND home_name = '%s';"
                     .formatted(username, homeName));
-            return rs.next();
+            return !rs.isBeforeFirst();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
