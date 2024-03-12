@@ -36,7 +36,7 @@ public class HomeService {
         try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
             ResultSet rs = stmt.executeQuery("SELECT username FROM user_homes WHERE username = '%s' AND home_name = '%s';"
                     .formatted(username, homeName));
-            return !rs.isBeforeFirst();
+            return rs.isBeforeFirst();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
