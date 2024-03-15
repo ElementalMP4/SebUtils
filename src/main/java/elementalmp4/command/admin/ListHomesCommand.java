@@ -1,13 +1,11 @@
 package main.java.elementalmp4.command.admin;
 
-import main.java.elementalmp4.SebUtils;
 import main.java.elementalmp4.service.HomeService;
 import main.java.elementalmp4.utils.Home;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.List;
 
@@ -19,15 +17,9 @@ public class ListHomesCommand implements CommandExecutor {
             return true;
         }
 
-        Player player = SebUtils.getPlugin().getServer().getPlayer(args[0]);
-        if (player == null) {
-            commandSender.sendMessage(ChatColor.RED + "Player could not be found!");
-            return true;
-        }
-
-        List<Home> homes = HomeService.getHomes(player.getName());
+        List<Home> homes = HomeService.getHomes(args[0]);
         if (homes.isEmpty()) {
-            commandSender.sendMessage(ChatColor.RED + "User hasn't set any homes");
+            commandSender.sendMessage(ChatColor.RED + "No homes found for player " + ChatColor.YELLOW + args[0]);
         } else {
             StringBuilder sb = new StringBuilder();
             for (Home home : homes) {

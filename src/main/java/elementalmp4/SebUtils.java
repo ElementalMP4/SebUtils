@@ -80,6 +80,7 @@ public class SebUtils extends JavaPlugin {
         getCommand("grantpermit").setExecutor(new GrantPermitCommand());
         getCommand("revokepermit").setExecutor(new RevokePermitCommand());
         getCommand("permits").setExecutor(new PermitsCommand());
+        getCommand("smite").setExecutor(new SmiteCommand());
 
         logger.info(ConsoleColours.YELLOW + "Registering autofill");
         getCommand("namecolour").setTabCompleter(new ColourTabCompleter());

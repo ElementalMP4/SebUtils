@@ -88,6 +88,10 @@ commands:
     description: "Toggle whether sheep are smited when shaved"
     usage: "/sheepsmite [true/false]"
     permission: "sebutils.admin"
+  smite:
+    description: "Smite a player"
+    usage: "/smite [player]"
+    permission: "sebutils.admin"
   showconfig:
     description: "Shows the plugin configuration"
     usage: "/showconfig"
