@@ -2,9 +2,10 @@ package main.java.elementalmp4;
 
 public enum GlobalConfig {
 
-    TNT_EXPLODES("tnt_explodes", "true"),
+    TNT_EXPLODES("tnt_enabled", "true"),
     COWS_EXPLODE("cows_explode", "false"),
     SHEEP_SMITE("sheep_smite", "false"),
+    BILLY_ENABLED("billy_enabled", "false"),
     PLOT_MAX_SIZE("plot_max_size", "10000");
 
     private final String key;

@@ -81,6 +81,7 @@ public class SebUtils extends JavaPlugin {
         getCommand("revokepermit").setExecutor(new RevokePermitCommand());
         getCommand("permits").setExecutor(new PermitsCommand());
         getCommand("smite").setExecutor(new SmiteCommand());
+        getCommand("enablebilly").setExecutor(new EnableBillyCommand());
 
         logger.info(ConsoleColours.YELLOW + "Registering autofill");
         getCommand("namecolour").setTabCompleter(new ColourTabCompleter());
@@ -93,6 +94,7 @@ public class SebUtils extends JavaPlugin {
         getCommand("revokepermit").setTabCompleter(new PermitCompleter());
         getCommand("permits").setTabCompleter(new PlotCompleter());
         getCommand("deleteplot").setTabCompleter(new PlotCompleter());
+        getCommand("enablebilly").setTabCompleter(new BooleanTabCompleter());
 
         logger.info(ConsoleColours.YELLOW + "Registering listeners");
         getServer().getPluginManager().registerEvents(new ChatInterceptor(), this);
@@ -101,6 +103,7 @@ public class SebUtils extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ExplosionListener(), this);
         getServer().getPluginManager().registerEvents(new AnimalInteractionListener(), this);
         getServer().getPluginManager().registerEvents(new PlotListener(), this);
+        getServer().getPluginManager().registerEvents(new VillagerInteractionListener(), this);
 
         logger.info(ConsoleColours.GREEN + "Ready!");
     }
