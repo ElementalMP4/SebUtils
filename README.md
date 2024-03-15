@@ -1,4 +1,4 @@
-# SebUtils
+![SebUtils](logo.png "SebUtils Logo")
 
 Lightweight commands to make a vanilla paper server a bit more friendly, without the need for enormous and complicated
 plugins and APIs and permissions and all that shebang. The bare essentials, and what I usually find myself requiring
