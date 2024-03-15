@@ -6,6 +6,7 @@ public enum GlobalConfig {
     COWS_EXPLODE("cows_explode", "false"),
     SHEEP_SMITE("sheep_smite", "false"),
     BILLY_ENABLED("billy_enabled", "false"),
+    ADMIN_PLOT_OVERRIDE("admin_plot_override", "true"),
     PLOT_MAX_SIZE("plot_max_size", "10000");
 
     private final String key;

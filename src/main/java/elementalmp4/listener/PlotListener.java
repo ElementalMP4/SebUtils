@@ -1,5 +1,7 @@
 package main.java.elementalmp4.listener;
 
+import main.java.elementalmp4.GlobalConfig;
+import main.java.elementalmp4.service.GlobalConfigService;
 import main.java.elementalmp4.service.PermitService;
 import main.java.elementalmp4.service.PlotService;
 import main.java.elementalmp4.utils.Plot;
@@ -52,7 +54,17 @@ public class PlotListener implements Listener {
         Location blockLocation = e.getClickedBlock().getLocation();
         Optional<Plot> blockOwner = PlotService.blockIsOwnedBySomeoneElse(e.getPlayer().getName(), blockLocation.getBlockX(), blockLocation.getBlockZ(), blockLocation.getWorld().getName());
         if (blockOwner.isPresent()) {
-            if (!PermitService.userHasPermit(blockOwner.get().getId(), e.getPlayer().getName())) {
+            boolean cancelEvent = true;
+
+            if (PermitService.userHasPermit(blockOwner.get().getId(), e.getPlayer().getName())) {
+                cancelEvent = false;
+            }
+
+            if (e.getPlayer().hasPermission("sebutils.admin") && GlobalConfigService.getAsBoolean(GlobalConfig.ADMIN_PLOT_OVERRIDE)) {
+                cancelEvent = false;
+            }
+
+            if (cancelEvent) {
                 e.setCancelled(true);
                 e.getPlayer().getWorld().spawnParticle(Particle.SMOKE_LARGE, e.getClickedBlock().getLocation(), 3);
                 e.getPlayer().sendMessage(ChatColor.RED + "Only " + ChatColor.GOLD + blockOwner.get().getOwner() + ChatColor.RED + " can interact with that!");

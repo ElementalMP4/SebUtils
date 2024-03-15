@@ -92,6 +92,10 @@ commands:
     description: "Toggle whether nitwit villagers will show a special item shop for difficult to acquire items"
     usage: "/enablebilly [true/false]"
     permission: "sebutils.admin"
+  adminplotoverride:
+    description: "Toggle whether players with the sebutils.admin permission can override user plots"
+    usage: "/adminplotoverride [true/false]"
+    permission: "sebutils.admin"
   smite:
     description: "Smite a player"
     usage: "/smite [player]"
