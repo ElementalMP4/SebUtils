@@ -12,6 +12,10 @@ when I want to start a server for friends.
 - Chat nicknames and colours
 - Disabling TNT
 - Simple permissions
+- Cows can explode when milked
+- Sheep can be smited when sheared
+- Players can be smited by admins
+- Nitwit Villagers can sell expensive items
 
 # Installing
 
