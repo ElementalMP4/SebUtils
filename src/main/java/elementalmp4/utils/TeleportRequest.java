@@ -1,5 +1,6 @@
 package main.java.elementalmp4.utils;
 
+import main.java.elementalmp4.service.TeleportService;
 import org.bukkit.entity.Player;
 
 public class TeleportRequest extends TimedRequest {
@@ -17,6 +18,8 @@ public class TeleportRequest extends TimedRequest {
 
     public void authorise() {
         player.teleport(target);
+        TeleportService.playTeleportEffects(player);
+        TeleportService.playTeleportEffects(target);
     }
 
     public String getAuthority() {

@@ -3,6 +3,8 @@ package main.java.elementalmp4.service;
 import main.java.elementalmp4.SebUtils;
 import main.java.elementalmp4.utils.TeleportRequest;
 import org.bukkit.ChatColor;
+import org.bukkit.Effect;
+import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -78,5 +80,10 @@ public class TeleportService {
         }
 
         return Optional.of(player);
+    }
+
+    public static void playTeleportEffects(Player player) {
+        player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 10, 1);
+        player.playEffect(player.getLocation(), Effect.ENDER_SIGNAL, 5);
     }
 }

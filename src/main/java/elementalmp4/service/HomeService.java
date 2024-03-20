@@ -2,6 +2,7 @@ package main.java.elementalmp4.service;
 
 import main.java.elementalmp4.SebUtils;
 import main.java.elementalmp4.utils.Home;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -51,7 +52,10 @@ public class HomeService {
                 int x = rs.getInt("pos_x");
                 int y = rs.getInt("pos_y");
                 int z = rs.getInt("pos_z");
+                Chunk oldChunk = player.getLocation().getChunk();
                 player.teleport(new Location(world, (x + 0.5), y, (z + 0.5)));
+                oldChunk.load(true);
+                TeleportService.playTeleportEffects(player);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

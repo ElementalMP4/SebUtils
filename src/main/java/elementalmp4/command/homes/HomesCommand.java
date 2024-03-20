@@ -7,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HomesCommand implements CommandExecutor {
@@ -17,11 +18,11 @@ public class HomesCommand implements CommandExecutor {
         if (homes.isEmpty()) {
             commandSender.sendMessage(ChatColor.RED + "You haven't set any homes!");
         } else {
-            StringBuilder sb = new StringBuilder();
+            List<String> homeList = new ArrayList<>();
             for (Home home : homes) {
-                sb.append(home.toString()).append("\n");
+                homeList.add(home.toString());
             }
-            commandSender.sendMessage(sb.toString());
+            commandSender.sendMessage(String.join("\n", homeList));
         }
         return true;
     }
