@@ -9,10 +9,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -42,6 +44,31 @@ public class PlotListener implements Listener {
                 e.setCancelled(true);
                 e.getPlayer().getWorld().spawnParticle(Particle.SMOKE_LARGE, e.getBlock().getLocation(), 3);
                 e.getPlayer().sendMessage(ChatColor.RED + "Only " + ChatColor.GOLD + blockOwner.get().getOwner() + ChatColor.RED + " can build here!");
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerAttacked(EntityDamageByEntityEvent e) {
+        if (e.getDamager().getType() == EntityType.PLAYER) {
+            Location blockLocation = e.getEntity().getLocation();
+            Optional<Plot> blockOwner = PlotService.blockIsOwnedBySomeoneElse(e.getDamager().getName(), blockLocation.getBlockX(), blockLocation.getBlockZ(), blockLocation.getWorld().getName());
+            if (blockOwner.isPresent()) {
+                boolean cancelEvent = true;
+
+                if (PermitService.userHasPermit(blockOwner.get().getId(), e.getDamager().getName())) {
+                    cancelEvent = false;
+                }
+
+                if (e.getDamager().hasPermission("sebutils.admin") && GlobalConfigService.getAsBoolean(GlobalConfig.ADMIN_PLOT_OVERRIDE)) {
+                    cancelEvent = false;
+                }
+
+                if (cancelEvent) {
+                    e.setCancelled(true);
+                    e.getDamager().getWorld().spawnParticle(Particle.SMOKE_LARGE, e.getEntity().getLocation(), 3);
+                    e.getDamager().sendMessage(ChatColor.RED + "Only " + ChatColor.GOLD + blockOwner.get().getOwner() + ChatColor.RED + " can interact with that!");
+                }
             }
         }
     }
