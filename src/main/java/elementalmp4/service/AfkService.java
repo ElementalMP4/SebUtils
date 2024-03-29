@@ -1,5 +1,6 @@
 package main.java.elementalmp4.service;
 
+import main.java.elementalmp4.GlobalConfig;
 import main.java.elementalmp4.utils.AfkStatus;
 
 import java.util.HashMap;
@@ -12,8 +13,10 @@ public class AfkService {
     private static final HashMap<String, AfkStatus> PLAYER_STATUS = new HashMap<>();
 
     static {
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(AfkService::checkForAfk, 0, 5, TimeUnit.SECONDS);
+        if (GlobalConfigService.getAsBoolean(GlobalConfig.AFK_ENABLED)) {
+            ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+            executor.scheduleAtFixedRate(AfkService::checkForAfk, 0, 5, TimeUnit.SECONDS);
+        }
     }
 
     private static void checkForAfk() {

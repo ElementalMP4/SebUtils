@@ -1,19 +1,23 @@
 package main.java.elementalmp4.command.plots;
 
 import main.java.elementalmp4.SebUtils;
+import main.java.elementalmp4.command.AbstractCommand;
+import main.java.elementalmp4.command.SebUtilsCommand;
+import main.java.elementalmp4.completer.PermitCompleter;
 import main.java.elementalmp4.service.PermitService;
 import main.java.elementalmp4.service.PlotService;
 import main.java.elementalmp4.utils.Converter;
 import main.java.elementalmp4.utils.Plot;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;
 
-public class RevokePermitCommand implements CommandExecutor {
+@SebUtilsCommand
+public class RevokePermitCommand extends AbstractCommand {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
         if (args.length < 2) {
@@ -48,5 +52,15 @@ public class RevokePermitCommand implements CommandExecutor {
         PermitService.revokePermit(id.get(), playerToRevoke.getName());
         commandSender.sendMessage(ChatColor.GREEN + "Removed " + ChatColor.YELLOW + playerToRevoke.getName() + ChatColor.GREEN + " from plot " + ChatColor.YELLOW + id.get());
         return true;
+    }
+
+    @Override
+    public String getCommandName() {
+        return "revokepermit";
+    }
+
+    @Override
+    public TabCompleter getTabCompleter() {
+        return new PermitCompleter();
     }
 }

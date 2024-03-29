@@ -1,16 +1,19 @@
 package main.java.elementalmp4.command.admin;
 
+import main.java.elementalmp4.command.AbstractCommand;
+import main.java.elementalmp4.command.SebUtilsCommand;
 import main.java.elementalmp4.service.HomeService;
 import main.java.elementalmp4.utils.Home;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListHomesCommand implements CommandExecutor {
+@SebUtilsCommand
+public class ListHomesCommand extends AbstractCommand {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
         if (args.length == 0) {
@@ -29,5 +32,15 @@ public class ListHomesCommand implements CommandExecutor {
             commandSender.sendMessage(String.join("\n", homeList));
         }
         return true;
+    }
+
+    @Override
+    public String getCommandName() {
+        return "listhomes";
+    }
+
+    @Override
+    public TabCompleter getTabCompleter() {
+        return null;
     }
 }

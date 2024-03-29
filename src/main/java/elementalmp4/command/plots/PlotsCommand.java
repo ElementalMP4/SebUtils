@@ -1,18 +1,21 @@
 package main.java.elementalmp4.command.plots;
 
 import main.java.elementalmp4.GlobalConfig;
+import main.java.elementalmp4.command.AbstractCommand;
+import main.java.elementalmp4.command.SebUtilsCommand;
 import main.java.elementalmp4.service.GlobalConfigService;
 import main.java.elementalmp4.service.PlotService;
 import main.java.elementalmp4.utils.Plot;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlotsCommand implements CommandExecutor {
+@SebUtilsCommand
+public class PlotsCommand extends AbstractCommand {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
         List<Plot> plots = PlotService.getUserPlots(commandSender.getName());
@@ -32,5 +35,15 @@ public class PlotsCommand implements CommandExecutor {
             commandSender.sendMessage(String.join("\n", out));
         }
         return true;
+    }
+
+    @Override
+    public String getCommandName() {
+        return "plots";
+    }
+
+    @Override
+    public TabCompleter getTabCompleter() {
+        return null;
     }
 }

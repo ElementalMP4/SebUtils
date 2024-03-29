@@ -1,12 +1,15 @@
 package main.java.elementalmp4.command.tpa;
 
+import main.java.elementalmp4.command.AbstractCommand;
+import main.java.elementalmp4.command.SebUtilsCommand;
 import main.java.elementalmp4.service.TeleportService;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 
-public class TeleportAcceptCommand implements CommandExecutor {
+@SebUtilsCommand
+public class TeleportAcceptCommand extends AbstractCommand {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
         if (!TeleportService.userIsAlreadyWaiting(commandSender.getName())) {
@@ -15,5 +18,15 @@ public class TeleportAcceptCommand implements CommandExecutor {
         }
         TeleportService.authoriseTeleport(commandSender.getName());
         return true;
+    }
+
+    @Override
+    public String getCommandName() {
+        return "tpaccept";
+    }
+
+    @Override
+    public TabCompleter getTabCompleter() {
+        return null;
     }
 }

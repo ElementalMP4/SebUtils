@@ -1,23 +1,16 @@
 package main.java.elementalmp4;
 
-import main.java.elementalmp4.command.admin.*;
-import main.java.elementalmp4.command.homes.DeleteHomeCommand;
-import main.java.elementalmp4.command.homes.HomeCommand;
-import main.java.elementalmp4.command.homes.HomesCommand;
-import main.java.elementalmp4.command.homes.SetHomeCommand;
-import main.java.elementalmp4.command.nicknames.SetColourCommand;
-import main.java.elementalmp4.command.nicknames.SetNicknameCommand;
-import main.java.elementalmp4.command.plots.*;
-import main.java.elementalmp4.command.tpa.TeleportAcceptCommand;
-import main.java.elementalmp4.command.tpa.TeleportCommand;
-import main.java.elementalmp4.command.tpa.TeleportDenyCommand;
-import main.java.elementalmp4.command.tpa.TeleportHereCommand;
-import main.java.elementalmp4.completer.*;
-import main.java.elementalmp4.listener.*;
+import main.java.elementalmp4.command.AbstractCommand;
+import main.java.elementalmp4.command.SebUtilsCommand;
+import main.java.elementalmp4.listener.SebUtilsListener;
 import main.java.elementalmp4.service.DatabaseService;
 import main.java.elementalmp4.utils.ConsoleColours;
+import main.java.elementalmp4.utils.ReflectiveInstantiator;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 public class SebUtils extends JavaPlugin {
@@ -59,53 +52,18 @@ public class SebUtils extends JavaPlugin {
         databaseService = new DatabaseService(plugin.getDataFolder().getAbsolutePath());
 
         logger.info(ConsoleColours.YELLOW + "Registering commands");
-        getCommand("nickname").setExecutor(new SetNicknameCommand());
-        getCommand("namecolour").setExecutor(new SetColourCommand());
-        getCommand("sethome").setExecutor(new SetHomeCommand());
-        getCommand("home").setExecutor(new HomeCommand());
-        getCommand("delhome").setExecutor(new DeleteHomeCommand());
-        getCommand("tpa").setExecutor(new TeleportCommand());
-        getCommand("tpahere").setExecutor(new TeleportHereCommand());
-        getCommand("tpaccept").setExecutor(new TeleportAcceptCommand());
-        getCommand("tpdeny").setExecutor(new TeleportDenyCommand());
-        getCommand("homes").setExecutor(new HomesCommand());
-        getCommand("allowtnt").setExecutor(new AllowTntCommand());
-        getCommand("listhomes").setExecutor(new ListHomesCommand());
-        getCommand("cowsexplode").setExecutor(new CowsExplodeCommand());
-        getCommand("sheepsmite").setExecutor(new SheepSmiteCommand());
-        getCommand("showconfig").setExecutor(new ShowConfigCommand());
-        getCommand("plots").setExecutor(new PlotsCommand());
-        getCommand("deleteplot").setExecutor(new DeletePlotCommand());
-        getCommand("plot").setExecutor(new PlotCommand());
-        getCommand("grantpermit").setExecutor(new GrantPermitCommand());
-        getCommand("revokepermit").setExecutor(new RevokePermitCommand());
-        getCommand("permits").setExecutor(new PermitsCommand());
-        getCommand("smite").setExecutor(new SmiteCommand());
-        getCommand("enablebilly").setExecutor(new EnableBillyCommand());
-        getCommand("adminplotoverride").setExecutor(new AdminPlotOverride());
-
-        logger.info(ConsoleColours.YELLOW + "Registering autofill");
-        getCommand("namecolour").setTabCompleter(new ColourTabCompleter());
-        getCommand("home").setTabCompleter(new HomesTabCompleter());
-        getCommand("delhome").setTabCompleter(new HomesTabCompleter());
-        getCommand("allowtnt").setTabCompleter(new BooleanTabCompleter());
-        getCommand("cowsexplode").setTabCompleter(new BooleanTabCompleter());
-        getCommand("sheepsmite").setTabCompleter(new BooleanTabCompleter());
-        getCommand("grantpermit").setTabCompleter(new PermitCompleter());
-        getCommand("revokepermit").setTabCompleter(new PermitCompleter());
-        getCommand("permits").setTabCompleter(new PlotCompleter());
-        getCommand("deleteplot").setTabCompleter(new PlotCompleter());
-        getCommand("enablebilly").setTabCompleter(new BooleanTabCompleter());
-        getCommand("adminplotoverride").setTabCompleter(new BooleanTabCompleter());
+        List<AbstractCommand> commands = new ReflectiveInstantiator<AbstractCommand>(SebUtilsCommand.class).getInstances();
+        for (AbstractCommand command : commands) {
+            PluginCommand pCommand = getCommand(command.getCommandName());
+            pCommand.setExecutor(command);
+            if (command.getTabCompleter() != null) pCommand.setTabCompleter(command.getTabCompleter());
+        }
 
         logger.info(ConsoleColours.YELLOW + "Registering listeners");
-        getServer().getPluginManager().registerEvents(new ChatInterceptor(), this);
-        getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
-        getServer().getPluginManager().registerEvents(new PlayerMoveListener(), this);
-        getServer().getPluginManager().registerEvents(new ExplosionListener(), this);
-        getServer().getPluginManager().registerEvents(new AnimalInteractionListener(), this);
-        getServer().getPluginManager().registerEvents(new PlotListener(), this);
-        getServer().getPluginManager().registerEvents(new VillagerInteractionListener(), this);
+        List<Listener> listeners = new ReflectiveInstantiator<Listener>(SebUtilsListener.class).getInstances();
+        for (Listener listener : listeners) {
+            getServer().getPluginManager().registerEvents(listener, this);
+        }
 
         logger.info(ConsoleColours.GREEN + "Ready!");
     }

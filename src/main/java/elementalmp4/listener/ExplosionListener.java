@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 
+@SebUtilsListener
 public class ExplosionListener implements Listener {
 
     @EventHandler

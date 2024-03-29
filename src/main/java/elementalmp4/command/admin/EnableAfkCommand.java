@@ -13,12 +13,13 @@ import org.bukkit.command.TabCompleter;
 import java.util.Set;
 
 @SebUtilsCommand
-public class SheepSmiteCommand extends AbstractCommand {
+public class EnableAfkCommand extends AbstractCommand {
+
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
         if (args.length == 0) {
-            boolean tntEnabled = GlobalConfigService.getAsBoolean(GlobalConfig.SHEEP_SMITE);
-            commandSender.sendMessage("Sheep will currently " + format(tntEnabled));
+            boolean tntEnabled = GlobalConfigService.getAsBoolean(GlobalConfig.AFK_ENABLED);
+            commandSender.sendMessage("AFK is currently " + format(tntEnabled));
             return true;
         }
 
@@ -27,18 +28,18 @@ public class SheepSmiteCommand extends AbstractCommand {
             return true;
         }
 
-        GlobalConfigService.set(GlobalConfig.SHEEP_SMITE, args[0]);
-        commandSender.sendMessage("Sheep will now " + format(Boolean.parseBoolean(args[0])));
+        GlobalConfigService.set(GlobalConfig.AFK_ENABLED, args[0]);
+        commandSender.sendMessage("AFK is now " + format(Boolean.parseBoolean(args[0])));
         return true;
     }
 
     private String format(boolean enabled) {
-        return (enabled ? ChatColor.GREEN + "be smited" : ChatColor.RED + "not be smited");
+        return (enabled ? ChatColor.GREEN + "enabled" : ChatColor.RED + "disabled");
     }
 
     @Override
     public String getCommandName() {
-        return "sheepsmite";
+        return "enableafk";
     }
 
     @Override

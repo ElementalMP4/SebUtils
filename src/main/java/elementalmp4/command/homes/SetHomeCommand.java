@@ -1,13 +1,16 @@
 package main.java.elementalmp4.command.homes;
 
+import main.java.elementalmp4.command.AbstractCommand;
+import main.java.elementalmp4.command.SebUtilsCommand;
 import main.java.elementalmp4.service.HomeService;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-public class SetHomeCommand implements CommandExecutor {
+@SebUtilsCommand
+public class SetHomeCommand extends AbstractCommand {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
@@ -22,4 +25,13 @@ public class SetHomeCommand implements CommandExecutor {
         return true;
     }
 
+    @Override
+    public String getCommandName() {
+        return "sethome";
+    }
+
+    @Override
+    public TabCompleter getTabCompleter() {
+        return null;
+    }
 }

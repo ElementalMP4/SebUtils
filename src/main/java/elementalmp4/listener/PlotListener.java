@@ -20,6 +20,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Optional;
 
+@SebUtilsListener
 public class PlotListener implements Listener {
 
     @EventHandler

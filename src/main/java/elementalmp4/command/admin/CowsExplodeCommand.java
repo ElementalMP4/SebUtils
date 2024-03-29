@@ -1,15 +1,19 @@
 package main.java.elementalmp4.command.admin;
 
 import main.java.elementalmp4.GlobalConfig;
+import main.java.elementalmp4.command.AbstractCommand;
+import main.java.elementalmp4.command.SebUtilsCommand;
+import main.java.elementalmp4.completer.BooleanTabCompleter;
 import main.java.elementalmp4.service.GlobalConfigService;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 
 import java.util.Set;
 
-public class CowsExplodeCommand implements CommandExecutor {
+@SebUtilsCommand
+public class CowsExplodeCommand extends AbstractCommand {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
         if (args.length == 0) {
@@ -30,5 +34,15 @@ public class CowsExplodeCommand implements CommandExecutor {
 
     private String format(boolean enabled) {
         return (enabled ? ChatColor.GREEN + "explode" : ChatColor.RED + "not explode");
+    }
+
+    @Override
+    public String getCommandName() {
+        return "cowsexplode";
+    }
+
+    @Override
+    public TabCompleter getTabCompleter() {
+        return new BooleanTabCompleter();
     }
 }

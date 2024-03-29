@@ -1,16 +1,19 @@
 package main.java.elementalmp4.command.admin;
 
+import main.java.elementalmp4.command.AbstractCommand;
+import main.java.elementalmp4.command.SebUtilsCommand;
 import main.java.elementalmp4.service.GlobalConfigService;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ShowConfigCommand implements CommandExecutor {
+@SebUtilsCommand
+public class ShowConfigCommand extends AbstractCommand {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
         Map<String, String> config = GlobalConfigService.getAllConfig();
@@ -21,5 +24,15 @@ public class ShowConfigCommand implements CommandExecutor {
         }
         commandSender.sendMessage(String.join("\n", out));
         return true;
+    }
+
+    @Override
+    public String getCommandName() {
+        return "showconfig";
+    }
+
+    @Override
+    public TabCompleter getTabCompleter() {
+        return null;
     }
 }

@@ -1,13 +1,16 @@
 package main.java.elementalmp4.command.admin;
 
 import main.java.elementalmp4.SebUtils;
+import main.java.elementalmp4.command.AbstractCommand;
+import main.java.elementalmp4.command.SebUtilsCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-public class SmiteCommand implements CommandExecutor {
+@SebUtilsCommand
+public class SmiteCommand extends AbstractCommand {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
         if (args.length == 0) {
@@ -24,5 +27,15 @@ public class SmiteCommand implements CommandExecutor {
         player.setHealth(0);
         commandSender.sendMessage(ChatColor.YELLOW + player.getName() + ChatColor.RED + " has been smited");
         return true;
+    }
+
+    @Override
+    public String getCommandName() {
+        return "smite";
+    }
+
+    @Override
+    public TabCompleter getTabCompleter() {
+        return null;
     }
 }

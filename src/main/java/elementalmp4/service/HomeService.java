@@ -80,4 +80,18 @@ public class HomeService {
             throw new RuntimeException(e);
         }
     }
+
+    public static List<String> getHomeNames(String username) {
+        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
+            ResultSet rs = stmt.executeQuery("SELECT home_name FROM user_homes WHERE username = '%s';"
+                    .formatted(username));
+            List<String> homes = new ArrayList<>();
+            while (rs.next()) {
+                homes.add(rs.getString("home_name"));
+            }
+            return homes;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

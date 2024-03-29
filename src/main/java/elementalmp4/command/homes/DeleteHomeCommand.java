@@ -1,12 +1,16 @@
 package main.java.elementalmp4.command.homes;
 
+import main.java.elementalmp4.command.AbstractCommand;
+import main.java.elementalmp4.command.SebUtilsCommand;
+import main.java.elementalmp4.completer.HomesTabCompleter;
 import main.java.elementalmp4.service.HomeService;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 
-public class DeleteHomeCommand implements CommandExecutor {
+@SebUtilsCommand
+public class DeleteHomeCommand extends AbstractCommand {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
         String homeName = args.length == 0 ? "default" : args[0];
@@ -17,5 +21,15 @@ public class DeleteHomeCommand implements CommandExecutor {
             commandSender.sendMessage(ChatColor.RED + "You don't have a home by that name, or you haven't set a default home yet!");
         }
         return true;
+    }
+
+    @Override
+    public String getCommandName() {
+        return "delhome";
+    }
+
+    @Override
+    public TabCompleter getTabCompleter() {
+        return new HomesTabCompleter();
     }
 }
