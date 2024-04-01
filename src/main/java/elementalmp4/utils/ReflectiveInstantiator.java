@@ -11,21 +11,27 @@ import java.util.Set;
 
 public class ReflectiveInstantiator<T> {
 
-    private final List<T> instances = new ArrayList<>();
+    private final List<T> instances;
+    private final Reflections reflections;
 
-    public ReflectiveInstantiator(Class<? extends Annotation> annotation) {
-        Reflections reflections = new Reflections("main.java.elementalmp4");
+    public ReflectiveInstantiator(String pkg) {
+        this.reflections = new Reflections(pkg);
+        this.instances = new ArrayList<>();
+    }
+
+    public ReflectiveInstantiator<T> findAnnotatedClasses(Class<? extends Annotation> annotation, Class<T> typeToken) {
         Set<Class<?>> classes = reflections.getTypesAnnotatedWith(annotation);
         for (Class<?> clazz : classes) {
             try {
                 Constructor<?> constructor = clazz.getConstructor();
-                T instance = (T) constructor.newInstance();
+                T instance = typeToken.cast(constructor.newInstance());
                 instances.add(instance);
             } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
                      IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
         }
+        return this;
     }
 
     public List<T> getInstances() {

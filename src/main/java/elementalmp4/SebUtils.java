@@ -52,7 +52,9 @@ public class SebUtils extends JavaPlugin {
         databaseService = new DatabaseService(plugin.getDataFolder().getAbsolutePath());
 
         logger.info(ConsoleColours.YELLOW + "Registering commands");
-        List<AbstractCommand> commands = new ReflectiveInstantiator<AbstractCommand>(SebUtilsCommand.class).getInstances();
+        List<AbstractCommand> commands = new ReflectiveInstantiator<AbstractCommand>("main.java.elementalmp4")
+                .findAnnotatedClasses(SebUtilsCommand.class, AbstractCommand.class)
+                .getInstances();
         for (AbstractCommand command : commands) {
             PluginCommand pCommand = getCommand(command.getCommandName());
             pCommand.setExecutor(command);
@@ -60,7 +62,9 @@ public class SebUtils extends JavaPlugin {
         }
 
         logger.info(ConsoleColours.YELLOW + "Registering listeners");
-        List<Listener> listeners = new ReflectiveInstantiator<Listener>(SebUtilsListener.class).getInstances();
+        List<Listener> listeners = new ReflectiveInstantiator<Listener>("main.java.elementalmp4")
+                .findAnnotatedClasses(SebUtilsListener.class, Listener.class)
+                .getInstances();
         for (Listener listener : listeners) {
             getServer().getPluginManager().registerEvents(listener, this);
         }
