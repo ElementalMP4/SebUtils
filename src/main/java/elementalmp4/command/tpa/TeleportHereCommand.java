@@ -1,7 +1,7 @@
 package main.java.elementalmp4.command.tpa;
 
 import main.java.elementalmp4.command.AbstractCommand;
-import main.java.elementalmp4.command.SebUtilsCommand;
+import main.java.elementalmp4.annotation.SebUtilsCommand;
 import main.java.elementalmp4.service.TeleportService;
 import main.java.elementalmp4.utils.TeleportRequest;
 import org.bukkit.ChatColor;

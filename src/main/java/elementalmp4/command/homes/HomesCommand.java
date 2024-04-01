@@ -1,7 +1,7 @@
 package main.java.elementalmp4.command.homes;
 
 import main.java.elementalmp4.command.AbstractCommand;
-import main.java.elementalmp4.command.SebUtilsCommand;
+import main.java.elementalmp4.annotation.SebUtilsCommand;
 import main.java.elementalmp4.service.HomeService;
 import main.java.elementalmp4.utils.Home;
 import org.bukkit.ChatColor;

@@ -1,6 +1,7 @@
 package main.java.elementalmp4.listener;
 
 import main.java.elementalmp4.GlobalConfig;
+import main.java.elementalmp4.annotation.SebUtilsListener;
 import main.java.elementalmp4.service.GlobalConfigService;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;

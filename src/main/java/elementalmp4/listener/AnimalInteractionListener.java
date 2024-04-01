@@ -1,7 +1,7 @@
 package main.java.elementalmp4.listener;
 
-import main.java.elementalmp4.service.CowExploder;
-import main.java.elementalmp4.service.SheepSmiter;
+import main.java.elementalmp4.annotation.SebUtilsListener;
+import main.java.elementalmp4.service.SillyGoofyService;
 import org.bukkit.Material;
 import org.bukkit.entity.Cow;
 import org.bukkit.entity.Entity;
@@ -23,13 +23,13 @@ public class AnimalInteractionListener implements Listener {
             return;
         if (!(player.getInventory().getItemInMainHand().getType().equals(Material.BUCKET)))
             return;
-        CowExploder.tryExplodeCow(e);
+        SillyGoofyService.tryExplodeCow(e);
     }
 
     @EventHandler
     public void playerShearEvent(PlayerShearEntityEvent e) {
         if (e.getEntity() instanceof Sheep) {
-            SheepSmiter.trySmiteSheep(e);
+            SillyGoofyService.trySmiteSheep(e);
         }
     }
 

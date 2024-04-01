@@ -2,7 +2,7 @@ package main.java.elementalmp4.command.plots;
 
 import main.java.elementalmp4.SebUtils;
 import main.java.elementalmp4.command.AbstractCommand;
-import main.java.elementalmp4.command.SebUtilsCommand;
+import main.java.elementalmp4.annotation.SebUtilsCommand;
 import main.java.elementalmp4.completer.PermitCompleter;
 import main.java.elementalmp4.service.PermitService;
 import main.java.elementalmp4.service.PlotService;

@@ -1,8 +1,8 @@
 package main.java.elementalmp4;
 
 import main.java.elementalmp4.command.AbstractCommand;
-import main.java.elementalmp4.command.SebUtilsCommand;
-import main.java.elementalmp4.listener.SebUtilsListener;
+import main.java.elementalmp4.annotation.SebUtilsCommand;
+import main.java.elementalmp4.annotation.SebUtilsListener;
 import main.java.elementalmp4.service.DatabaseService;
 import main.java.elementalmp4.utils.ConsoleColours;
 import main.java.elementalmp4.utils.ReflectiveInstantiator;

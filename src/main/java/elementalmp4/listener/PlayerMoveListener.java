@@ -1,5 +1,6 @@
 package main.java.elementalmp4.listener;
 
+import main.java.elementalmp4.annotation.SebUtilsListener;
 import main.java.elementalmp4.service.AfkService;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

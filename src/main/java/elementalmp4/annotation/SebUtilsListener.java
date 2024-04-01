@@ -1,4 +1,4 @@
-package main.java.elementalmp4.listener;
+package main.java.elementalmp4.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
