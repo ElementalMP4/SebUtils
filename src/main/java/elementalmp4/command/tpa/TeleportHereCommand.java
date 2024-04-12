@@ -4,6 +4,7 @@ import main.java.elementalmp4.command.AbstractCommand;
 import main.java.elementalmp4.annotation.SebUtilsCommand;
 import main.java.elementalmp4.service.TeleportService;
 import main.java.elementalmp4.utils.TeleportRequest;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -21,13 +22,15 @@ public class TeleportHereCommand extends AbstractCommand {
         Player player = playerOpt.get();
 
         commandSender.sendMessage(ChatColor.YELLOW + "Teleport request sent to " + ChatColor.RED + player.getName());
-        player.sendMessage(
-                ChatColor.GOLD + commandSender.getName()
-                        + ChatColor.RED + " would like to teleport to you to their location. Accept with "
-                        + ChatColor.GOLD + "/tpaccept "
-                        + ChatColor.RED + "or deny with "
-                        + ChatColor.GOLD + "/tpdeny "
-                        + ChatColor.RED + " - This request will expire in 60 seconds");
+        TextComponent message = new TextComponent();
+        message.addExtra(ChatColor.DARK_BLUE + "=====================================================");
+        message.addExtra(ChatColor.YELLOW + commandSender.getName() + ChatColor.WHITE + " has requested to teleport you to their location\n\n ");
+        message.addExtra(TeleportService.ACCEPT_COMPONENT);
+        message.addExtra(ChatColor.WHITE + "          ");
+        message.addExtra(TeleportService.DENY_COMPONENT);
+        message.addExtra(ChatColor.DARK_BLUE + "\n=====================================================");
+
+        player.spigot().sendMessage(message);
         TeleportService.createNewTeleportRequest(new TeleportRequest(player, ((Player) commandSender), player.getName()));
         return true;
     }

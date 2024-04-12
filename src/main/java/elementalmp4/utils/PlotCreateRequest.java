@@ -1,5 +1,8 @@
 package main.java.elementalmp4.utils;
 
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+
 public class PlotCreateRequest extends TimedRequest {
 
     private final int x_a;
@@ -7,10 +10,10 @@ public class PlotCreateRequest extends TimedRequest {
     private int x_b;
     private int y_b;
 
-    private final String owner;
+    private final Player owner;
     private final String world;
 
-    public PlotCreateRequest(String owner, String world, int x_a, int y_a) {
+    public PlotCreateRequest(Player owner, String world, int x_a, int y_a) {
         super(120000);
         this.x_a = x_a;
         this.y_a = y_a;
@@ -28,8 +31,8 @@ public class PlotCreateRequest extends TimedRequest {
         return x_a != x_b && y_a != y_b;
     }
 
-    public String getPlayer() {
-        return this.owner;
+    public String getPlayerName() {
+        return this.owner.getName();
     }
 
     public String getWorld() {
@@ -52,4 +55,8 @@ public class PlotCreateRequest extends TimedRequest {
         return y_b;
     }
 
+    @Override
+    public void whenExpired() {
+        this.owner.sendMessage(ChatColor.RED + "Plot creation request expired");
+    }
 }

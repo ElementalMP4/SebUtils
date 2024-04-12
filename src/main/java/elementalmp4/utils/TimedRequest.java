@@ -9,7 +9,11 @@ public abstract class TimedRequest {
     }
 
     public boolean expired() {
-        return expiryTime < System.currentTimeMillis();
+        boolean expired = expiryTime < System.currentTimeMillis();
+        if (expired) whenExpired();
+        return expired;
     }
+
+    public abstract void whenExpired();
 
 }

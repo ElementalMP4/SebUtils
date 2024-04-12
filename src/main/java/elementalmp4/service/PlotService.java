@@ -88,7 +88,7 @@ public class PlotService {
                 .map(PlotService.requests::get)
                 .filter(PlotCreateRequest::expired).toList();
         for (PlotCreateRequest t : expired) {
-            requests.remove(t.getPlayer());
+            requests.remove(t.getPlayerName());
         }
     }
 
@@ -152,7 +152,7 @@ public class PlotService {
             int x = e.getClickedBlock().getX();
             int y = e.getClickedBlock().getZ();
             requests.put(e.getPlayer().getName(), new PlotCreateRequest(
-                    e.getPlayer().getName(),
+                    e.getPlayer(),
                     e.getPlayer().getWorld().getName(),
                     x, y
             ));
@@ -170,7 +170,7 @@ public class PlotService {
         );
 
         for (List<Integer> permutation : permutations) {
-            Optional<Plot> blockOwner = blockIsOwnedBySomeoneElse(r.getPlayer(), permutation.get(0), permutation.get(1), r.getWorld());
+            Optional<Plot> blockOwner = blockIsOwnedBySomeoneElse(r.getPlayerName(), permutation.get(0), permutation.get(1), r.getWorld());
             if (blockOwner.isPresent()) {
                 p.sendMessage(ChatColor.RED + "Your plot overlaps " + ChatColor.GOLD
                         + blockOwner.get().getOwner() + ChatColor.RED + "'s plot");
@@ -204,7 +204,7 @@ public class PlotService {
     private static void createPlot(PlotCreateRequest r) {
         try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
             stmt.executeUpdate("INSERT INTO block_locker (owner, world, bound_x_a, bound_y_a, bound_x_b, bound_y_b) VALUES ('%s', '%s', %d, %d, %d, %d)"
-                    .formatted(r.getPlayer(), r.getWorld(), r.getXA(), r.getYA(), r.getXB(), r.getYB()));
+                    .formatted(r.getPlayerName(), r.getWorld(), r.getXA(), r.getYA(), r.getXB(), r.getYB()));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

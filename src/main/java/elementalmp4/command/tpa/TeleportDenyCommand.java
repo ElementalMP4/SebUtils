@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 
 @SebUtilsCommand
 public class TeleportDenyCommand extends AbstractCommand {
@@ -16,7 +17,7 @@ public class TeleportDenyCommand extends AbstractCommand {
             commandSender.sendMessage(ChatColor.RED + "You do not have any pending requests to deny");
             return true;
         }
-        TeleportService.denyTeleport(commandSender.getName());
+        TeleportService.denyTeleport((Player) commandSender);
         return true;
     }
 

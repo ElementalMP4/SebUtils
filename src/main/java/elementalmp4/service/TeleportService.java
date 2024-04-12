@@ -2,8 +2,11 @@ package main.java.elementalmp4.service;
 
 import main.java.elementalmp4.SebUtils;
 import main.java.elementalmp4.utils.TeleportRequest;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
-import org.bukkit.Effect;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -16,6 +19,17 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class TeleportService {
+
+    public static final TextComponent ACCEPT_COMPONENT = new TextComponent("" + ChatColor.GREEN + ChatColor.BOLD + "[ACCEPT]" + ChatColor.RESET);
+    public static final TextComponent DENY_COMPONENT = new TextComponent("" + ChatColor.RED + ChatColor.BOLD + "[DENY]" + ChatColor.RESET);
+
+    static {
+        ACCEPT_COMPONENT.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpaccept"));
+        DENY_COMPONENT.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpdeny"));
+
+        ACCEPT_COMPONENT.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to accept").create()));
+        DENY_COMPONENT.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to deny").create()));
+    }
 
     private static final List<TeleportRequest> requests = new ArrayList<>();
 
@@ -46,9 +60,10 @@ public class TeleportService {
         requests.remove(tr);
     }
 
-    public static void denyTeleport(String name) {
-        TeleportRequest tr = requests.stream().filter(t -> t.getAuthority().equals(name)).findFirst().orElse(null);
+    public static void denyTeleport(Player player) {
+        TeleportRequest tr = requests.stream().filter(t -> t.getAuthority().equals(player.getName())).findFirst().orElse(null);
         assert tr != null;
+        tr.deny(player);
         requests.remove(tr);
     }
 
@@ -84,6 +99,5 @@ public class TeleportService {
 
     public static void playTeleportEffects(Player player) {
         player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 10, 1);
-        player.playEffect(player.getLocation(), Effect.ENDER_SIGNAL, 5);
     }
 }
