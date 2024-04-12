@@ -21,8 +21,8 @@ public class TeleportRequest extends TimedRequest {
         player.teleport(target);
         TeleportService.playTeleportEffects(player);
         TeleportService.playTeleportEffects(target);
-        player.sendMessage("Teleported " + ChatColor.YELLOW + player.getName() + ChatColor.GREEN + " to " + ChatColor.YELLOW + target.getName());
-        target.sendMessage("Teleported " + ChatColor.YELLOW + player.getName() + ChatColor.GREEN + " to " + ChatColor.YELLOW + target.getName());
+        player.sendMessage(ChatColor.GREEN + "Teleported " + ChatColor.YELLOW + player.getName() + ChatColor.GREEN + " to " + ChatColor.YELLOW + target.getName());
+        target.sendMessage(ChatColor.GREEN + "Teleported " + ChatColor.YELLOW + player.getName() + ChatColor.GREEN + " to " + ChatColor.YELLOW + target.getName());
     }
 
     public void deny(Player denier) {
