@@ -8,7 +8,8 @@ public enum GlobalConfig {
     BILLY_ENABLED("billy_enabled", "false"),
     ADMIN_PLOT_OVERRIDE("admin_plot_override", "true"),
     PLOT_MAX_SIZE("plot_max_size", "10000"),
-    AFK_ENABLED("afk_enabled", "true");
+    AFK_ENABLED("afk_enabled", "true"),
+    GRAVES_ENABLED("graves_enabled", "true");
 
     private final String key;
     private final String defaultValue;

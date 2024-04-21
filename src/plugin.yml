@@ -21,7 +21,18 @@ permissions:
   sebutils.plots:
     description: "Allows players to create and delete plots"
     default: true
+  sebutils.graves:
+    description: "Allows players to use grave commands"
+    default: true
 commands:
+  listgraves:
+    description: "Show your uncollected graves"
+    usage: "/listgraves"
+    permission: "sebutils.graves"
+  tpgrave:
+    description: "Teleport to a grave"
+    usage: "/tpgrave"
+    permission: "sebutils.graves"
   sethome:
     description: "Sets your home to the current location"
     usage: "/sethome"
