@@ -5,6 +5,7 @@ import main.java.elementalmp4.annotation.SebUtilsListener;
 import main.java.elementalmp4.service.GlobalConfigService;
 import main.java.elementalmp4.service.PermitService;
 import main.java.elementalmp4.service.PlotService;
+import main.java.elementalmp4.service.PortalService;
 import main.java.elementalmp4.utils.Plot;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -22,7 +23,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Optional;
 
 @SebUtilsListener
-public class PlotListener implements Listener {
+public class InteractionListener implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e) {
@@ -104,9 +105,11 @@ public class PlotListener implements Listener {
         if (!e.getPlayer().hasPermission("sebutils.plots")) return;
         if (e.getAction().toString().contains("RIGHT_CLICK")) {
             ItemStack item = e.getItem();
-            if (item != null && item.getType() == Material.IRON_NUGGET) {
-                if (e.getClickedBlock() != null && e.getClickedBlock().getType() != Material.AIR) {
+            if (item != null && e.getClickedBlock() != null && e.getClickedBlock().getType() != Material.AIR) {
+                if (item.getType() == Material.IRON_NUGGET) {
                     PlotService.handleIronNuggetClick(e);
+                } else if (item.getType() == Material.BLAZE_ROD) {
+                    PortalService.handleBlazeRodClick(e);
                 }
             }
         }
