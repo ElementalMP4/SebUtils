@@ -1,8 +1,8 @@
 package main.java.elementalmp4.command.admin;
 
 import main.java.elementalmp4.SebUtils;
-import main.java.elementalmp4.command.AbstractCommand;
 import main.java.elementalmp4.annotation.SebUtilsCommand;
+import main.java.elementalmp4.command.AbstractCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

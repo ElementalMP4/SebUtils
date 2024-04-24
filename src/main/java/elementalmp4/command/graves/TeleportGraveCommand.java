@@ -2,6 +2,7 @@ package main.java.elementalmp4.command.graves;
 
 import main.java.elementalmp4.annotation.SebUtilsCommand;
 import main.java.elementalmp4.command.AbstractCommand;
+import main.java.elementalmp4.completer.GraveCompleter;
 import main.java.elementalmp4.service.GraveService;
 import main.java.elementalmp4.utils.Grave;
 import org.bukkit.ChatColor;
@@ -21,7 +22,7 @@ public class TeleportGraveCommand extends AbstractCommand {
 
     @Override
     public TabCompleter getTabCompleter() {
-        return null;
+        return new GraveCompleter();
     }
 
     @Override

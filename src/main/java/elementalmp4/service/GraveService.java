@@ -65,4 +65,18 @@ public class GraveService {
             throw new RuntimeException(e);
         }
     }
+
+    public static List<String> getGraveIds(String name) {
+        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
+            ResultSet rs = stmt.executeQuery("SELECT grave_id FROM graves WHERE grave_owner = '%s';"
+                    .formatted(name));
+            List<String> graves = new ArrayList<>();
+            while (rs.next()) {
+                graves.add(rs.getString("grave_id"));
+            }
+            return graves;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
