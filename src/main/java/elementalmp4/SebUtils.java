@@ -74,7 +74,8 @@ public class SebUtils extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        logger.info("Stopped.");
+        logger.info(ConsoleColours.YELLOW + "Closing Database");
         databaseService.close();
+        logger.info(ConsoleColours.YELLOW + "Finished! SebUtils has shut down.");
     }
 }

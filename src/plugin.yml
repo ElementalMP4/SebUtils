@@ -1,7 +1,7 @@
 api-version: "1.20"
 name: SebUtils
 author: ElementalMP4
-version: '1.5.1'
+version: '1.5.2'
 main: main.java.elementalmp4.SebUtils
 description: Useful stuff, brought to you by Seb
 prefix: SebUtils
@@ -21,7 +21,18 @@ permissions:
   sebutils.plots:
     description: "Allows players to create and delete plots"
     default: true
+  sebutils.graves:
+    description: "Allows players to use grave commands"
+    default: true
 commands:
+  listgraves:
+    description: "Show your uncollected graves"
+    usage: "/listgraves"
+    permission: "sebutils.graves"
+  tpgrave:
+    description: "Teleport to a grave"
+    usage: "/tpgrave"
+    permission: "sebutils.graves"
   sethome:
     description: "Sets your home to the current location"
     usage: "/sethome"
@@ -103,6 +114,10 @@ commands:
   enableafk:
     description: "Enable or disable automatic AFK messages"
     usage: "/enableafk [true/false]"
+    permission: "sebutils.admin"
+  enablegraves:
+    description: "Enable or disable player graves"
+    usage: "/enablegraves [true/false]"
     permission: "sebutils.admin"
   showconfig:
     description: "Shows the plugin configuration"
