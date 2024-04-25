@@ -3,13 +3,11 @@ package main.java.elementalmp4.listener;
 import main.java.elementalmp4.GlobalConfig;
 import main.java.elementalmp4.annotation.SebUtilsListener;
 import main.java.elementalmp4.service.GlobalConfigService;
+import main.java.elementalmp4.service.PlotService;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
-import org.bukkit.entity.Creeper;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Firework;
-import org.bukkit.entity.Sheep;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
@@ -23,7 +21,8 @@ public class ExplosionListener implements Listener {
 
     @EventHandler
     public void onEntityExplodeEvent(ExplosionPrimeEvent e) {
-        if (tntDisabled()) {
+        Location l = e.getEntity().getLocation();
+        if (tntDisabled() || blockIsInPlot(l)) {
             if (e.getEntityType().equals(EntityType.PRIMED_TNT)) {
                 spawnFireworks(e.getEntity().getLocation(), 10, 10);
                 e.setCancelled(true);
@@ -31,19 +30,30 @@ public class ExplosionListener implements Listener {
                 spawnFireworks(e.getEntity().getLocation(), 6, 5);
                 ((Creeper) e.getEntity()).setHealth(0);
                 e.setCancelled(true);
+            } else if (e.getEntityType().equals(EntityType.FIREBALL)) {
+                ((Fireball) e).setIsIncendiary(false);
+                e.setCancelled(true);
+            } else if (e.getEntityType().equals(EntityType.SMALL_FIREBALL)) {
+                ((SmallFireball) e).setIsIncendiary(false);
+                e.setCancelled(true);
             }
         }
     }
 
     @EventHandler
     public void onVehicleCreate(VehicleCreateEvent event) {
-        if (tntDisabled() && event.getVehicle().getType().equals(EntityType.MINECART_TNT)) {
+        Location l = event.getVehicle().getLocation();
+        if ((tntDisabled() || blockIsInPlot(l)) && event.getVehicle().getType().equals(EntityType.MINECART_TNT)) {
             event.setCancelled(true);
         }
     }
 
     private boolean tntDisabled() {
         return !GlobalConfigService.getAsBoolean(GlobalConfig.TNT_EXPLODES);
+    }
+
+    private boolean blockIsInPlot(Location l) {
+        return PlotService.blockIsOwned(l.getBlockX(), l.getBlockY(), l.getWorld().getName()).isPresent();
     }
 
     private void spawnFireworks(Location location, int amount, int power) {
