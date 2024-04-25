@@ -11,6 +11,8 @@ import java.util.Map;
 
 public class GlobalConfigService {
 
+    private static final Map<String, String> CACHE = new LinkedHashMap<>();
+
     static {
         for (GlobalConfig config : GlobalConfig.values()) {
             try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
@@ -18,6 +20,9 @@ public class GlobalConfigService {
                         .formatted(config.getKey()));
                 if (!rs.next()) {
                     stmt.executeUpdate("INSERT INTO global_config VALUES ('%s', '%s');".formatted(config.getKey(), config.getDefaultValue()));
+                    CACHE.put(config.getKey(), config.getDefaultValue());
+                } else {
+                    CACHE.put(config.getKey(), rs.getString("config_value"));
                 }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -26,30 +31,11 @@ public class GlobalConfigService {
     }
 
     public static String getValue(GlobalConfig config) {
-        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
-            ResultSet rs = stmt.executeQuery("SELECT config_value FROM global_config WHERE config_item = '%s';"
-                    .formatted(config.getKey()));
-            if (rs.next()) {
-                return rs.getString("config_value");
-            } else {
-                return config.getDefaultValue();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        return CACHE.get(config.getKey());
     }
 
     public static Map<String, String> getAllConfig() {
-        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
-            Map<String, String> config = new LinkedHashMap<>();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM global_config;");
-            while (rs.next()) {
-                config.put(rs.getString("config_item"), rs.getString("config_value"));
-            }
-            return config;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        return CACHE;
     }
 
     public static boolean getAsBoolean(GlobalConfig config) {
@@ -63,6 +49,7 @@ public class GlobalConfigService {
     public static void set(GlobalConfig config, String value) {
         try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
             stmt.executeUpdate("UPDATE global_config SET config_value = '%s' WHERE config_item = '%s'".formatted(value, config.getKey()));
+            CACHE.put(config.getKey(), value);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

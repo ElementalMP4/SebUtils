@@ -1,5 +1,6 @@
 package main.java.elementalmp4.command.admin;
 
+import main.java.elementalmp4.GlobalConfig;
 import main.java.elementalmp4.annotation.SebUtilsCommand;
 import main.java.elementalmp4.command.AbstractCommand;
 import main.java.elementalmp4.service.GlobalConfigService;
@@ -19,8 +20,8 @@ public class ShowConfigCommand extends AbstractCommand {
         Map<String, String> config = GlobalConfigService.getAllConfig();
         List<String> out = new ArrayList<>();
         out.add(ChatColor.RED + "SebUtils Config");
-        for (String key : config.keySet()) {
-            out.add(ChatColor.AQUA + key + ChatColor.RESET + " - " + ChatColor.YELLOW + config.get(key));
+        for (GlobalConfig configItem : GlobalConfig.values()) {
+            out.add(ChatColor.AQUA + configItem.getDisplayName() + ChatColor.RESET + " - " + ChatColor.YELLOW + config.get(configItem.getKey()));
         }
         commandSender.sendMessage(String.join("\n", out));
         return true;
