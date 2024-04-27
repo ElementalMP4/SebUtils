@@ -30,12 +30,6 @@ public class ExplosionListener implements Listener {
                 spawnFireworks(e.getEntity().getLocation(), 6, 5);
                 ((Creeper) e.getEntity()).setHealth(0);
                 e.setCancelled(true);
-            } else if (e.getEntityType().equals(EntityType.FIREBALL)) {
-                ((Fireball) e).setIsIncendiary(false);
-                e.setCancelled(true);
-            } else if (e.getEntityType().equals(EntityType.SMALL_FIREBALL)) {
-                ((SmallFireball) e).setIsIncendiary(false);
-                e.setCancelled(true);
             }
         }
     }

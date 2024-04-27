@@ -1,5 +1,9 @@
 package main.java.elementalmp4.utils;
 
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 
 public class Home {
@@ -23,9 +27,18 @@ public class Home {
         return this.name;
     }
 
-    @Override
-    public String toString() {
-        return ChatColor.YELLOW + this.name + ": " + ChatColor.GREEN + this.x + " " + this.y + " " + this.z + " " + ChatColor.AQUA + this.dimension;
+    public TextComponent toChatComponent(boolean isAdmin) {
+        TextComponent message = new TextComponent();
+
+        TextComponent teleportComponent = new TextComponent("" + ChatColor.YELLOW  + ChatColor.BOLD + name + ": " + ChatColor.RESET);
+        teleportComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to teleport!").create()));
+
+        if (isAdmin) teleportComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tp " + x + " " + y + " " + z));
+        else teleportComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/home " + name));
+
+        message.addExtra(teleportComponent);
+        message.addExtra("" + ChatColor.GREEN + x + " " + y + " " + z + " " + ChatColor.AQUA + dimension);
+        return message;
     }
 
 }

@@ -1,7 +1,7 @@
 api-version: "1.20"
 name: SebUtils
 author: ElementalMP4
-version: '1.5.2'
+version: '1.6.0'
 main: main.java.elementalmp4.SebUtils
 description: Useful stuff, brought to you by Seb
 prefix: SebUtils
