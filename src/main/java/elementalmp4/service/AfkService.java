@@ -2,6 +2,7 @@ package main.java.elementalmp4.service;
 
 import main.java.elementalmp4.GlobalConfig;
 import main.java.elementalmp4.utils.AfkStatus;
+import main.java.elementalmp4.utils.NamedThreadFactory;
 
 import java.util.HashMap;
 import java.util.concurrent.Executors;
@@ -14,7 +15,7 @@ public class AfkService {
 
     static {
         if (GlobalConfigService.getAsBoolean(GlobalConfig.AFK_ENABLED)) {
-            ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+            ScheduledExecutorService executor = Executors.newScheduledThreadPool(1, new NamedThreadFactory("afk"));
             executor.scheduleAtFixedRate(AfkService::checkForAfk, 0, 5, TimeUnit.SECONDS);
         }
     }

@@ -2,6 +2,7 @@ package main.java.elementalmp4.service;
 
 import main.java.elementalmp4.GlobalConfig;
 import main.java.elementalmp4.SebUtils;
+import main.java.elementalmp4.utils.NamedThreadFactory;
 import main.java.elementalmp4.utils.Plot;
 import main.java.elementalmp4.utils.PlotCreateRequest;
 import org.bukkit.ChatColor;
@@ -79,7 +80,7 @@ public class PlotService {
     private static final Map<String, PlotCreateRequest> requests = new HashMap<>();
 
     static {
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1, new NamedThreadFactory("plotreq"));
         executor.scheduleAtFixedRate(PlotService::expireRequests, 0, 1, TimeUnit.SECONDS);
     }
 

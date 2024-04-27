@@ -1,6 +1,7 @@
 package main.java.elementalmp4.service;
 
 import main.java.elementalmp4.SebUtils;
+import main.java.elementalmp4.utils.NamedThreadFactory;
 import main.java.elementalmp4.utils.TeleportRequest;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -34,7 +35,7 @@ public class TeleportService {
     private static final List<TeleportRequest> requests = new ArrayList<>();
 
     static {
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1, new NamedThreadFactory("tp"));
         executor.scheduleAtFixedRate(TeleportService::expireRequests, 0, 1, TimeUnit.SECONDS);
     }
 
