@@ -3,7 +3,7 @@ package main.java.elementalmp4.utils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class PlotCreateRequest extends TimedRequest {
+public class PlotCreateRequest extends EphemeralObject {
 
     private final int x_a;
     private final int y_a;

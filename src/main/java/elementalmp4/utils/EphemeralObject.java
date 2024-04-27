@@ -1,10 +1,10 @@
 package main.java.elementalmp4.utils;
 
-public abstract class TimedRequest {
+public abstract class EphemeralObject {
 
     long expiryTime;
 
-    TimedRequest(long lifespan) {
+    EphemeralObject(long lifespan) {
         this.expiryTime = System.currentTimeMillis() + lifespan;
     }
 

@@ -13,14 +13,13 @@ public class PlayerJoinListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        if (!NicknameService.userConfigExists(event.getPlayer().getName())) {
-            NicknameService.addUser(event.getPlayer().getName());
-        }
+        NicknameService.cacheProfile(event.getPlayer().getName());
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         AfkService.removeUser(event.getPlayer().getName());
+        NicknameService.removeProfileCache(event.getPlayer().getName());
     }
 
 }

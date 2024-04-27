@@ -2,6 +2,7 @@ package main.java.elementalmp4.service;
 
 import main.java.elementalmp4.SebUtils;
 import main.java.elementalmp4.utils.ConsoleColours;
+import main.java.elementalmp4.utils.Profile;
 import org.bukkit.ChatColor;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
@@ -17,6 +18,7 @@ public class NicknameService {
 
     private static final Map<String, String> COLOURS = new HashMap<>();
     private static final List<String> RAINBOW_ORDER = List.of("red", "orange", "yellow", "green", "blue", "purple", "pink");
+    private static final Map<String, Profile> PROFILE_CACHE = new HashMap<>();
 
     static {
         COLOURS.put("black", "0");
@@ -55,6 +57,27 @@ public class NicknameService {
         event.setFormat(modifiedPlayerName + ": %2$s");
     }
 
+    public static void cacheProfile(String playerName) {
+        Profile defaultProfile = new Profile(playerName, ChatColor.WHITE.toString());
+        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
+            ResultSet rs = stmt.executeQuery("SELECT nickname, colourName FROM chat_customisation WHERE username = '%s'".formatted(playerName));
+            if (rs.next()) {
+                Profile p = new Profile(rs.getString("nickname"), rs.getString("colourname"));
+                PROFILE_CACHE.put(playerName, p);
+            } else {
+                PROFILE_CACHE.put(playerName, defaultProfile);
+                addUser(playerName);
+            }
+        } catch (SQLException e) {
+            PROFILE_CACHE.put(playerName, defaultProfile);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void removeProfileCache(String playerName) {
+        PROFILE_CACHE.remove(playerName);
+    }
+
     private static String applyColour(String userColour, String nickname) {
         if (userColour.equals("rainbow")) {
             StringBuilder rainbowNameBuilder = new StringBuilder();
@@ -71,32 +94,17 @@ public class NicknameService {
     }
 
     private static String getUserNickname(String playerName) {
-        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
-            ResultSet rs = stmt.executeQuery("SELECT nickname FROM chat_customisation WHERE username = '%s'".formatted(playerName));
-            while (rs.next()) {
-                return rs.getString("nickname");
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return playerName;
+        return PROFILE_CACHE.get(playerName).getNickname();
     }
 
     private static String getUserColour(String playerName) {
-        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
-            ResultSet rs = stmt.executeQuery("SELECT colourName FROM chat_customisation WHERE username = '%s'".formatted(playerName));
-            while (rs.next()) {
-                return rs.getString("colourName");
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return ChatColor.WHITE.toString();
+       return PROFILE_CACHE.get(playerName).getColourName();
     }
 
     public static void updateNickname(String name, String nickname) {
         try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
             stmt.executeUpdate("UPDATE chat_customisation SET nickname = '%s' WHERE username = '%s';".formatted(nickname, name));
+            PROFILE_CACHE.get(name).setNickname(nickname);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -111,19 +119,10 @@ public class NicknameService {
         }
     }
 
-    public static boolean userConfigExists(String username) {
-        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
-            ResultSet rs = stmt.executeQuery("SELECT username FROM chat_customisation WHERE username = '%s';"
-                    .formatted(username));
-            return rs.isBeforeFirst();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public static void updateColour(String name, String colour) {
         try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
             stmt.executeUpdate("UPDATE chat_customisation SET colourName = '%s' WHERE username = '%s';".formatted(colour, name));
+            PROFILE_CACHE.get(name).setColourName(colour);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

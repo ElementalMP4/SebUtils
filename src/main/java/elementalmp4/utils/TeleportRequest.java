@@ -4,7 +4,7 @@ import main.java.elementalmp4.service.TeleportService;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class TeleportRequest extends TimedRequest {
+public class TeleportRequest extends EphemeralObject {
 
     private final Player player;
     private final Player target;
