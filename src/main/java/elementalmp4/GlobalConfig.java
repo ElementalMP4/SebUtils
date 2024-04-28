@@ -7,7 +7,7 @@ public enum GlobalConfig {
     SHEEP_SMITE("Sheep smite when sheared", "sheep_smite", "false"),
     BILLY_ENABLED("Billy shop enabled", "billy_enabled", "false"),
     ADMIN_PLOT_OVERRIDE("Admins override plot permissions", "admin_plot_override", "true"),
-    PLOT_MAX_SIZE("Maxmimum plot area per user", "plot_max_size", "10000"),
+    PLOT_MAX_SIZE("Maximum plot area per user", "plot_max_size", "10000"),
     AFK_ENABLED( "Auto AFK enabled", "afk_enabled", "true"),
     GRAVES_ENABLED("Graves enabled", "graves_enabled", "true");
 
