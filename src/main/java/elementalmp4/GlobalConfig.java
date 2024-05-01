@@ -2,23 +2,28 @@ package main.java.elementalmp4;
 
 public enum GlobalConfig {
 
-    TNT_EXPLODES("Explosions enabled", "tnt_enabled", "true"),
-    COWS_EXPLODE("Cows explode when milked", "cows_explode", "false"),
-    SHEEP_SMITE("Sheep smite when sheared", "sheep_smite", "false"),
-    BILLY_ENABLED("Billy shop enabled", "billy_enabled", "false"),
-    ADMIN_PLOT_OVERRIDE("Admins override plot permissions", "admin_plot_override", "true"),
-    PLOT_MAX_SIZE("Maximum plot area per user", "plot_max_size", "10000"),
-    AFK_ENABLED( "Auto AFK enabled", "afk_enabled", "true"),
-    GRAVES_ENABLED("Graves enabled", "graves_enabled", "true");
+    TNT_EXPLODES("Explosions enabled", "tnt_enabled", "true", true),
+    COWS_EXPLODE("Cows explode when milked", "cows_explode", "false", true),
+    SHEEP_SMITE("Sheep smite when sheared", "sheep_smite", "false", true),
+    BILLY_ENABLED("Billy shop enabled", "billy_enabled", "false", true),
+    ADMIN_PLOT_OVERRIDE("Admins override plot permissions", "admin_plot_override", "true", true),
+    PLOT_MAX_SIZE("Maximum plot area per user", "plot_max_size", "10000", true),
+    AFK_ENABLED( "Auto AFK enabled", "afk_enabled", "true", true),
+    GRAVES_ENABLED("Graves enabled", "graves_enabled", "true", true),
+    DISCORD_TOKEN("Discord token", "discord_token", "Not set", false),
+    DISCORD_CHANNEL("Discord Channel", "discord_channel", "Not set", false),
+    DISCORD_ENABLED("Discord Integration Enabled", "discord_enabled", "false", true);
 
     private final String key;
     private final String defaultValue;
     private final String displayName;
+    private final boolean visible;
 
-    GlobalConfig(String displayName, String key, String defaultValue) {
+    GlobalConfig(String displayName, String key, String defaultValue, boolean visible) {
         this.displayName = displayName;
         this.key = key;
         this.defaultValue = defaultValue;
+        this.visible = visible;
     }
 
     public String getKey() {
@@ -31,6 +36,10 @@ public enum GlobalConfig {
 
     public String getDisplayName() {
         return this.displayName;
+    }
+
+    public boolean isVisible() {
+        return this.visible;
     }
 
 }

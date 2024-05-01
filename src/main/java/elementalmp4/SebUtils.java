@@ -4,6 +4,8 @@ import main.java.elementalmp4.command.AbstractCommand;
 import main.java.elementalmp4.annotation.SebUtilsCommand;
 import main.java.elementalmp4.annotation.SebUtilsListener;
 import main.java.elementalmp4.service.DatabaseService;
+import main.java.elementalmp4.service.DiscordService;
+import main.java.elementalmp4.service.GlobalConfigService;
 import main.java.elementalmp4.utils.ConsoleColours;
 import main.java.elementalmp4.utils.ReflectiveInstantiator;
 import org.bukkit.command.PluginCommand;
@@ -51,6 +53,9 @@ public class SebUtils extends JavaPlugin {
         logger.info(ConsoleColours.YELLOW + "Initialising H2");
         databaseService = new DatabaseService(plugin.getDataFolder().getAbsolutePath());
 
+        logger.info(ConsoleColours.YELLOW + "Initialising Global Config");
+        GlobalConfigService.initialiseGlobalConfig();
+
         logger.info(ConsoleColours.YELLOW + "Registering commands");
         List<AbstractCommand> commands = new ReflectiveInstantiator<AbstractCommand>("main.java.elementalmp4")
                 .findAnnotatedClasses(SebUtilsCommand.class, AbstractCommand.class)
@@ -69,11 +74,17 @@ public class SebUtils extends JavaPlugin {
             getServer().getPluginManager().registerEvents(listener, this);
         }
 
+        boolean discord = DiscordService.connectDiscordOnBoot();
+        if (discord) logger.info(ConsoleColours.YELLOW + "Connected to Discord");
+        else logger.info(ConsoleColours.YELLOW + "Not connecting to Discord");
+
+
         logger.info(ConsoleColours.GREEN + "Ready!");
     }
 
     @Override
     public void onDisable() {
+        DiscordService.close(true);
         logger.info("Stopped.");
         databaseService.close();
     }

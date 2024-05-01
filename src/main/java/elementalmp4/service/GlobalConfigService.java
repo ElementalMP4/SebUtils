@@ -13,7 +13,7 @@ public class GlobalConfigService {
 
     private static final Map<String, String> CACHE = new LinkedHashMap<>();
 
-    static {
+    public static void initialiseGlobalConfig() {
         for (GlobalConfig config : GlobalConfig.values()) {
             try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
                 ResultSet rs = stmt.executeQuery("SELECT config_value FROM global_config WHERE config_item = '%s';"
