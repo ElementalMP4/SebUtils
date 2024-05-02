@@ -5,7 +5,7 @@ import main.java.elementalmp4.annotation.SebUtilsCommand;
 import main.java.elementalmp4.completer.PlotCompleter;
 import main.java.elementalmp4.service.PlotService;
 import main.java.elementalmp4.utils.Converter;
-import main.java.elementalmp4.utils.Plot;
+import main.java.elementalmp4.entity.Plot;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

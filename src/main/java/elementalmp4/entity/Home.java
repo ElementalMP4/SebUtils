@@ -1,4 +1,4 @@
-package main.java.elementalmp4.utils;
+package main.java.elementalmp4.entity;
 
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;

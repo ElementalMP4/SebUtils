@@ -1,4 +1,4 @@
-package main.java.elementalmp4.utils;
+package main.java.elementalmp4.entity;
 
 import main.java.elementalmp4.SebUtils;
 import main.java.elementalmp4.service.TeleportService;

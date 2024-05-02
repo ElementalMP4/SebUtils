@@ -3,7 +3,7 @@ package main.java.elementalmp4.command.tpa;
 import main.java.elementalmp4.annotation.SebUtilsCommand;
 import main.java.elementalmp4.command.AbstractCommand;
 import main.java.elementalmp4.service.TeleportService;
-import main.java.elementalmp4.utils.TeleportRequest;
+import main.java.elementalmp4.entity.TeleportRequest;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

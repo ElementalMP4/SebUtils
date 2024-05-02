@@ -1,7 +1,7 @@
 package main.java.elementalmp4.service;
 
 import main.java.elementalmp4.SebUtils;
-import main.java.elementalmp4.utils.Grave;
+import main.java.elementalmp4.entity.Grave;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

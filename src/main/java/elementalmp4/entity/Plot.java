@@ -1,4 +1,4 @@
-package main.java.elementalmp4.utils;
+package main.java.elementalmp4.entity;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

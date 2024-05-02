@@ -1,7 +1,7 @@
 package main.java.elementalmp4.service;
 
 import main.java.elementalmp4.SebUtils;
-import main.java.elementalmp4.utils.Home;
+import main.java.elementalmp4.entity.Home;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;

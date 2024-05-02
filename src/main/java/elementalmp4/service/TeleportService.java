@@ -2,7 +2,7 @@ package main.java.elementalmp4.service;
 
 import main.java.elementalmp4.SebUtils;
 import main.java.elementalmp4.utils.NamedThreadFactory;
-import main.java.elementalmp4.utils.TeleportRequest;
+import main.java.elementalmp4.entity.TeleportRequest;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;

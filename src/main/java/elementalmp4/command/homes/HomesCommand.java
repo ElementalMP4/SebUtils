@@ -3,14 +3,13 @@ package main.java.elementalmp4.command.homes;
 import main.java.elementalmp4.command.AbstractCommand;
 import main.java.elementalmp4.annotation.SebUtilsCommand;
 import main.java.elementalmp4.service.HomeService;
-import main.java.elementalmp4.utils.Home;
+import main.java.elementalmp4.entity.Home;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @SebUtilsCommand

@@ -2,7 +2,7 @@ package main.java.elementalmp4.service;
 
 import main.java.elementalmp4.SebUtils;
 import main.java.elementalmp4.utils.ConsoleColours;
-import main.java.elementalmp4.utils.Profile;
+import main.java.elementalmp4.entity.Profile;
 import org.bukkit.ChatColor;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 

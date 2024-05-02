@@ -3,7 +3,7 @@ package main.java.elementalmp4.command.plots;
 import main.java.elementalmp4.command.AbstractCommand;
 import main.java.elementalmp4.annotation.SebUtilsCommand;
 import main.java.elementalmp4.service.PlotService;
-import main.java.elementalmp4.utils.Plot;
+import main.java.elementalmp4.entity.Plot;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;

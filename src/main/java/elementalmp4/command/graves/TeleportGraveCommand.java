@@ -4,7 +4,7 @@ import main.java.elementalmp4.annotation.SebUtilsCommand;
 import main.java.elementalmp4.command.AbstractCommand;
 import main.java.elementalmp4.completer.GraveCompleter;
 import main.java.elementalmp4.service.GraveService;
-import main.java.elementalmp4.utils.Grave;
+import main.java.elementalmp4.entity.Grave;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
