@@ -6,6 +6,7 @@ import club.minnced.discord.webhook.send.WebhookMessage;
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
 import main.java.elementalmp4.GlobalConfig;
 import main.java.elementalmp4.SebUtils;
+import main.java.elementalmp4.utils.ConsoleColours;
 import main.java.elementalmp4.utils.NamedThreadFactory;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -158,6 +159,8 @@ public class DiscordService {
         component.addExtra(ChatColor.YELLOW + "[%s] ".formatted(name));
         component.addExtra(ChatColor.WHITE + contentStripped);
         SebUtils.getPlugin().getServer().spigot().broadcast(component);
+        SebUtils.getPluginLogger().info("%s[DISCORD] %s[%s] %s%s"
+                .formatted(ConsoleColours.BLUE, ConsoleColours.YELLOW, name, ConsoleColours.WHITE, contentStripped));
     }
 
     private static class DiscordMessageListener extends ListenerAdapter {
