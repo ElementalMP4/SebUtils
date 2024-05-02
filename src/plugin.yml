@@ -127,9 +127,9 @@ commands:
     description: "Enable or disable player graves"
     usage: "/enablegraves [true/false]"
     permission: "sebutils.admin"
-  showconfig:
+  config:
     description: "Shows the plugin configuration"
-    usage: "/showconfig"
+    usage: "/config"
     permission: "sebutils.admin"
   plots:
     description: "Shows all your plot locations"

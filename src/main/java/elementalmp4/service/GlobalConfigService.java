@@ -2,7 +2,16 @@ package main.java.elementalmp4.service;
 
 import main.java.elementalmp4.GlobalConfig;
 import main.java.elementalmp4.SebUtils;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -47,12 +56,46 @@ public class GlobalConfigService {
     }
 
     public static void set(GlobalConfig config, String value) {
+        setValue(config.getKey(), value);
+    }
+
+    private static void setValue(String config, String value) {
         try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
-            stmt.executeUpdate("UPDATE global_config SET config_value = '%s' WHERE config_item = '%s'".formatted(value, config.getKey()));
-            CACHE.put(config.getKey(), value);
+            stmt.executeUpdate("UPDATE global_config SET config_value = '%s' WHERE config_item = '%s'".formatted(value, config));
+            CACHE.put(config, value);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static boolean importConfig() {
+        try {
+            String content = new String(Files.readAllBytes(Paths.get(SebUtils.getPlugin().getDataFolder().getAbsolutePath() + "/config.json")));
+            JSONObject json = new JSONObject(content);
+            for (String key : json.keySet()) {
+                setValue(key, json.getString(key));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean exportConfig() {
+        try {
+            JSONObject json = new JSONObject();
+            Path pathToExport = Paths.get(SebUtils.getPlugin().getDataFolder().getAbsolutePath() + "/config.json");
+            for (String key : CACHE.keySet()) {
+                String value = CACHE.get(key);
+                json.put(key, value);
+            }
+            Files.writeString(pathToExport, json.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
 }

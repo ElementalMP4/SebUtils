@@ -6,6 +6,7 @@ import main.java.elementalmp4.command.AbstractCommand;
 import main.java.elementalmp4.completer.DiscordTabCompleter;
 import main.java.elementalmp4.service.DiscordService;
 import main.java.elementalmp4.service.GlobalConfigService;
+import main.java.elementalmp4.utils.CommandRunnable;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -142,9 +143,5 @@ public class DiscordCommand extends AbstractCommand {
         subCommand.run(commandSender, List.of(args).subList(1, args.length));
 
         return true;
-    }
-
-    private interface CommandRunnable {
-        void run(CommandSender sender, List<String> args);
     }
 }
