@@ -54,43 +54,4 @@ mv target/SebUtils.*.jar /path/to/server/plugins/
 All permissions are granted by default, but can be customised if required. Using a plugin such as LuckPerms is
 recommended for this.
 
-## Homes
-
-**Permission** `sebutils.homes`
-
-| Command  | Aliases | Description                          |
-|----------|---------|--------------------------------------|
-| /home    | /h      | Takes you to a home location         |
-| /sethome | /sh     | Sets a home to your current location |
-| /delhome | /dh     | Deletes a home                       |
-| /homes   | none    | Lists your home locations            |
-
-## Teleportation
-
-**Permission** `sebutils.tpa`
-
-| Command   | Aliases | Description                           |
-|-----------|---------|---------------------------------------|
-| /tpa      | none    | Ask to teleport to another player     |
-| /tpahere  | none    | Ask to teleport another player to you |
-| /tpaccept | none    | Accept a teleport request             |
-| /tpdeny   | none    | Deny a teleport request               |
-
-## Chat Customisation
-
-**Permission** `sebutils.nicknames`
-
-| Command     | Aliases | Description              |
-|-------------|---------|--------------------------|
-| /namecolour | /nc     | Set your nickname colour |
-| /nickname   | /nick   | Set your chat nickname   |
-
-## Admin Commands
-
-| Command      | Aliases | Description                                 |
-|--------------|---------|---------------------------------------------|
-| /allowtnt    | none    | Toggle TNT explosion damage                 |
-| /listhomes   | none    | Show a user's homes                         |
-| /showconfig  | /sconf  | Show the plugin configuration               |
-| /cowsexplode | none    | Toggle whether cows explode once milked     |
-| /sheepsmite  | none    | Toggle whether sheep get smited when shaved |
+For a list of all the commands, please read the [commands documentation](COMMANDS.md)
