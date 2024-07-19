@@ -20,10 +20,10 @@ public class PVPListener implements Listener {
             Player attacker = (Player) event.getDamager();
             Player target = (Player) event.getEntity();
 
-            if (PVPToggleService.playerHasDisabledPvp(attacker)) {
+            if (PVPToggleService.playerHasDisabledPvp(attacker.getName())) {
                 attacker.sendMessage(ChatColor.RED + "You cannot attack other players if you have disabled PVP!");
                 event.setCancelled(true);
-            } else if (PVPToggleService.playerHasDisabledPvp(target)) {
+            } else if (PVPToggleService.playerHasDisabledPvp(target.getName())) {
                 attacker.sendMessage(ChatColor.RED + target.getName() + " has PVP disabled!");
                 event.setCancelled(true);
             }

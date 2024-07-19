@@ -24,7 +24,14 @@ permissions:
   sebutils.graves:
     description: "Allows players to use grave commands"
     default: true
+  sebutils.pvp:
+    description: "Allows players to use pvp commands"
+    default: true
 commands:
+  pvptoggle:
+    description: "Toggle whether or not you can attack and be attacked by other players"
+    usage: "/pvptoggle [true/false]"
+    permission: "sebutils.pvp"
   listgraves:
     description: "Show your uncollected graves"
     usage: "/listgraves"

@@ -4,6 +4,7 @@ import main.java.elementalmp4.annotation.SebUtilsListener;
 import main.java.elementalmp4.service.AfkService;
 import main.java.elementalmp4.service.DiscordService;
 import main.java.elementalmp4.service.NicknameService;
+import main.java.elementalmp4.service.PVPToggleService;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -16,6 +17,7 @@ public class PlayerJoinListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         NicknameService.cacheProfile(event.getPlayer().getName());
         DiscordService.sendJoinMessage(event.getPlayer());
+        PVPToggleService.cachePlayer(event.getPlayer().getName());
     }
 
     @EventHandler
@@ -23,6 +25,7 @@ public class PlayerJoinListener implements Listener {
         AfkService.removeUser(event.getPlayer().getName());
         NicknameService.removeProfileCache(event.getPlayer().getName());
         DiscordService.sendLeaveMessage(event.getPlayer());
+        PVPToggleService.removePlayerCache(event.getPlayer().getName());
     }
 
 }
