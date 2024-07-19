@@ -27,7 +27,7 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.UUID;
 
 @SebUtilsListener
 public class GraveListener implements Listener {

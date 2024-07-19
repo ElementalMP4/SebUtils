@@ -1,7 +1,7 @@
 package main.java.elementalmp4.command.nicknames;
 
-import main.java.elementalmp4.command.AbstractCommand;
 import main.java.elementalmp4.annotation.SebUtilsCommand;
+import main.java.elementalmp4.command.AbstractCommand;
 import main.java.elementalmp4.completer.ColourTabCompleter;
 import main.java.elementalmp4.service.NicknameService;
 import org.bukkit.ChatColor;

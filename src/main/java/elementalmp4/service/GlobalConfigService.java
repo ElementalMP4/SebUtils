@@ -2,13 +2,8 @@ package main.java.elementalmp4.service;
 
 import main.java.elementalmp4.GlobalConfig;
 import main.java.elementalmp4.SebUtils;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;

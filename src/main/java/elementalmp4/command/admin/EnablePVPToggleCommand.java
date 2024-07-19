@@ -13,12 +13,13 @@ import org.bukkit.command.TabCompleter;
 import java.util.Set;
 
 @SebUtilsCommand
-public class AdminPlotOverrideCommand extends AbstractCommand {
+public class EnablePVPToggleCommand extends AbstractCommand {
+
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
+    public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
         if (args.length == 0) {
-            boolean adminOverride = GlobalConfigService.getAsBoolean(GlobalConfig.ADMIN_PLOT_OVERRIDE);
-            commandSender.sendMessage("Admin plot override is currently " + format(adminOverride));
+            boolean toggleEnabled = GlobalConfigService.getAsBoolean(GlobalConfig.PVP_TOGGLE_ENABLED);
+            commandSender.sendMessage("Individual Player PVP Toggle is currently " + format(toggleEnabled));
             return true;
         }
 
@@ -27,8 +28,8 @@ public class AdminPlotOverrideCommand extends AbstractCommand {
             return true;
         }
 
-        GlobalConfigService.set(GlobalConfig.ADMIN_PLOT_OVERRIDE, args[0]);
-        commandSender.sendMessage("Admin plot override is now " + format(Boolean.parseBoolean(args[0])));
+        GlobalConfigService.set(GlobalConfig.PVP_TOGGLE_ENABLED, args[0]);
+        commandSender.sendMessage("Individual Player PVP Toggle is now " + format(Boolean.parseBoolean(args[0])));
         return true;
     }
 
@@ -38,12 +39,12 @@ public class AdminPlotOverrideCommand extends AbstractCommand {
 
     @Override
     public String getCommandName() {
-        return "adminplotoverride";
+        return "enablepvptoggle";
     }
 
     @Override
     public TabCompleter getTabCompleter() {
         return new BooleanTabCompleter();
     }
-}
 
+}

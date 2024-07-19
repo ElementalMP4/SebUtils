@@ -12,7 +12,8 @@ public enum GlobalConfig {
     GRAVES_ENABLED("Graves enabled", "graves_enabled", "true", true),
     DISCORD_TOKEN("Discord token", "discord_token", "Not set", false),
     DISCORD_CHANNEL("Discord Channel", "discord_channel", "Not set", false),
-    DISCORD_ENABLED("Discord Integration Enabled", "discord_enabled", "false", true);
+    DISCORD_ENABLED("Discord Integration Enabled", "discord_enabled", "false", true),
+    PVP_TOGGLE_ENABLED("Individual Player PVP Toggle Enabled", "pvp_toggle_enabled", "true", true);
 
     private final String key;
     private final String defaultValue;

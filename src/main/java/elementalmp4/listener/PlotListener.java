@@ -2,10 +2,10 @@ package main.java.elementalmp4.listener;
 
 import main.java.elementalmp4.GlobalConfig;
 import main.java.elementalmp4.annotation.SebUtilsListener;
+import main.java.elementalmp4.entity.Plot;
 import main.java.elementalmp4.service.GlobalConfigService;
 import main.java.elementalmp4.service.PermitService;
 import main.java.elementalmp4.service.PlotService;
-import main.java.elementalmp4.entity.Plot;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;

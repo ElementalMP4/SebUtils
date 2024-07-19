@@ -91,6 +91,10 @@ commands:
     description: "Configure the Discord integration"
     usage: "/discord [config/enable/disable/token/channel]"
     permission: "sebutils.admin"
+  enablepvptoggle:
+    description: "Configure individual player PVP toggles. If enabled, players will be able to choose whether or not they have PVP enabled."
+    usage: "/enablepvptoggle [true/false]"
+    permission: "sebutils.admin"
   plotsize:
     description: "Adjust the maximum plot area players are allowed"
     usage: "/plotsize [size]"

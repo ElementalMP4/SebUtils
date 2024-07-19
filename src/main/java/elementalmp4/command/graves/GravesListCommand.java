@@ -2,8 +2,8 @@ package main.java.elementalmp4.command.graves;
 
 import main.java.elementalmp4.annotation.SebUtilsCommand;
 import main.java.elementalmp4.command.AbstractCommand;
-import main.java.elementalmp4.service.GraveService;
 import main.java.elementalmp4.entity.Grave;
+import main.java.elementalmp4.service.GraveService;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
