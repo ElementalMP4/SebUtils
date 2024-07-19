@@ -41,14 +41,14 @@ commands:
     usage: "/tpgrave"
     permission: "sebutils.graves"
   sethome:
-    description: "Sets your home to the current location"
-    usage: "/sethome"
+    description: "Sets your home to your current location. If no name is specified, the home will be 'default'"
+    usage: "/sethome [optional name]"
     permission: "sebutils.homes"
     aliases:
       - "sh"
   home:
-    description: "Takes you to your home"
-    usage: "/home"
+    description: "Takes you to your home. If no name is specified, the home will be 'default'"
+    usage: "/home [optional name]"
     permission: "sebutils.homes"
     aliases:
       - "h"
@@ -57,8 +57,8 @@ commands:
     usage: "/homes"
     permission: "sebutils.homes"
   delhome:
-    description: "Deletes your home"
-    usage: "/delhome"
+    description: "Deletes a home. If no name is specified, the home will be 'default'"
+    usage: "/delhome [optional name]"
     permission: "sebutils.homes"
     aliases:
       - "dh"
@@ -75,7 +75,7 @@ commands:
     usage: "/tpaccept"
     permission: "sebutils.tpa"
   tpdeny:
-    description: "Do not allow another user to teleport to you"
+    description: "Deny a teleport request"
     usage: "/tpdeny"
     permission: "sebutils.tpa"
   namecolour:
