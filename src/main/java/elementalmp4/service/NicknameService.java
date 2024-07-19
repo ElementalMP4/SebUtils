@@ -58,11 +58,11 @@ public class NicknameService {
     }
 
     public static void cacheProfile(String playerName) {
-        Profile defaultProfile = new Profile(playerName, ChatColor.WHITE.toString());
+        Profile defaultProfile = new Profile(playerName, "white");
         try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
             ResultSet rs = stmt.executeQuery("SELECT nickname, colourName FROM chat_customisation WHERE username = '%s'".formatted(playerName));
             if (rs.next()) {
-                Profile p = new Profile(rs.getString("nickname"), rs.getString("colourname"));
+                Profile p = new Profile(rs.getString("nickname"), rs.getString("colourName"));
                 PROFILE_CACHE.put(playerName, p);
             } else {
                 PROFILE_CACHE.put(playerName, defaultProfile);
