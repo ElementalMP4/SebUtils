@@ -1,5 +1,6 @@
 package main.java.elementalmp4.command.graves;
 
+import main.java.elementalmp4.SebUtils;
 import main.java.elementalmp4.annotation.SebUtilsCommand;
 import main.java.elementalmp4.command.AbstractCommand;
 import main.java.elementalmp4.entity.Grave;
@@ -9,8 +10,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.Optional;
 
 @SebUtilsCommand
 public class GravesListCommand extends AbstractCommand {
@@ -26,10 +29,21 @@ public class GravesListCommand extends AbstractCommand {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
-        List<Grave> graves = GraveService.getGraves(commandSender.getName());
+        String target = commandSender.getName();
+
+        if (commandSender.hasPermission("sebutils.admin") && args.length > 0) {
+            Player player = SebUtils.getPlugin().getServer().getPlayer(args[0]);
+            if (player == null) {
+                commandSender.sendMessage(ChatColor.RED + "Player could not be found!");
+                return true;
+            }
+            target = player.getName();
+        }
+
+        List<Grave> graves = GraveService.getGraves(target);
 
         if (graves.isEmpty()) {
-            commandSender.sendMessage(ChatColor.RED + "You have no graves!");
+            commandSender.sendMessage(ChatColor.RED + "No graves were found!");
             return true;
         }
 
