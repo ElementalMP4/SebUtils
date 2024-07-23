@@ -30,16 +30,6 @@ public class GravesListCommand extends AbstractCommand {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
         String target = commandSender.getName();
-
-        if (commandSender.hasPermission("sebutils.admin") && args.length > 0) {
-            Player player = SebUtils.getPlugin().getServer().getPlayer(args[0]);
-            if (player == null) {
-                commandSender.sendMessage(ChatColor.RED + "Player could not be found!");
-                return true;
-            }
-            target = player.getName();
-        }
-
         List<Grave> graves = GraveService.getGraves(target);
 
         if (graves.isEmpty()) {
