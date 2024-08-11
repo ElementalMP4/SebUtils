@@ -40,8 +40,10 @@ public class ConfigCommand extends AbstractCommand {
         Map<String, String> config = GlobalConfigService.getAllConfig();
         List<String> out = new ArrayList<>();
         out.add(ChatColor.RED + "SebUtils Config");
+        out.add(ChatColor.WHITE + "Some items are redacted for security. To view them, export the config.");
         for (GlobalConfig configItem : GlobalConfig.values()) {
-            out.add(ChatColor.AQUA + configItem.getDisplayName() + ChatColor.RESET + " - " + ChatColor.YELLOW + config.get(configItem.getKey()));
+            String value = configItem.isVisible() ? config.get(configItem.getKey()) : "REDACTED";
+            out.add(ChatColor.AQUA + configItem.getDisplayName() + ChatColor.RESET + " - " + ChatColor.YELLOW + value);
         }
         sender.sendMessage(String.join("\n", out));
     };
