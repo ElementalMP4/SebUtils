@@ -42,8 +42,8 @@ public class ConfigCommand extends AbstractCommand {
         out.add(ChatColor.RED + "SebUtils Config");
         out.add(ChatColor.WHITE + "Some items are redacted for security. To view them, export the config.");
         for (GlobalConfig configItem : GlobalConfig.values()) {
-            String value = configItem.isVisible() ? config.get(configItem.getKey()) : "REDACTED";
-            out.add(ChatColor.AQUA + configItem.getDisplayName() + ChatColor.RESET + " - " + ChatColor.YELLOW + value);
+            if (configItem.isVisible())
+                out.add(ChatColor.AQUA + configItem.getDisplayName() + ChatColor.RESET + " - " + ChatColor.YELLOW + config.get(configItem.getKey()));
         }
         sender.sendMessage(String.join("\n", out));
     };
