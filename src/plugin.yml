@@ -98,6 +98,10 @@ commands:
     description: "Configure the Discord integration"
     usage: "/discord [config/enable/disable/token/channel]"
     permission: "sebutils.admin"
+  slack:
+    description: "Configure the Slack integration"
+    usage: "/slack [config/enable/disable/webhook]"
+    permission: "sebutils.admin"
   enablepvptoggle:
     description: "Configure individual player PVP toggles. If enabled, players will be able to choose whether or not they have PVP enabled."
     usage: "/enablepvptoggle [true/false]"
