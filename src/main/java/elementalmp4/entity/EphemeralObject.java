@@ -2,7 +2,7 @@ package main.java.elementalmp4.entity;
 
 public abstract class EphemeralObject {
 
-    long expiryTime;
+    private final long expiryTime;
 
     EphemeralObject(long lifespan) {
         this.expiryTime = System.currentTimeMillis() + lifespan;

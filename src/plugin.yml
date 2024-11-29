@@ -102,6 +102,10 @@ commands:
     description: "Configure the Slack integration"
     usage: "/slack [config/enable/disable/webhook]"
     permission: "sebutils.admin"
+  web:
+    description: "Configure access to the web dashboard"
+    usage: "/web"
+    permission: "sebutils.admin"
   enablepvptoggle:
     description: "Configure individual player PVP toggles. If enabled, players will be able to choose whether or not they have PVP enabled."
     usage: "/enablepvptoggle [true/false]"
