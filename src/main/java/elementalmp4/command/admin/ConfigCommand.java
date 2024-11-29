@@ -18,39 +18,20 @@ import java.util.Map;
 @SebUtilsCommand
 public class ConfigCommand extends AbstractCommand {
 
-    private static final CommandRunnable importCommand = (CommandSender sender, List<String> args) -> {
-        boolean success = GlobalConfigService.importConfig();
-        if (success) {
-            sender.sendMessage(ChatColor.GREEN + "Imported config successfully!");
-        } else {
-            sender.sendMessage(ChatColor.RED + "Failed to import config! Check server logs for details");
-        }
-    };
-
-    private static final CommandRunnable exportCommand = (CommandSender sender, List<String> args) -> {
-        boolean success = GlobalConfigService.exportConfig();
-        if (success) {
-            sender.sendMessage(ChatColor.GREEN + "Exported config successfully!");
-        } else {
-            sender.sendMessage(ChatColor.RED + "Failed to export config! Check server logs for details");
-        }
-    };
-
     private static final CommandRunnable listCommand = (CommandSender sender, List<String> args) -> {
         Map<String, String> config = GlobalConfigService.getAllConfig();
         List<String> out = new ArrayList<>();
         out.add(ChatColor.RED + "SebUtils Config");
-        out.add(ChatColor.WHITE + "Some items are redacted for security. To view them, export the config.");
+        out.add(ChatColor.WHITE + "Some items are redacted for security.");
         for (GlobalConfig configItem : GlobalConfig.values()) {
-            String value = configItem.isVisible() ? config.get(configItem.getKey()) : "REDACTED";
-            out.add(ChatColor.AQUA + configItem.getDisplayName() + ChatColor.RESET + " - " + ChatColor.YELLOW + value);
+            if (configItem.isVisible()) {
+                out.add(ChatColor.AQUA + configItem.getDisplayName() + ChatColor.RESET + " - " + ChatColor.YELLOW + config.get(configItem.getKey()));
+            }
         }
         sender.sendMessage(String.join("\n", out));
     };
 
     private static final Map<String, CommandRunnable> VALID_COMMANDS = Map.of(
-            "import", importCommand,
-            "export", exportCommand,
             "list", listCommand
     );
 

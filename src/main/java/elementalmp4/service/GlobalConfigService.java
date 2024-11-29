@@ -7,30 +7,33 @@ import org.json.JSONObject;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class GlobalConfigService {
 
     private static final Map<String, String> CACHE = new LinkedHashMap<>();
+    private static final Path CONFIG_PATH = Paths.get(SebUtils.getPlugin().getDataFolder().getAbsolutePath() + "/config.json");
+
+    private static void createDefaultMap() {
+        for (GlobalConfig globalConfig : GlobalConfig.values()) {
+            CACHE.put(globalConfig.getKey(), globalConfig.getDefaultValue());
+        }
+    }
 
     public static void initialiseGlobalConfig() {
-        for (GlobalConfig config : GlobalConfig.values()) {
-            try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
-                ResultSet rs = stmt.executeQuery("SELECT config_value FROM global_config WHERE config_item = '%s';"
-                        .formatted(config.getKey()));
-                if (!rs.next()) {
-                    stmt.executeUpdate("INSERT INTO global_config VALUES ('%s', '%s');".formatted(config.getKey(), config.getDefaultValue()));
-                    CACHE.put(config.getKey(), config.getDefaultValue());
-                } else {
-                    CACHE.put(config.getKey(), rs.getString("config_value"));
+        try {
+            createDefaultMap();
+            if (Files.exists(CONFIG_PATH)) {
+                String content = new String(Files.readAllBytes(CONFIG_PATH));
+                JSONObject json = new JSONObject(content);
+                for (String key : json.keySet()) {
+                    CACHE.put(key, json.getString(key));
                 }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
             }
+            saveConfig();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -55,29 +58,11 @@ public class GlobalConfigService {
     }
 
     private static void setValue(String config, String value) {
-        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
-            stmt.executeUpdate("UPDATE global_config SET config_value = '%s' WHERE config_item = '%s'".formatted(value, config));
-            CACHE.put(config, value);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        CACHE.put(config, value);
+        saveConfig();
     }
 
-    public static boolean importConfig() {
-        try {
-            String content = new String(Files.readAllBytes(Paths.get(SebUtils.getPlugin().getDataFolder().getAbsolutePath() + "/config.json")));
-            JSONObject json = new JSONObject(content);
-            for (String key : json.keySet()) {
-                setValue(key, json.getString(key));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
-
-    public static boolean exportConfig() {
+    private static void saveConfig() {
         try {
             JSONObject json = new JSONObject();
             Path pathToExport = Paths.get(SebUtils.getPlugin().getDataFolder().getAbsolutePath() + "/config.json");
@@ -85,12 +70,10 @@ public class GlobalConfigService {
                 String value = CACHE.get(key);
                 json.put(key, value);
             }
-            Files.writeString(pathToExport, json.toString());
+            Files.writeString(pathToExport, json.toString(3));
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
-        return true;
     }
 
 }

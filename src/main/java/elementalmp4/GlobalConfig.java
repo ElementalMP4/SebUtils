@@ -15,7 +15,8 @@ public enum GlobalConfig {
     DISCORD_ENABLED("Discord Integration Enabled", "discord_enabled", "false", true),
     PVP_TOGGLE_ENABLED("Individual Player PVP Toggle Enabled", "pvp_toggle_enabled", "true", true),
     SLACK_INTEGRATION_ENABLED("Slack integration enabled", "slack_enabled", "false", true),
-    SLACK_WEBHOOK("Slack integration webhook", "slack_webhook", "Not set", false);
+    SLACK_WEBHOOK("Slack integration webhook", "slack_webhook", "Not set", false),
+    WEB_SERVER_PORT("Web server port", "web_server_port" , "7070" , false);
 
     private final String key;
     private final String defaultValue;
