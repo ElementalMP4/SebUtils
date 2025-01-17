@@ -6,10 +6,8 @@ import main.java.elementalmp4.command.AbstractCommand;
 import main.java.elementalmp4.service.DatabaseService;
 import main.java.elementalmp4.service.DiscordService;
 import main.java.elementalmp4.service.GlobalConfigService;
-import main.java.elementalmp4.service.WebService;
 import main.java.elementalmp4.utils.ConsoleColours;
 import main.java.elementalmp4.utils.ReflectiveInstantiator;
-import org.bukkit.ChatColor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -78,8 +76,7 @@ public class SebUtils extends JavaPlugin {
 
         boolean discord = DiscordService.connectDiscordOnBoot();
         if (discord) logger.info(ConsoleColours.YELLOW + "Connected to Discord");
-
-        WebService.startServer();
+        
         logger.info(ConsoleColours.GREEN + "Ready!" + ConsoleColours.RESET);
     }
 
