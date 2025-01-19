@@ -25,6 +25,7 @@ public class PlayerJoinListener implements Listener {
         DiscordService.sendLeaveMessage(event.getPlayer());
         PVPToggleService.removePlayerCache(event.getPlayer().getName());
         SlackService.sendLeaveMessage(event.getPlayer().getName());
+        OllamaService.clearConversation(event.getPlayer().getName());
     }
 
 }
