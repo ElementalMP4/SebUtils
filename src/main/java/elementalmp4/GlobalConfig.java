@@ -8,7 +8,7 @@ public enum GlobalConfig {
     BILLY_ENABLED("Billy shop enabled", "billy_enabled", "false", true),
     ADMIN_PLOT_OVERRIDE("Admins override plot permissions", "admin_plot_override", "true", true),
     PLOT_MAX_SIZE("Maximum plot area per user", "plot_max_size", "10000", true),
-    AFK_ENABLED( "Auto AFK enabled", "afk_enabled", "true", true),
+    AFK_ENABLED("Auto AFK enabled", "afk_enabled", "true", true),
     GRAVES_ENABLED("Graves enabled", "graves_enabled", "true", true),
     DISCORD_TOKEN("Discord token", "discord_token", "Not set", false),
     DISCORD_CHANNEL("Discord Channel", "discord_channel", "Not set", false),
@@ -16,7 +16,8 @@ public enum GlobalConfig {
     PVP_TOGGLE_ENABLED("Individual Player PVP Toggle Enabled", "pvp_toggle_enabled", "true", true),
     SLACK_INTEGRATION_ENABLED("Slack integration enabled", "slack_enabled", "false", true),
     SLACK_WEBHOOK("Slack integration webhook", "slack_webhook", "Not set", false),
-    WEB_SERVER_PORT("Web server port", "web_server_port" , "7070" , false);
+    OLLAMA_HOST("Ollama Host", "ollama_host", "http://localhost:11434", true),
+    OLLAMA_ENABLED("Ollama Enabled", "ollama_enabled", "false", true);
 
     private final String key;
     private final String defaultValue;

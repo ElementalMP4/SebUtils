@@ -1,6 +1,5 @@
 package main.java.elementalmp4.command.graves;
 
-import main.java.elementalmp4.SebUtils;
 import main.java.elementalmp4.annotation.SebUtilsCommand;
 import main.java.elementalmp4.command.AbstractCommand;
 import main.java.elementalmp4.entity.Grave;
@@ -10,10 +9,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.Player;
 
 import java.util.List;
-import java.util.Optional;
 
 @SebUtilsCommand
 public class GravesListCommand extends AbstractCommand {

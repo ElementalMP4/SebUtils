@@ -1,7 +1,7 @@
-api-version: "1.20"
+api-version: "1.21"
 name: SebUtils
 author: ElementalMP4
-version: '1.8.0'
+version: '1.9.0'
 main: main.java.elementalmp4.SebUtils
 description: Homes, Teleportation, Chat customisation and plenty more
 prefix: SebUtils
@@ -26,6 +26,9 @@ permissions:
     default: true
   sebutils.pvp:
     description: "Allows players to use pvp commands"
+    default: true
+  sebutils.ai:
+    description: "Allows players to use AI commands"
     default: true
 commands:
   pvptoggle:
@@ -94,6 +97,10 @@ commands:
     description: "Enable or disable TNT explosions"
     usage: "/allowtnt [true/false]"
     permission: "sebutils.admin"
+  ollama:
+    description: "Configure the Ollama integration"
+    usage: "/ollama [enble/disable/host]"
+    permission: "sebutils.admin"
   discord:
     description: "Configure the Discord integration"
     usage: "/discord [config/enable/disable/token/channel]"
@@ -101,10 +108,6 @@ commands:
   slack:
     description: "Configure the Slack integration"
     usage: "/slack [config/enable/disable/webhook]"
-    permission: "sebutils.admin"
-  web:
-    description: "Configure access to the web dashboard"
-    usage: "/web"
     permission: "sebutils.admin"
   enablepvptoggle:
     description: "Configure individual player PVP toggles. If enabled, players will be able to choose whether or not they have PVP enabled."
@@ -180,3 +183,7 @@ commands:
     description: "Views the permits for a plot"
     usage: "/permits [plot ID]"
     permission: "sebutils.plots"
+  ask:
+    description: "Ask Llama a question"
+    usage: "/ask [question]"
+    permission: "sebutils.ai"

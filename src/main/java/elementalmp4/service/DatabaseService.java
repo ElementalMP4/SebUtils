@@ -18,7 +18,6 @@ public class DatabaseService {
         MIGRATIONS.put("plot sharing", "CREATE TABLE IF NOT EXISTS plot_permissions (plot_id BIGINT, player TEXT, FOREIGN KEY (plot_id) REFERENCES block_locker(plot_id) ON DELETE CASCADE);");
         MIGRATIONS.put("graves", "CREATE TABLE IF NOT EXISTS graves (grave_id TEXT, grave_owner TEXT, pos_x INTEGER, pos_y INTEGER, pos_z INTEGER, world TEXT);");
         MIGRATIONS.put("pvp toggles", "CREATE TABLE IF NOT EXISTS pvp_toggles (username TEXT, toggle BOOLEAN);");
-        MIGRATIONS.put("web dashboard", "CREATE TABLE IF NOT EXISTS web_dash_accounts (username TEXT, otpSecret TEXT);");
     }
 
     private final Connection connection;

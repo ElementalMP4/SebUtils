@@ -6,6 +6,7 @@ import main.java.elementalmp4.command.AbstractCommand;
 import main.java.elementalmp4.service.DatabaseService;
 import main.java.elementalmp4.service.DiscordService;
 import main.java.elementalmp4.service.GlobalConfigService;
+import main.java.elementalmp4.service.OllamaService;
 import main.java.elementalmp4.utils.ConsoleColours;
 import main.java.elementalmp4.utils.ReflectiveInstantiator;
 import org.bukkit.command.PluginCommand;
@@ -76,7 +77,10 @@ public class SebUtils extends JavaPlugin {
 
         boolean discord = DiscordService.connectDiscordOnBoot();
         if (discord) logger.info(ConsoleColours.YELLOW + "Connected to Discord");
-        
+
+        boolean ollama = OllamaService.startOllamaOnBoot();
+        if (ollama) logger.info(ConsoleColours.YELLOW + "Started Ollama Client");
+
         logger.info(ConsoleColours.GREEN + "Ready!" + ConsoleColours.RESET);
     }
 
