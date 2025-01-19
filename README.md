@@ -16,6 +16,12 @@ when I want to start a server for friends.
 - Sheep can be smited when sheared
 - Players can be smited by admins
 - Nitwit Villagers can sell expensive items
+- Graves to save your items when you die
+- Plots to protect your builds from griefing
+- Discord & Slack integrations
+- Ollama integration
+
+It's super easy to configure, and your configuration can easily be exported and shared between your servers.
 
 # Installing
 
@@ -26,7 +32,7 @@ the [releases tab](https://github.com/ElementalMP4/SebUtils/releases/)
 
 You'll need:
 
-- Java 17
+- Java 21
 - Maven
 
 Then:

@@ -16,7 +16,9 @@
 | namecolour        | /namecolour [colour]                           | sebutils.nicknames | Set your name colour                                                                                                      |
 | nickname          | /nickname [name]                               | sebutils.nicknames | Set a nickname                                                                                                            |
 | allowtnt          | /allowtnt [true/false]                         | sebutils.admin     | Enable or disable TNT explosions                                                                                          |
+| ollama            | /ollama [enble/disable/host]                   | sebutils.admin     | Configure the Ollama integration                                                                                          |
 | discord           | /discord [config/enable/disable/token/channel] | sebutils.admin     | Configure the Discord integration                                                                                         |
+| slack             | /slack [config/enable/disable/webhook]         | sebutils.admin     | Configure the Slack integration                                                                                           |
 | enablepvptoggle   | /enablepvptoggle [true/false]                  | sebutils.admin     | Configure individual player PVP toggles. If enabled, players will be able to choose whether or not they have PVP enabled. |
 | plotsize          | /plotsize [size]                               | sebutils.admin     | Adjust the maximum plot area players are allowed                                                                          |
 | listhomes         | /listhomes [player]                            | sebutils.admin     | Shows a user's homes                                                                                                      |
@@ -34,6 +36,7 @@
 | grantpermit       | /grantpermit [player] [plot ID]                | sebutils.plots     | Allow another player to access your plot                                                                                  |
 | revokepermit      | /revokepermit [player] [plot ID]               | sebutils.plots     | Revokes a plot permit from a player on your plot                                                                          |
 | permits           | /permits [plot ID]                             | sebutils.plots     | Views the permits for a plot                                                                                              |
+| ask               | /ask [question]                                | sebutils.ai        | Ask Llama a question                                                                                                      |
 
 # Permissions
 
@@ -46,3 +49,4 @@
 | sebutils.plots     | Allows players to create and delete plots                            |
 | sebutils.graves    | Allows players to use grave commands                                 |
 | sebutils.pvp       | Allows players to use pvp commands                                   |
+| sebutils.ai        | Allows players to use AI commands                                    |
