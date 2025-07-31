@@ -37,6 +37,7 @@ public class GraveListener implements Listener {
     private static final String GRAVE_LABEL_META = "grave_label";
     private static final String INVENTORY_CONTENTS_META = "grave_inventory_contents";
     private static final String GRAVE_ID_META = "grave_id";
+    private static final String EXPERIENCE_META = "grave_experience";
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerDeath(PlayerDeathEvent event) {
@@ -48,6 +49,7 @@ public class GraveListener implements Listener {
     private void createGrave(PlayerDeathEvent event) {
         Player player = event.getEntity();
         event.getDrops().clear();
+        event.setDroppedExp(0);
 
         Block deathBlock = player.getLocation().getBlock();
         deathBlock.setType(Material.DEEPSLATE_BRICK_WALL);
@@ -67,6 +69,10 @@ public class GraveListener implements Listener {
         deathBlock.setMetadata(GRAVE_LABEL_META, new FixedMetadataValue(SebUtils.getPlugin(), armorStand.getUniqueId().toString()));
         deathBlock.setMetadata(INVENTORY_CONTENTS_META, new FixedMetadataValue(SebUtils.getPlugin(), itemStackArrayToBase64(player.getInventory().getContents())));
 
+        deathBlock.setMetadata(EXPERIENCE_META, new FixedMetadataValue(SebUtils.getPlugin(), player.getTotalExperience()));
+
+        // Clean slate, in case KeepInventory is true
+        player.setExp(0);
         player.getInventory().clear();
         player.getInventory().setArmorContents(new ItemStack[4]);
 
@@ -125,8 +131,13 @@ public class GraveListener implements Listener {
             }
         }
 
+        // Restore experience
+        int experience = clickedBlock.getMetadata(EXPERIENCE_META).get(0).asInt();
+        player.giveExp(experience);
+
         player.playSound(player.getLocation(), Sound.ITEM_BUNDLE_DROP_CONTENTS, 10, 1);
         clickedBlock.setType(Material.AIR);
+
         String armorStandId = clickedBlock.getMetadata(GRAVE_LABEL_META).get(0).asString();
         ArmorStand armorStand = (ArmorStand) Bukkit.getEntity(UUID.fromString(armorStandId));
         if (armorStand != null) {
