@@ -15,28 +15,50 @@ import java.util.Set;
 
 @SebUtilsCommand
 public class OllamaCommand extends AbstractCommand {
+
+    private static final Set<String> VALID_SUBCOMMANDS = Set.of("enable", "disable", "model");
+
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
         if (args.length == 0) {
             boolean ollamaEnabled = GlobalConfigService.getAsBoolean(GlobalConfig.OLLAMA_ENABLED);
+            String currentModel = GlobalConfigService.getValue(GlobalConfig.OLLAMA_MODEL);
             commandSender.sendMessage("Ollama is currently " + format(ollamaEnabled));
+            commandSender.sendMessage("Current model: " + ChatColor.YELLOW + currentModel);
             return true;
         }
 
-        if (!Set.of("enable", "disable").contains(args[0])) {
-            commandSender.sendMessage(ChatColor.RED + "You must specify enable or disable");
+        String subcommand = args[0].toLowerCase();
+
+        if (!VALID_SUBCOMMANDS.contains(subcommand)) {
+            commandSender.sendMessage(ChatColor.RED + "Invalid argument. Use enable, disable, or model <name>");
             return true;
         }
 
-        boolean isEnabled = args[0].equals("enable");
-        if (isEnabled) {
-            OllamaService.startClient();
-        } else {
-            OllamaService.stopClient();
+        switch (subcommand) {
+            case "enable":
+                OllamaService.startClient();
+                GlobalConfigService.set(GlobalConfig.OLLAMA_ENABLED, "true");
+                commandSender.sendMessage("Ollama is now " + format(true));
+                break;
+
+            case "disable":
+                OllamaService.stopClient();
+                GlobalConfigService.set(GlobalConfig.OLLAMA_ENABLED, "false");
+                commandSender.sendMessage("Ollama is now " + format(false));
+                break;
+
+            case "model":
+                if (args.length < 2) {
+                    commandSender.sendMessage(ChatColor.RED + "You must specify a model name after 'model'");
+                    return true;
+                }
+                String modelName = args[1];
+                GlobalConfigService.set(GlobalConfig.OLLAMA_MODEL, modelName);
+                commandSender.sendMessage(ChatColor.GREEN + "Model set to: " + ChatColor.YELLOW + modelName);
+                break;
         }
 
-        GlobalConfigService.set(GlobalConfig.OLLAMA_ENABLED, String.valueOf(isEnabled));
-        commandSender.sendMessage("Ollama is now " + format(isEnabled));
         return true;
     }
 

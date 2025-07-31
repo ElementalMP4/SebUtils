@@ -18,9 +18,8 @@ import java.util.concurrent.Executors;
 
 public class OllamaService {
 
-    private static final String SYSTEM_PROMPT = "Your responses to the following questions should be no longer than 300 characters. Try and be funny and witty, your end goal is to make the user laugh. Respond with ONLY your answer to this question, and nothing else.";
+    private static final String SYSTEM_PROMPT = "Your name is chatgpsteve. Your responses to the following questions should be no longer than 300 characters. Respond with ONLY your answer to this question, and nothing else.";
     private static final ExecutorService OLLAMA_EXECUTOR = Executors.newSingleThreadExecutor();
-    private static final String MODEL = "llama3.2:latest";
     private static OllamaAPI ollamaAPI;
     private static final Map<String, OllamaChatResult> CONVERSATIONS = new HashMap<>();
 
@@ -35,7 +34,7 @@ public class OllamaService {
     public static void startClient() {
         ollamaAPI = new OllamaAPI(GlobalConfigService.getValue(GlobalConfig.OLLAMA_HOST));
         ollamaAPI.setRequestTimeoutSeconds(60);
-        
+
     }
 
     public static void stopClient() {
@@ -48,14 +47,14 @@ public class OllamaService {
             throw new IllegalStateException("Ollama API not initialized. This shouldn't be possible if Seb programmed the plugin correctly.");
         }
         try {
-            OllamaChatRequestBuilder builder = OllamaChatRequestBuilder.getInstance(MODEL);
+            OllamaChatRequestBuilder builder = OllamaChatRequestBuilder.getInstance(GlobalConfigService.getValue(GlobalConfig.OLLAMA_MODEL));
             OllamaChatResult conversation = CONVERSATIONS.get(name);
             if (conversation != null) {
                 builder.withMessages(conversation.getChatHistory());
                 builder.withMessage(OllamaChatMessageRole.USER, prompt);
             } else {
                 builder.withMessage(OllamaChatMessageRole.SYSTEM, SYSTEM_PROMPT);
-                builder.withMessage(OllamaChatMessageRole.SYSTEM, "This conversation is with " + name);
+                builder.withMessage(OllamaChatMessageRole.SYSTEM, "The user who is talking to you is called " + name);
                 builder.withMessage(OllamaChatMessageRole.USER, prompt);
             }
 
@@ -76,8 +75,8 @@ public class OllamaService {
         OLLAMA_EXECUTOR.submit(() -> {
             String response = getResponse(prompt, name);
             server.broadcastMessage(
-                    ChatColor.GREEN + name + " asked: " + ChatColor.WHITE + prompt + "\n"
-                            + ChatColor.GREEN + "AI Responded: " + ChatColor.WHITE + response);
+                    ChatColor.GREEN + name + ": " + ChatColor.WHITE + prompt + "\n"
+                            + ChatColor.GREEN + "ChatGPSteve: " + ChatColor.WHITE + response);
         });
     }
 

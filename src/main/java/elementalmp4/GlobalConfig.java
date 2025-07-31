@@ -17,7 +17,8 @@ public enum GlobalConfig {
     SLACK_INTEGRATION_ENABLED("Slack integration enabled", "slack_enabled", "false", true),
     SLACK_WEBHOOK("Slack integration webhook", "slack_webhook", "Not set", false),
     OLLAMA_HOST("Ollama Host", "ollama_host", "http://localhost:11434", true),
-    OLLAMA_ENABLED("Ollama Enabled", "ollama_enabled", "false", true);
+    OLLAMA_ENABLED("Ollama Enabled", "ollama_enabled", "false", true),
+    OLLAMA_MODEL("Ollama Model", "ollama_model", "gemma3:12b", true);
 
     private final String key;
     private final String defaultValue;

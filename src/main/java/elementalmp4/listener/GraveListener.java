@@ -15,6 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -35,9 +36,6 @@ public class GraveListener implements Listener {
     private static final String GRAVE_OWNER_META = "grave_owner";
     private static final String GRAVE_LABEL_META = "grave_label";
     private static final String INVENTORY_CONTENTS_META = "grave_inventory_contents";
-    private static final String INVENTORY_ARMOR_META = "grave_armor_contents";
-    private static final String INVENTORY_OFFHAND_META = "grave_offhand_contents";
-    private static final String INVENTORY_EXTRA_META = "grave_extra_contents";
     private static final String GRAVE_ID_META = "grave_id";
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -50,9 +48,9 @@ public class GraveListener implements Listener {
     private void createGrave(PlayerDeathEvent event) {
         Player player = event.getEntity();
         event.getDrops().clear();
+
         Block deathBlock = player.getLocation().getBlock();
         deathBlock.setType(Material.DEEPSLATE_BRICK_WALL);
-
         deathBlock.setMetadata(GRAVE_OWNER_META, new FixedMetadataValue(SebUtils.getPlugin(), player.getName()));
 
         Location labelLocation = deathBlock.getLocation().add(0.5, 1.5, 0.5);
@@ -68,9 +66,6 @@ public class GraveListener implements Listener {
 
         deathBlock.setMetadata(GRAVE_LABEL_META, new FixedMetadataValue(SebUtils.getPlugin(), armorStand.getUniqueId().toString()));
         deathBlock.setMetadata(INVENTORY_CONTENTS_META, new FixedMetadataValue(SebUtils.getPlugin(), itemStackArrayToBase64(player.getInventory().getContents())));
-        deathBlock.setMetadata(INVENTORY_OFFHAND_META, new FixedMetadataValue(SebUtils.getPlugin(), itemStackArrayToBase64(player.getInventory().getItemInOffHand())));
-        deathBlock.setMetadata(INVENTORY_ARMOR_META, new FixedMetadataValue(SebUtils.getPlugin(), itemStackArrayToBase64(player.getInventory().getArmorContents())));
-        deathBlock.setMetadata(INVENTORY_EXTRA_META, new FixedMetadataValue(SebUtils.getPlugin(), itemStackArrayToBase64(player.getInventory().getExtraContents())));
 
         player.getInventory().clear();
         player.getInventory().setArmorContents(new ItemStack[4]);
@@ -95,49 +90,78 @@ public class GraveListener implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         Block clickedBlock = event.getClickedBlock();
-        if (clickedBlock != null && clickedBlock.getType() == Material.DEEPSLATE_BRICK_WALL) {
-            if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                String playerName = player.getName();
-                if (clickedBlock.hasMetadata(GRAVE_OWNER_META)) {
-                    if (clickedBlock.getMetadata(GRAVE_OWNER_META).get(0).asString().equals(playerName)) {
 
-                        ItemStack[] inventory = itemStackArrayFromBase64(clickedBlock.getMetadata(INVENTORY_CONTENTS_META).get(0).asString());
-                        ItemStack[] offhand = itemStackArrayFromBase64(clickedBlock.getMetadata(INVENTORY_OFFHAND_META).get(0).asString());
-                        ItemStack[] armor = itemStackArrayFromBase64(clickedBlock.getMetadata(INVENTORY_ARMOR_META).get(0).asString());
-                        ItemStack[] extra = itemStackArrayFromBase64(clickedBlock.getMetadata(INVENTORY_EXTRA_META).get(0).asString());
+        // See if the interaction is a click on a deepslate brick wall first, so we know the interaction is on a potential grave
+        if (clickedBlock == null || clickedBlock.getType() != Material.DEEPSLATE_BRICK_WALL) {
+            return;
+        }
 
-                        player.getInventory().setContents(inventory);
-                        player.getInventory().setItemInOffHand(offhand[0]);
-                        player.getInventory().setArmorContents(armor);
-                        player.getInventory().setExtraContents(extra);
+        // Look for our custom metadata, so we know the interaction is on an actual grave
+        if (!clickedBlock.hasMetadata(GRAVE_OWNER_META)) {
+            return;
+        }
 
-                        player.playSound(player.getLocation(), Sound.ITEM_BUNDLE_DROP_CONTENTS, 10, 1);
+        // Then see if it was a right click, so we know if it was a retrieval attempt
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+            return;
+        }
 
-                        clickedBlock.setType(Material.AIR);
-                        String armorStandId = clickedBlock.getMetadata(GRAVE_LABEL_META).get(0).asString();
-                        ArmorStand armorStand = (ArmorStand) Bukkit.getEntity(UUID.fromString(armorStandId));
-                        if (armorStand != null) {
-                            armorStand.remove();
-                        }
+        // Check the player's name against the metadata
+        String playerName = player.getName();
+        if (!clickedBlock.getMetadata(GRAVE_OWNER_META).get(0).asString().equals(playerName)) {
+            player.sendMessage(ChatColor.RED + "This isn't your grave!");
+            return;
+        }
 
-                        String graveId = clickedBlock.getMetadata(GRAVE_ID_META).get(0).asString();
-                        GraveService.removeGrave(graveId);
-                    } else {
-                        player.sendMessage(ChatColor.RED + "This isn't your grave!");
-                    }
+        // Restore the inventory
+        ItemStack[] inventory = itemStackArrayFromBase64(clickedBlock.getMetadata(INVENTORY_CONTENTS_META).get(0).asString());
+        if (isEmpty(player.getInventory().getContents())) {
+            player.getInventory().setContents(inventory);
+        } else {
+            for (ItemStack stack : inventory) {
+                if (stack != null && stack.getType() != Material.AIR) {
+                    player.getWorld().dropItemNaturally(player.getLocation(), stack);
                 }
             }
         }
+
+        player.playSound(player.getLocation(), Sound.ITEM_BUNDLE_DROP_CONTENTS, 10, 1);
+        clickedBlock.setType(Material.AIR);
+        String armorStandId = clickedBlock.getMetadata(GRAVE_LABEL_META).get(0).asString();
+        ArmorStand armorStand = (ArmorStand) Bukkit.getEntity(UUID.fromString(armorStandId));
+        if (armorStand != null) {
+            armorStand.remove();
+        }
+
+        String graveId = clickedBlock.getMetadata(GRAVE_ID_META).get(0).asString();
+        GraveService.removeGrave(graveId);
     }
 
-    //https://gist.github.com/graywolf336/8153678
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onBlockBreak(BlockBreakEvent event) {
+        Block block = event.getBlock();
+        Player player = event.getPlayer();
+        if (block.getType() == Material.DEEPSLATE_BRICK_WALL && block.hasMetadata(GRAVE_OWNER_META)) {
+            event.setCancelled(true);
+            player.sendMessage(ChatColor.RED + "You can't destroy graves!");
+        }
+    }
+
+    private boolean isEmpty(ItemStack[] items) {
+        for (ItemStack item : items) {
+            if (item != null && item.getType() != Material.AIR) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static String itemStackArrayToBase64(ItemStack... items) {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
 
             dataOutput.writeInt(items.length);
-
             for (ItemStack item : items) {
                 dataOutput.writeObject(item);
             }
@@ -165,5 +189,4 @@ public class GraveListener implements Listener {
             throw new RuntimeException("Unable to decode class type", e);
         }
     }
-
 }

@@ -39,22 +39,22 @@ public class SebUtils extends JavaPlugin {
         logger = getLogger();
         plugin = getPlugin(SebUtils.class);
 
-        logger.info(ConsoleColours.RED + "   _____      __    __  ____  _ __    ");
-        logger.info(ConsoleColours.YELLOW + "  / ___/___  / /_  / / / / /_(_) /____");
-        logger.info(ConsoleColours.GREEN + "  \\__ \\/ _ \\/ __ \\/ / / / __/ / / ___/");
-        logger.info(ConsoleColours.BLUE + " ___/ /  __/ /_/ / /_/ / /_/ / (__  ) ");
-        logger.info(ConsoleColours.PURPLE + "/____/\\___/_.___/\\____/\\__/_/_/____/  ");
+        logger.info(ConsoleColours.RED + "   _____      __    __  ____  _ __    " + ConsoleColours.RESET);
+        logger.info(ConsoleColours.YELLOW + "  / ___/___  / /_  / / / / /_(_) /____" + ConsoleColours.RESET);
+        logger.info(ConsoleColours.GREEN + "  \\__ \\/ _ \\/ __ \\/ / / / __/ / / ___/" + ConsoleColours.RESET);
+        logger.info(ConsoleColours.BLUE + " ___/ /  __/ /_/ / /_/ / /_/ / (__  ) " + ConsoleColours.RESET);
+        logger.info(ConsoleColours.PURPLE + "/____/\\___/_.___/\\____/\\__/_/_/____/  " + ConsoleColours.RESET);
         logger.info("");
 
         if (!plugin.getDataFolder().exists()) {
-            logger.info(ConsoleColours.YELLOW + "Creating data directory");
+            logger.info(ConsoleColours.YELLOW + "Creating data directory" + ConsoleColours.RESET);
             plugin.getDataFolder().mkdir();
         }
 
-        logger.info(ConsoleColours.YELLOW + "Initialising H2");
+        logger.info(ConsoleColours.YELLOW + "Initialising H2" + ConsoleColours.RESET);
         databaseService = new DatabaseService(plugin.getDataFolder().getAbsolutePath());
 
-        logger.info(ConsoleColours.YELLOW + "Initialising Global Config");
+        logger.info(ConsoleColours.YELLOW + "Initialising Global Config" + ConsoleColours.RESET);
         GlobalConfigService.initialiseGlobalConfig();
 
         logger.info(ConsoleColours.YELLOW + "Registering commands");
@@ -76,10 +76,10 @@ public class SebUtils extends JavaPlugin {
         }
 
         boolean discord = DiscordService.connectDiscordOnBoot();
-        if (discord) logger.info(ConsoleColours.YELLOW + "Connected to Discord");
+        if (discord) logger.info(ConsoleColours.YELLOW + "Connected to Discord" + ConsoleColours.RESET);
 
         boolean ollama = OllamaService.startOllamaOnBoot();
-        if (ollama) logger.info(ConsoleColours.YELLOW + "Started Ollama Client");
+        if (ollama) logger.info(ConsoleColours.YELLOW + "Started Ollama Client" + ConsoleColours.RESET);
 
         logger.info(ConsoleColours.GREEN + "Ready!" + ConsoleColours.RESET);
     }
