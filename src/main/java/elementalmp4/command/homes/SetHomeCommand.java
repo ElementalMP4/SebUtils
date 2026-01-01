@@ -2,6 +2,7 @@ package main.java.elementalmp4.command.homes;
 
 import main.java.elementalmp4.annotation.SebUtilsCommand;
 import main.java.elementalmp4.command.AbstractCommand;
+import main.java.elementalmp4.completer.EmptyTabCompleter;
 import main.java.elementalmp4.service.HomeService;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -32,6 +33,6 @@ public class SetHomeCommand extends AbstractCommand {
 
     @Override
     public TabCompleter getTabCompleter() {
-        return null;
+        return new EmptyTabCompleter();
     }
 }

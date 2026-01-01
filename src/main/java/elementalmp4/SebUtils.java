@@ -51,11 +51,11 @@ public class SebUtils extends JavaPlugin {
             plugin.getDataFolder().mkdir();
         }
 
-        logger.info(ConsoleColours.YELLOW + "Initialising H2" + ConsoleColours.RESET);
-        databaseService = new DatabaseService(plugin.getDataFolder().getAbsolutePath());
-
         logger.info(ConsoleColours.YELLOW + "Initialising Global Config" + ConsoleColours.RESET);
         GlobalConfigService.initialiseGlobalConfig();
+
+        logger.info(ConsoleColours.YELLOW + "Initialising Database" + ConsoleColours.RESET);
+        databaseService = new DatabaseService();
 
         logger.info(ConsoleColours.YELLOW + "Registering commands");
         List<AbstractCommand> commands = new ReflectiveInstantiator<AbstractCommand>("main.java.elementalmp4")
@@ -88,6 +88,6 @@ public class SebUtils extends JavaPlugin {
     public void onDisable() {
         DiscordService.close(true);
         logger.info("Stopped.");
-        databaseService.close();
+        if (databaseService != null) databaseService.close();
     }
 }

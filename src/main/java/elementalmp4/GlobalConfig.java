@@ -1,7 +1,6 @@
 package main.java.elementalmp4;
 
 public enum GlobalConfig {
-
     TNT_EXPLODES("Explosions enabled", "tnt_enabled", "true", true),
     COWS_EXPLODE("Cows explode when milked", "cows_explode", "false", true),
     SHEEP_SMITE("Sheep smite when sheared", "sheep_smite", "false", true),
@@ -18,7 +17,10 @@ public enum GlobalConfig {
     SLACK_WEBHOOK("Slack integration webhook", "slack_webhook", "Not set", false),
     OLLAMA_HOST("Ollama Host", "ollama_host", "http://localhost:11434", true),
     OLLAMA_ENABLED("Ollama Enabled", "ollama_enabled", "false", true),
-    OLLAMA_MODEL("Ollama Model", "ollama_model", "gemma3:12b", true);
+    OLLAMA_MODEL("Ollama Model", "ollama_model", "gemma3:12b", true),
+    DATABASE_URI("Database URI", "db_uri", "unset", false),
+    DATABASE_USERNAME("Database Username", "db_username", "unset", false),
+    DATABASE_PASSWORD("Database Password", "db_password", "unset", false);
 
     private final String key;
     private final String defaultValue;
