@@ -28,11 +28,18 @@ public class ConfigCommand extends AbstractCommand {
                 out.add(ChatColor.AQUA + configItem.getDisplayName() + ChatColor.RESET + " - " + ChatColor.YELLOW + config.get(configItem.getKey()));
             }
         }
+
         sender.sendMessage(String.join("\n", out));
     };
 
+    private static final CommandRunnable reloadCommand = (CommandSender sender, List<String> args) -> {
+        GlobalConfigService.initialiseGlobalConfig();
+        sender.sendMessage(ChatColor.GREEN + "Reloaded config from disk");
+    };
+
     private static final Map<String, CommandRunnable> VALID_COMMANDS = Map.of(
-            "list", listCommand
+            "list", listCommand,
+            "reload", reloadCommand
     );
 
     public static List<String> getValidCommands() {
