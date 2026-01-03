@@ -37,7 +37,7 @@ public class PlotListener implements Listener {
 
             if (cancel) {
                 e.setCancelled(true);
-                e.getPlayer().getWorld().spawnParticle(Particle.SMOKE_LARGE, e.getBlock().getLocation(), 3);
+                e.getPlayer().getWorld().spawnParticle(Particle.LARGE_SMOKE, e.getBlock().getLocation(), 3);
                 e.getPlayer().sendMessage(ChatColor.RED + "Only " + ChatColor.GOLD + blockOwner.get().getOwner() + ChatColor.RED + " can build here!");
             }
         }
@@ -56,7 +56,7 @@ public class PlotListener implements Listener {
 
             if (cancel) {
                 e.setCancelled(true);
-                e.getPlayer().getWorld().spawnParticle(Particle.SMOKE_LARGE, e.getBlock().getLocation(), 3);
+                e.getPlayer().getWorld().spawnParticle(Particle.LARGE_SMOKE, e.getBlock().getLocation(), 3);
                 e.getPlayer().sendMessage(ChatColor.RED + "Only " + ChatColor.GOLD + blockOwner.get().getOwner() + ChatColor.RED + " can build here!");
             }
         }
@@ -80,7 +80,7 @@ public class PlotListener implements Listener {
 
                 if (cancelEvent) {
                     e.setCancelled(true);
-                    e.getDamager().getWorld().spawnParticle(Particle.SMOKE_LARGE, e.getEntity().getLocation(), 3);
+                    e.getDamager().getWorld().spawnParticle(Particle.LARGE_SMOKE, e.getEntity().getLocation(), 3);
                     e.getDamager().sendMessage(ChatColor.RED + "Only " + ChatColor.GOLD + blockOwner.get().getOwner() + ChatColor.RED + " can interact with that!");
                 }
             }
@@ -103,7 +103,7 @@ public class PlotListener implements Listener {
 
             if (cancelEvent) {
                 e.setCancelled(true);
-                e.getPlayer().getWorld().spawnParticle(Particle.SMOKE_LARGE, e.getClickedBlock().getLocation(), 3);
+                e.getPlayer().getWorld().spawnParticle(Particle.LARGE_SMOKE, e.getClickedBlock().getLocation(), 3);
                 e.getPlayer().sendMessage(ChatColor.RED + "Only " + ChatColor.GOLD + blockOwner.get().getOwner() + ChatColor.RED + " can interact with that!");
                 return;
             }

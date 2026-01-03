@@ -25,7 +25,7 @@ public class ExplosionListener implements Listener {
     public void onEntityExplodeEvent(ExplosionPrimeEvent e) {
         Location l = e.getEntity().getLocation();
         if (tntDisabled() || blockIsInPlot(l)) {
-            if (e.getEntityType().equals(EntityType.PRIMED_TNT)) {
+            if (e.getEntityType().equals(EntityType.TNT)) {
                 spawnFireworks(e.getEntity().getLocation(), 10, 10);
                 e.setCancelled(true);
             } else if (e.getEntityType().equals(EntityType.CREEPER)) {
@@ -39,7 +39,7 @@ public class ExplosionListener implements Listener {
     @EventHandler
     public void onVehicleCreate(VehicleCreateEvent event) {
         Location l = event.getVehicle().getLocation();
-        if ((tntDisabled() || blockIsInPlot(l)) && event.getVehicle().getType().equals(EntityType.MINECART_TNT)) {
+        if ((tntDisabled() || blockIsInPlot(l)) && event.getVehicle().getType().equals(EntityType.TNT_MINECART)) {
             event.setCancelled(true);
         }
     }
@@ -54,7 +54,7 @@ public class ExplosionListener implements Listener {
 
     private void spawnFireworks(Location location, int amount, int power) {
         for (int i = 0; i < amount; i++) {
-            Firework fw = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK);
+            Firework fw = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK_ROCKET);
             FireworkMeta fwm = fw.getFireworkMeta();
             fwm.setPower(power);
             fwm.addEffect(FireworkEffect.builder().withColor(getRandomColour()).flicker(true).build());

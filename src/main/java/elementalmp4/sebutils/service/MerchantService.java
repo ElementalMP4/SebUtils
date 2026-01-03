@@ -37,7 +37,7 @@ public class MerchantService {
         //Unbreaking 3
         ItemStack unbreakingBook = new ItemStack(Material.ENCHANTED_BOOK);
         EnchantmentStorageMeta unbreakingMeta = (EnchantmentStorageMeta) unbreakingBook.getItemMeta();
-        unbreakingMeta.addStoredEnchant(Enchantment.DURABILITY, 3, true);
+        unbreakingMeta.addStoredEnchant(Enchantment.UNBREAKING, 3, true);
         unbreakingBook.setItemMeta(unbreakingMeta);
 
         MerchantRecipe unbreaking = new MerchantRecipe(unbreakingBook, 100);
