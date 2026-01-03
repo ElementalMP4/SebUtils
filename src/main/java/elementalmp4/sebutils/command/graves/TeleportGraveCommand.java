@@ -5,6 +5,7 @@ import main.java.elementalmp4.sebutils.command.AbstractCommand;
 import main.java.elementalmp4.sebutils.completer.GraveCompleter;
 import main.java.elementalmp4.sebutils.entity.Grave;
 import main.java.elementalmp4.sebutils.service.GraveService;
+import main.java.elementalmp4.sebutils.utils.GameruleChecker;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -39,6 +40,11 @@ public class TeleportGraveCommand extends AbstractCommand {
         }
 
         grave.get().teleport((Player) commandSender);
+
+        if (!GameruleChecker.isKeepInventory(((Player) commandSender).getWorld())) {
+            GraveService.removeGrave(grave.get().getId());
+        }
+
         return true;
     }
 }

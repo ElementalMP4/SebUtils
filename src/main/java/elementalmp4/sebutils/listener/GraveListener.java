@@ -5,6 +5,7 @@ import main.java.elementalmp4.sebutils.SebUtils;
 import main.java.elementalmp4.sebutils.annotation.SebUtilsListener;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
 import main.java.elementalmp4.sebutils.service.GraveService;
+import main.java.elementalmp4.sebutils.utils.GameruleChecker;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -50,7 +51,7 @@ public class GraveListener implements Listener {
             String world = event.getPlayer().getWorld().getName();
             String id = GraveService.createGrave(event.getPlayer().getName(), x, y, z, world);
 
-            if (!isKeepInventory(event.getPlayer().getWorld())) createGrave(event, id);
+            if (!GameruleChecker.isKeepInventory(event.getPlayer().getWorld())) createGrave(event, id);
             Component message = Component.text("You died!", NamedTextColor.RED)
                     .append(
                             Component.text(" [TELEPORT]", NamedTextColor.YELLOW)
@@ -59,10 +60,6 @@ public class GraveListener implements Listener {
                     );
             event.getPlayer().sendMessage(message);
         }
-    }
-
-    private boolean isKeepInventory(World world) {
-        return Boolean.TRUE.equals(world.getGameRuleValue(GameRules.KEEP_INVENTORY));
     }
 
     private void createGrave(PlayerDeathEvent event, String graveId) {
