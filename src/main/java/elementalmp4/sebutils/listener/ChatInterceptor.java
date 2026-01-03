@@ -15,7 +15,8 @@ public class ChatInterceptor implements Listener {
         if (event.isCancelled()) {
             return;
         }
-        NicknameService.adaptMessageNickname(event);
+        String modifiedPlayerName = NicknameService.getPlayerNameCustomised(event.getPlayer().getName());
+        event.setFormat(modifiedPlayerName + ": %2$s");
         DiscordService.forwardPlayerMessage(event.getPlayer(), event.getMessage());
     }
 

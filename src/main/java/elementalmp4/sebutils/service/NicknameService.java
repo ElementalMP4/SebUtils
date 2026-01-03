@@ -4,7 +4,6 @@ import main.java.elementalmp4.sebutils.SebUtils;
 import main.java.elementalmp4.sebutils.entity.Profile;
 import main.java.elementalmp4.sebutils.utils.ConsoleColours;
 import org.bukkit.ChatColor;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -49,12 +48,10 @@ public class NicknameService {
         return COLOURS.keySet();
     }
 
-    public static void adaptMessageNickname(AsyncPlayerChatEvent event) {
-        String playerName = event.getPlayer().getName();
+    public static String getPlayerNameCustomised(String playerName) {
         String userColour = getUserColour(playerName);
         String nickname = getUserNickname(playerName);
-        String modifiedPlayerName = applyColour(userColour, nickname) + ChatColor.RESET;
-        event.setFormat(modifiedPlayerName + ": %2$s");
+        return applyColour(userColour, nickname) + ChatColor.RESET;
     }
 
     public static void cacheProfile(String playerName) {

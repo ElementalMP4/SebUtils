@@ -2,7 +2,7 @@ api-version: "1.21"
 name: SebUtils
 author: ElementalMP4
 version: '1.9.0'
-main: main.java.elementalmp4.SebUtils
+main: main.java.elementalmp4.sebutils.SebUtils
 description: Homes, Teleportation, Chat customisation and plenty more
 prefix: SebUtils
 permissions:
