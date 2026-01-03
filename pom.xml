@@ -36,7 +36,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>main.java.elementalmp4.SebUtils</mainClass>
+                                    <mainClass>main.java.elementalmp4.sebutils.SebUtils</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
