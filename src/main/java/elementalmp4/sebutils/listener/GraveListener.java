@@ -5,8 +5,10 @@ import main.java.elementalmp4.sebutils.SebUtils;
 import main.java.elementalmp4.sebutils.annotation.SebUtilsListener;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
 import main.java.elementalmp4.sebutils.service.GraveService;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
@@ -42,11 +44,28 @@ public class GraveListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerDeath(PlayerDeathEvent event) {
         if (GlobalConfigService.getAsBoolean(GlobalConfig.GRAVES_ENABLED)) {
-            createGrave(event);
+            int x = event.getPlayer().getLocation().getBlockX();
+            int y = event.getPlayer().getLocation().getBlockY();
+            int z = event.getPlayer().getLocation().getBlockZ();
+            String world = event.getPlayer().getWorld().getName();
+            String id = GraveService.createGrave(event.getPlayer().getName(), x, y, z, world);
+
+            if (!isKeepInventory(event.getPlayer().getWorld())) createGrave(event, id);
+            Component message = Component.text("You died!", NamedTextColor.RED)
+                    .append(
+                            Component.text(" [TELEPORT]", NamedTextColor.YELLOW)
+                                    .decorate(TextDecoration.BOLD)
+                                    .clickEvent(ClickEvent.runCommand("/tpgrave " + id))
+                    );
+            event.getPlayer().sendMessage(message);
         }
     }
 
-    private void createGrave(PlayerDeathEvent event) {
+    private boolean isKeepInventory(World world) {
+        return Boolean.TRUE.equals(world.getGameRuleValue(GameRules.KEEP_INVENTORY));
+    }
+
+    private void createGrave(PlayerDeathEvent event, String graveId) {
         Player player = event.getEntity();
         event.getDrops().clear();
         event.setDroppedExp(0);
@@ -76,20 +95,7 @@ public class GraveListener implements Listener {
         player.getInventory().clear();
         player.getInventory().setArmorContents(new ItemStack[4]);
 
-        int x = player.getLocation().getBlockX();
-        int y = player.getLocation().getBlockY();
-        int z = player.getLocation().getBlockZ();
-        String world = player.getWorld().getName();
-        String id = GraveService.createGrave(player.getName(), x, y, z, world);
-
-        deathBlock.setMetadata(GRAVE_ID_META, new FixedMetadataValue(SebUtils.getPlugin(), id));
-
-        TextComponent message = new TextComponent();
-        message.addExtra(ChatColor.RED + "You died!");
-        TextComponent teleportComponent = new TextComponent("" + ChatColor.YELLOW + ChatColor.BOLD + " [TELEPORT]");
-        teleportComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpgrave " + id));
-        message.addExtra(teleportComponent);
-        player.spigot().sendMessage(message);
+        deathBlock.setMetadata(GRAVE_ID_META, new FixedMetadataValue(SebUtils.getPlugin(), graveId));
     }
 
     @EventHandler
