@@ -4,7 +4,6 @@ public enum GlobalConfig {
     TNT_EXPLODES("Explosions enabled", "tnt_enabled", "true", true),
     COWS_EXPLODE("Cows explode when milked", "cows_explode", "false", true),
     SHEEP_SMITE("Sheep smite when sheared", "sheep_smite", "false", true),
-    BILLY_ENABLED("Billy shop enabled", "billy_enabled", "false", true),
     ADMIN_PLOT_OVERRIDE("Admins override plot permissions", "admin_plot_override", "true", true),
     PLOT_MAX_SIZE("Maximum plot area per user", "plot_max_size", "10000", true),
     AFK_ENABLED("Auto AFK enabled", "afk_enabled", "true", true),

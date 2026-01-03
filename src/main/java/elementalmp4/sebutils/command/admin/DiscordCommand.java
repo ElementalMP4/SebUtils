@@ -50,7 +50,7 @@ public class DiscordCommand extends AbstractCommand {
         } else {
             String token = GlobalConfigService.getValue(GlobalConfig.DISCORD_TOKEN);
             String channel = GlobalConfigService.getValue(GlobalConfig.DISCORD_CHANNEL);
-            if (token.equals("Not set") || channel.equals("Not set")) {
+            if (token.equals("unset") || channel.equals("unset")) {
                 sender.sendMessage(ChatColor.RED + "Message channel and token both need to be set!");
             } else {
                 GlobalConfigService.set(GlobalConfig.DISCORD_ENABLED, "true");

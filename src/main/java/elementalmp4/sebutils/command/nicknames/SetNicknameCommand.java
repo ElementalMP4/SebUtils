@@ -2,6 +2,7 @@ package main.java.elementalmp4.sebutils.command.nicknames;
 
 import main.java.elementalmp4.sebutils.annotation.SebUtilsCommand;
 import main.java.elementalmp4.sebutils.command.AbstractCommand;
+import main.java.elementalmp4.sebutils.completer.EmptyTabCompleter;
 import main.java.elementalmp4.sebutils.service.NicknameService;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -35,6 +36,6 @@ public class SetNicknameCommand extends AbstractCommand {
 
     @Override
     public TabCompleter getTabCompleter() {
-        return null;
+        return new EmptyTabCompleter();
     }
 }

@@ -43,7 +43,7 @@ public class SlackCommand extends AbstractCommand {
             sender.sendMessage(ChatColor.RED + "Slack integration is already enabled!");
         } else {
             String webhook = GlobalConfigService.getValue(GlobalConfig.SLACK_INTEGRATION_ENABLED);
-            if (webhook.equals("Not set")) {
+            if (webhook.equals("unset")) {
                 sender.sendMessage(ChatColor.RED + "Slack webhook needs to be set!");
             } else {
                 GlobalConfigService.set(GlobalConfig.SLACK_INTEGRATION_ENABLED, "true");

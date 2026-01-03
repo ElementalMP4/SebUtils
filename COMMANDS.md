@@ -24,7 +24,6 @@
 | listhomes         | /listhomes [player]                            | sebutils.admin     | Shows a user's homes                                                                                                      |
 | cowsexplode       | /cowsexplode [true/false]                      | sebutils.admin     | Toggle whether cows explode when milked                                                                                   |
 | sheepsmite        | /sheepsmite [true/false]                       | sebutils.admin     | Toggle whether sheep are smited when shaved                                                                               |
-| enablebilly       | /enablebilly [true/false]                      | sebutils.admin     | Toggle whether nitwit villagers will show a special item shop for difficult to acquire items                              |
 | adminplotoverride | /adminplotoverride [true/false]                | sebutils.admin     | Toggle whether players with the sebutils.admin permission can override user plots                                         |
 | smite             | /smite [player]                                | sebutils.admin     | Smite a player                                                                                                            |
 | enableafk         | /enableafk [true/false]                        | sebutils.admin     | Enable or disable automatic AFK messages                                                                                  |
