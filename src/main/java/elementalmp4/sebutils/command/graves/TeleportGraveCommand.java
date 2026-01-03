@@ -41,7 +41,7 @@ public class TeleportGraveCommand extends AbstractCommand {
 
         grave.get().teleport((Player) commandSender);
 
-        if (!GameruleChecker.isKeepInventory(((Player) commandSender).getWorld())) {
+        if (GameruleChecker.isKeepInventory(((Player) commandSender).getWorld())) {
             GraveService.removeGrave(grave.get().getId());
         }
 
