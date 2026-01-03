@@ -54,7 +54,7 @@ public class OllamaService {
                 builder.withMessage(OllamaChatMessageRole.USER, prompt);
             } else {
                 builder.withMessage(OllamaChatMessageRole.SYSTEM, SYSTEM_PROMPT);
-                builder.withMessage(OllamaChatMessageRole.SYSTEM, "The user who is talking to you is called " + name);
+                builder.withMessage(OllamaChatMessageRole.SYSTEM, "The user who is talking to you is called " + name + ". All subsequent messages will be from them.");
                 builder.withMessage(OllamaChatMessageRole.USER, prompt);
             }
 
