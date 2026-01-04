@@ -1,14 +1,16 @@
-package main.java.elementalmp4.sebutils.service;
+package main.java.elementalmp4.sebutils.modules;
 
 import main.java.elementalmp4.sebutils.config.GlobalConfig;
-import main.java.elementalmp4.sebutils.SebUtils;
+import main.java.elementalmp4.sebutils.service.GlobalConfigService;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 
-public class DatabaseService {
+import static main.java.elementalmp4.sebutils.SebUtils.getPluginLogger;
+
+public class DatabaseModule extends AbstractModule {
 
     private static final LinkedHashMap<String, String> MIGRATIONS = new LinkedHashMap<>();
 
@@ -21,10 +23,12 @@ public class DatabaseService {
         MIGRATIONS.put("pvp toggles", "CREATE TABLE IF NOT EXISTS pvp_toggles (username TEXT, toggle BOOLEAN);");
     }
 
-    private static Connection connection;
+    private Connection connection;
 
-    public static void connect() {
+    @Override
+    public void onStart() {
         try {
+            getPluginLogger().info("Connecting to database...");
             Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(
                     GlobalConfigService.getValue(GlobalConfig.DATABASE_URI),
@@ -32,27 +36,30 @@ public class DatabaseService {
                     GlobalConfigService.getValue(GlobalConfig.DATABASE_PASSWORD)
             );
             migrate();
+            getPluginLogger().info("Database ready!");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static void migrate() {
+    private void migrate() {
         for (String migration : MIGRATIONS.keySet()) {
             try {
                 connection.createStatement().executeUpdate(MIGRATIONS.get(migration));
             } catch (Exception e) {
-                SebUtils.getPluginLogger().severe("Failed to run migration " + migration + " - " + e.getMessage());
+                getPluginLogger().severe("Failed to run migration " + migration + " - " + e.getMessage());
                 throw new RuntimeException(e);
             }
         }
     }
 
-    public static Connection getConnection() {
+    public Connection getConnection() {
         return connection;
     }
 
-    public static void close() {
+    @Override
+    public void onStop() {
+        getPluginLogger().info("Stopping database module");
         try {
             if (connection == null) return;
             connection.close();

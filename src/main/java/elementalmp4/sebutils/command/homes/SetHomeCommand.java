@@ -4,7 +4,7 @@ import main.java.elementalmp4.sebutils.annotation.SebUtilsCommand;
 import main.java.elementalmp4.sebutils.command.AbstractCommand;
 import main.java.elementalmp4.sebutils.completer.EmptyTabCompleter;
 import main.java.elementalmp4.sebutils.service.HomeService;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -21,8 +21,8 @@ public class SetHomeCommand extends AbstractCommand {
         int y = player.getLocation().getBlockY();
         int z = player.getLocation().getBlockZ();
         HomeService.setHome(commandSender.getName(), player.getWorld().getName(), x, y, z, homeName);
-        commandSender.sendMessage(ChatColor.RED + "Home " + ChatColor.YELLOW + homeName + ChatColor.RED
-                + " has been set to " + ChatColor.YELLOW + x + " " + y + " " + z);
+        commandSender.sendMessage(NamedTextColor.RED + "Home " + NamedTextColor.YELLOW + homeName + NamedTextColor.RED
+                + " has been set to " + NamedTextColor.YELLOW + x + " " + y + " " + z);
         return true;
     }
 

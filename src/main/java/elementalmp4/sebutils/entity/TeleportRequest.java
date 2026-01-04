@@ -1,7 +1,7 @@
 package main.java.elementalmp4.sebutils.entity;
 
 import main.java.elementalmp4.sebutils.service.TeleportService;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 
 public class TeleportRequest extends EphemeralObject {
@@ -21,15 +21,15 @@ public class TeleportRequest extends EphemeralObject {
         player.teleport(target);
         TeleportService.playTeleportEffects(player);
         TeleportService.playTeleportEffects(target);
-        player.sendMessage(ChatColor.GREEN + "Teleported " + ChatColor.YELLOW + player.getName() + ChatColor.GREEN + " to " + ChatColor.YELLOW + target.getName());
-        target.sendMessage(ChatColor.GREEN + "Teleported " + ChatColor.YELLOW + player.getName() + ChatColor.GREEN + " to " + ChatColor.YELLOW + target.getName());
+        player.sendMessage(NamedTextColor.GREEN + "Teleported " + NamedTextColor.YELLOW + player.getName() + NamedTextColor.GREEN + " to " + NamedTextColor.YELLOW + target.getName());
+        target.sendMessage(NamedTextColor.GREEN + "Teleported " + NamedTextColor.YELLOW + player.getName() + NamedTextColor.GREEN + " to " + NamedTextColor.YELLOW + target.getName());
     }
 
     public void deny(Player denier) {
-        player.sendMessage(ChatColor.YELLOW + (denier.getName().equals(player.getName()) ? "You" : denier.getName())
-                + ChatColor.RED + " denied teleport request");
-        target.sendMessage(ChatColor.YELLOW + (denier.getName().equals(target.getName()) ? "You" : denier.getName())
-                + ChatColor.RED + " denied teleport request");
+        player.sendMessage(NamedTextColor.YELLOW + (denier.getName().equals(player.getName()) ? "You" : denier.getName())
+                + NamedTextColor.RED + " denied teleport request");
+        target.sendMessage(NamedTextColor.YELLOW + (denier.getName().equals(target.getName()) ? "You" : denier.getName())
+                + NamedTextColor.RED + " denied teleport request");
     }
 
     public String getAuthority() {
@@ -42,7 +42,7 @@ public class TeleportRequest extends EphemeralObject {
 
     @Override
     public void whenExpired() {
-        player.sendMessage(ChatColor.RED + "Teleport request expired");
-        target.sendMessage(ChatColor.RED + "Teleport request expired");
+        player.sendMessage(NamedTextColor.RED + "Teleport request expired");
+        target.sendMessage(NamedTextColor.RED + "Teleport request expired");
     }
 }

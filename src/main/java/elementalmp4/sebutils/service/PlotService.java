@@ -4,7 +4,7 @@ import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.entity.Plot;
 import main.java.elementalmp4.sebutils.entity.PlotCreateRequest;
 import main.java.elementalmp4.sebutils.utils.NamedThreadFactory;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -16,6 +16,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static main.java.elementalmp4.sebutils.SebUtils.getDatabaseConnection;
 
 public class PlotService {
 
@@ -93,7 +95,7 @@ public class PlotService {
     }
 
     public static Optional<Plot> blockIsOwnedBySomeoneElse(String player, int x, int y, String world) {
-        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
+        try (Statement stmt = getDatabaseConnection().createStatement()) {
             ResultSet rs = stmt.executeQuery(createSql(FIND_BOUNDS_CONTAINING_POINT_NOT_OWNED, x, y, player, world));
             if (rs.next()) {
                 return Optional.of(new Plot(rs));
@@ -106,7 +108,7 @@ public class PlotService {
     }
 
     public static Optional<Plot> blockIsOwned(int x, int y, String world) {
-        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
+        try (Statement stmt = getDatabaseConnection().createStatement()) {
             ResultSet rs = stmt.executeQuery(createSql(FIND_BOUNDS_CONTAINING_POINT, x, y, "", world));
             if (rs.next()) {
                 return Optional.of(new Plot(rs));
@@ -119,7 +121,7 @@ public class PlotService {
     }
 
     public static void deletePlot(int id) {
-        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
+        try (Statement stmt = getDatabaseConnection().createStatement()) {
             stmt.executeUpdate("DELETE FROM block_locker WHERE plot_id = %d".formatted(id));
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -141,11 +143,11 @@ public class PlotService {
             if (plotIsValid) {
                 if (canCreatePlot(request, e.getPlayer())) {
                     createPlot(request);
-                    e.getPlayer().sendMessage(ChatColor.GREEN + "Created plot! Used " + ChatColor.YELLOW +
-                            Plot.getPlotArea(request) + ChatColor.GREEN + " blocks");
+                    e.getPlayer().sendMessage(NamedTextColor.GREEN + "Created plot! Used " + NamedTextColor.YELLOW +
+                            Plot.getPlotArea(request) + NamedTextColor.GREEN + " blocks");
                 }
             } else {
-                e.getPlayer().sendMessage(ChatColor.RED + "Your plot is invalid! Try making it larger");
+                e.getPlayer().sendMessage(NamedTextColor.RED + "Your plot is invalid! Try making it larger");
             }
             requests.remove(e.getPlayer().getName());
         } else {
@@ -156,7 +158,7 @@ public class PlotService {
                     e.getPlayer().getWorld().getName(),
                     x, y
             ));
-            e.getPlayer().sendMessage(ChatColor.GOLD + "Started a new plot at " + ChatColor.YELLOW + x + ", " + y);
+            e.getPlayer().sendMessage(NamedTextColor.GOLD + "Started a new plot at " + NamedTextColor.YELLOW + x + ", " + y);
         }
     }
 
@@ -172,8 +174,8 @@ public class PlotService {
         for (List<Integer> permutation : permutations) {
             Optional<Plot> blockOwner = blockIsOwnedBySomeoneElse(r.getPlayerName(), permutation.get(0), permutation.get(1), r.getWorld());
             if (blockOwner.isPresent()) {
-                p.sendMessage(ChatColor.RED + "Your plot overlaps " + ChatColor.GOLD
-                        + blockOwner.get().getOwner() + ChatColor.RED + "'s plot");
+                p.sendMessage(NamedTextColor.RED + "Your plot overlaps " + NamedTextColor.GOLD
+                        + blockOwner.get().getOwner() + NamedTextColor.RED + "'s plot");
                 return false;
             }
         }
@@ -183,7 +185,7 @@ public class PlotService {
         int newPlotSize = Plot.getPlotArea(r);
 
         if (newPlotSize > maxPlotSize) {
-            p.sendMessage(ChatColor.RED + "This plot exceeds the maximum plot size of " + ChatColor.GOLD + maxPlotSize + " blocks");
+            p.sendMessage(NamedTextColor.RED + "This plot exceeds the maximum plot size of " + NamedTextColor.GOLD + maxPlotSize + " blocks");
             return false;
         }
 
@@ -193,7 +195,7 @@ public class PlotService {
         for (Plot plot : plots) {
             totalPlotSize += Plot.getPlotArea(plot);
             if (totalPlotSize > maxPlotSize) {
-                p.sendMessage(ChatColor.RED + "This plot, along with your existing plots, will exceed the maximum plot size of " + ChatColor.GOLD + maxPlotSize + " blocks");
+                p.sendMessage(NamedTextColor.RED + "This plot, along with your existing plots, will exceed the maximum plot size of " + NamedTextColor.GOLD + maxPlotSize + " blocks");
                 return false;
             }
         }
@@ -202,7 +204,7 @@ public class PlotService {
     }
 
     private static void createPlot(PlotCreateRequest r) {
-        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
+        try (Statement stmt = getDatabaseConnection().createStatement()) {
             stmt.executeUpdate("INSERT INTO block_locker (owner, world, bound_x_a, bound_y_a, bound_x_b, bound_y_b) VALUES ('%s', '%s', %d, %d, %d, %d)"
                     .formatted(r.getPlayerName(), r.getWorld(), r.getXA(), r.getYA(), r.getXB(), r.getYB()));
         } catch (SQLException e) {
@@ -211,7 +213,7 @@ public class PlotService {
     }
 
     public static List<Plot> getUserPlots(String player) {
-        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
+        try (Statement stmt = getDatabaseConnection().createStatement()) {
             ResultSet rs = stmt.executeQuery("SELECT * FROM block_locker WHERE owner = '%s'".formatted(player));
             List<Plot> plots = new ArrayList<>();
             while (rs.next()) {
@@ -224,7 +226,7 @@ public class PlotService {
     }
 
     public static Optional<Plot> getPlotByIdAndOwner(int id, String name) {
-        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
+        try (Statement stmt = getDatabaseConnection().createStatement()) {
             ResultSet rs = stmt.executeQuery("SELECT * FROM block_locker WHERE plot_id = %d AND owner = '%s'".formatted(id, name));
             if (rs.next()) return Optional.of(new Plot(rs));
         } catch (SQLException e) {

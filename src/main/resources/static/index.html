@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plugin Configuration</title>
+    <title>SebUtils Configuration</title>
     <style>
         * {
             margin: 0;
@@ -262,8 +262,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Plugin Configuration</h1>
-            <p class="subtitle">Manage your server settings</p>
+            <h1>SebUtils Configuration</h1>
+            <p class="subtitle">Manage your SebUtils configuration</p>
         </div>
 
         <div class="menu-bar" id="menu-bar">
@@ -388,7 +388,7 @@
                                    value="${cfg.value}"
                                    onchange="updateValue('${key}', this.value)"
                                    placeholder="Enter secure value">
-                            <div class="secure-indicator">Value is encrypted</div>
+                            <div class="secure-indicator">Value is redacted for security</div>
                         </div>
                     `;
                     break;

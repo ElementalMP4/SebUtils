@@ -3,11 +3,12 @@ package main.java.elementalmp4.sebutils.service;
 import main.java.elementalmp4.sebutils.SebUtils;
 import main.java.elementalmp4.sebutils.entity.TeleportRequest;
 import main.java.elementalmp4.sebutils.utils.NamedThreadFactory;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -21,8 +22,8 @@ import java.util.concurrent.TimeUnit;
 
 public class TeleportService {
 
-    public static final TextComponent ACCEPT_COMPONENT = new TextComponent("" + ChatColor.GREEN + ChatColor.BOLD + "[ACCEPT]" + ChatColor.RESET);
-    public static final TextComponent DENY_COMPONENT = new TextComponent("" + ChatColor.RED + ChatColor.BOLD + "[DENY]" + ChatColor.RESET);
+    public static final TextComponent ACCEPT_COMPONENT = new TextComponent("" + NamedTextColor.GREEN + TextDecoration.BOLD + "[ACCEPT]");
+    public static final TextComponent DENY_COMPONENT = new TextComponent("" + NamedTextColor.RED + TextDecoration.BOLD + "[DENY]");
 
     static {
         ACCEPT_COMPONENT.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpaccept"));
@@ -70,28 +71,28 @@ public class TeleportService {
 
     public static Optional<Player> validateTeleportRequest(CommandSender commandSender, String[] args) {
         if (TeleportService.userIsAlreadyWaiting(commandSender.getName())) {
-            commandSender.sendMessage(ChatColor.RED + "You cannot send a teleport request whilst you have pending incoming or outgoing teleport requests");
+            commandSender.sendMessage(NamedTextColor.RED + "You cannot send a teleport request whilst you have pending incoming or outgoing teleport requests");
             return Optional.empty();
         }
 
         if (args.length == 0) {
-            commandSender.sendMessage(ChatColor.RED + "You must specify another player!");
+            commandSender.sendMessage(NamedTextColor.RED + "You must specify another player!");
             return Optional.empty();
         }
 
         Player player = SebUtils.getPlugin().getServer().getPlayer(args[0]);
         if (player == null) {
-            commandSender.sendMessage(ChatColor.RED + "Player could not be found!");
+            commandSender.sendMessage(NamedTextColor.RED + "Player could not be found!");
             return Optional.empty();
         }
 
         if (player.getName().equals(commandSender.getName())) {
-            commandSender.sendMessage(ChatColor.RED + "You cannot teleport to yourself!");
+            commandSender.sendMessage(NamedTextColor.RED + "You cannot teleport to yourself!");
             return Optional.empty();
         }
 
         if (TeleportService.userIsAlreadyWaiting(player.getName())) {
-            commandSender.sendMessage(ChatColor.RED + "That player already has a pending teleport request!");
+            commandSender.sendMessage(NamedTextColor.RED + "That player already has a pending teleport request!");
             return Optional.empty();
         }
 

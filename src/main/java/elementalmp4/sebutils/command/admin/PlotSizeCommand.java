@@ -1,10 +1,10 @@
 package main.java.elementalmp4.sebutils.command.admin;
 
-import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.annotation.SebUtilsCommand;
 import main.java.elementalmp4.sebutils.command.AbstractCommand;
+import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -27,24 +27,24 @@ public class PlotSizeCommand extends AbstractCommand {
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
         if (args.length == 0) {
             int size = GlobalConfigService.getAsInteger(GlobalConfig.PLOT_MAX_SIZE);
-            commandSender.sendMessage(ChatColor.GREEN + "Maximum plot size is currently " + ChatColor.YELLOW + size + " blocks");
+            commandSender.sendMessage(NamedTextColor.GREEN + "Maximum plot size is currently " + NamedTextColor.YELLOW + size + " blocks");
             return true;
         }
 
         Optional<Integer> potentialSize = parseInteger(args[0]);
         if (potentialSize.isEmpty()) {
-            commandSender.sendMessage(ChatColor.RED + "Plot size must be a valid whole number!");
+            commandSender.sendMessage(NamedTextColor.RED + "Plot size must be a valid whole number!");
             return true;
         }
 
         int newSize = potentialSize.get();
         if (newSize < 100 || newSize > 100000) {
-            commandSender.sendMessage(ChatColor.RED + "Plot size must be between 100 and 100,000 blocks!");
+            commandSender.sendMessage(NamedTextColor.RED + "Plot size must be between 100 and 100,000 blocks!");
             return true;
         }
 
         GlobalConfigService.set(GlobalConfig.PLOT_MAX_SIZE, args[0]);
-        commandSender.sendMessage(ChatColor.GREEN + "Maximum plot allocation has been set to " + ChatColor.YELLOW + newSize + " blocks");
+        commandSender.sendMessage(NamedTextColor.GREEN + "Maximum plot allocation has been set to " + NamedTextColor.YELLOW + newSize + " blocks");
         return true;
     }
 

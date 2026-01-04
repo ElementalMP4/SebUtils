@@ -1,16 +1,16 @@
 package main.java.elementalmp4.sebutils.service;
 
-import main.java.elementalmp4.sebutils.SebUtils;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import static main.java.elementalmp4.sebutils.SebUtils.getDatabaseConnection;
+
 public class PermitService {
     public static void grantPermit(int id, String name) {
-        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
+        try (Statement stmt = getDatabaseConnection().createStatement()) {
             stmt.executeUpdate("INSERT INTO plot_permissions (plot_id, player) VALUES (%d, '%s');"
                     .formatted(id, name));
         } catch (SQLException e) {
@@ -19,7 +19,7 @@ public class PermitService {
     }
 
     public static boolean userHasPermit(int id, String name) {
-        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
+        try (Statement stmt = getDatabaseConnection().createStatement()) {
             ResultSet rs = stmt.executeQuery("SELECT * FROM plot_permissions WHERE plot_id = %d AND player = '%s';"
                     .formatted(id, name));
             return rs.next();
@@ -29,7 +29,7 @@ public class PermitService {
     }
 
     public static void revokePermit(int id, String name) {
-        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
+        try (Statement stmt = getDatabaseConnection().createStatement()) {
             stmt.executeUpdate("DELETE FROM plot_permissions WHERE plot_id = %d AND player = '%s';"
                     .formatted(id, name));
         } catch (SQLException e) {
@@ -38,7 +38,7 @@ public class PermitService {
     }
 
     public static List<String> getPermits(int id) {
-        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
+        try (Statement stmt = getDatabaseConnection().createStatement()) {
             List<String> players = new ArrayList<>();
             ResultSet rs = stmt.executeQuery("SELECT * FROM plot_permissions WHERE plot_id = %d;"
                     .formatted(id));

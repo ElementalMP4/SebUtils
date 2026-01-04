@@ -1,11 +1,12 @@
-package main.java.elementalmp4.sebutils.service;
+package main.java.elementalmp4.sebutils.modules;
 
 import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.WebhookClientBuilder;
 import club.minnced.discord.webhook.send.WebhookMessage;
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
-import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.SebUtils;
+import main.java.elementalmp4.sebutils.config.GlobalConfig;
+import main.java.elementalmp4.sebutils.service.GlobalConfigService;
 import main.java.elementalmp4.sebutils.utils.ConsoleColours;
 import main.java.elementalmp4.sebutils.utils.NamedThreadFactory;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -18,8 +19,9 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
@@ -27,33 +29,26 @@ import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
-public class DiscordService {
+import static main.java.elementalmp4.sebutils.SebUtils.getPluginLogger;
+
+public class DiscordModule extends AbstractModule {
 
     private static final String HEAD_URL_FORMAT = "https://api.mineatar.io/head/%s?scale=16";
     private static final String FACE_URL_FORMAT = "https://api.mineatar.io/face/%s?scale=16";
     private static final String WEBHOOK_NAME = "sebutils_chat";
 
-    private static JDA jda;
-    private static WebhookClient webhookClient;
+    private JDA jda;
+    private WebhookClient webhookClient;
 
-    public static boolean connectDiscordOnBoot() {
-        if (GlobalConfigService.getAsBoolean(GlobalConfig.DISCORD_ENABLED)) {
-            startDiscordClient(true);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private static String getHeadUrl(Player player) {
+    private String getHeadUrl(Player player) {
         return HEAD_URL_FORMAT.formatted(player.getUniqueId().toString());
     }
 
-    private static String getFaceUrlFormat(Player player) {
+    private String getFaceUrlFormat(Player player) {
         return FACE_URL_FORMAT.formatted(player.getUniqueId().toString());
     }
 
-    public static void sendJoinMessage(Player player) {
+    public void sendJoinMessage(Player player) {
         if (GlobalConfigService.getAsBoolean(GlobalConfig.DISCORD_ENABLED)) {
             MessageEmbed joinEmbed = new EmbedBuilder()
                     .setColor(Color.GREEN)
@@ -63,7 +58,7 @@ public class DiscordService {
         }
     }
 
-    public static void sendLeaveMessage(Player player) {
+    public void sendLeaveMessage(Player player) {
         if (GlobalConfigService.getAsBoolean(GlobalConfig.DISCORD_ENABLED)) {
             MessageEmbed joinEmbed = new EmbedBuilder()
                     .setColor(Color.RED)
@@ -73,45 +68,29 @@ public class DiscordService {
         }
     }
 
-    public static void startDiscordClient(boolean sendServerUpdate) {
+    @Override
+    public void onStart() {
         try {
+            getPluginLogger().info("Connecting to discord...");
             jda = JDABuilder.createLight(GlobalConfigService.getValue(GlobalConfig.DISCORD_TOKEN))
                     .addEventListeners(new DiscordMessageListener())
                     .enableIntents(GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT)
                     .setActivity(Activity.of(Activity.ActivityType.PLAYING, "Minecraft"))
                     .build()
                     .awaitReady();
-            if (sendServerUpdate) sendStartupMessage();
+            getPluginLogger().info("Discord ready!");
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static void sendStartupMessage() {
-        MessageEmbed startEmbed = new EmbedBuilder()
-                .setAuthor("Server started")
-                .setColor(Color.YELLOW)
-                .build();
-        sendEmbed(startEmbed);
+    @Override
+    public void onStop() {
+        getPluginLogger().info("Stopping discord module");
+        jda.shutdown();
     }
 
-    public static void close(boolean sendServerUpdate) {
-        if (jda != null) {
-            if (sendServerUpdate) sendShutdownMessage();
-            jda.shutdown();
-            jda = null;
-        }
-    }
-
-    private static void sendShutdownMessage() {
-        MessageEmbed shutdownEmbed = new EmbedBuilder()
-                .setAuthor("Server closed")
-                .setColor(Color.YELLOW)
-                .build();
-        sendEmbed(shutdownEmbed);
-    }
-
-    private static void sendEmbed(MessageEmbed embed) {
+    private void sendEmbed(MessageEmbed embed) {
         String channelId = GlobalConfigService.getValue(GlobalConfig.DISCORD_CHANNEL);
         TextChannel channel = jda.getTextChannelById(channelId);
         if (channel == null) {
@@ -121,7 +100,7 @@ public class DiscordService {
         }
     }
 
-    private static WebhookClient getOrCreateWebhookClient() {
+    private WebhookClient getOrCreateWebhookClient() {
         if (webhookClient != null) return webhookClient;
 
         TextChannel channel = jda.getTextChannelById(GlobalConfigService.getValue(GlobalConfig.DISCORD_CHANNEL));
@@ -137,7 +116,7 @@ public class DiscordService {
         return webhookClient;
     }
 
-    public static void forwardPlayerMessage(Player author, String message) {
+    public void forwardPlayerMessage(Player author, String message) {
         if (GlobalConfigService.getAsBoolean(GlobalConfig.DISCORD_ENABLED)) {
             WebhookClient client = getOrCreateWebhookClient();
             WebhookMessage msg = new WebhookMessageBuilder()
@@ -149,21 +128,21 @@ public class DiscordService {
         }
     }
 
-    private static String removeVolatileMentions(String text) {
+    private String removeVolatileMentions(String text) {
         return text.replaceAll("@everyone", "``@``everyone").replaceAll("@here", "``@``here").replaceAll("<@&", "<");
     }
 
-    private static void forwardDiscordMessage(String name, String contentStripped) {
+    private void forwardDiscordMessage(String name, String contentStripped) {
         TextComponent component = new TextComponent();
-        component.addExtra("" + ChatColor.BLUE + ChatColor.BOLD + "[DISCORD] ");
-        component.addExtra(ChatColor.YELLOW + "[%s] ".formatted(name));
-        component.addExtra(ChatColor.WHITE + contentStripped);
-        SebUtils.getPlugin().getServer().spigot().broadcast(component);
+        component.addExtra("" + NamedTextColor.BLUE + TextDecoration.BOLD + "[DISCORD] ");
+        component.addExtra(NamedTextColor.YELLOW + "[%s] ".formatted(name));
+        component.addExtra(NamedTextColor.WHITE + contentStripped);
+        SebUtils.getPlugin().getServer().broadcast(component);
         SebUtils.getPluginLogger().info("%s[DISCORD] %s[%s] %s%s"
                 .formatted(ConsoleColours.BLUE, ConsoleColours.YELLOW, name, ConsoleColours.WHITE, contentStripped));
     }
 
-    private static class DiscordMessageListener extends ListenerAdapter {
+    private class DiscordMessageListener extends ListenerAdapter {
 
         @Override
         public void onMessageReceived(@Nonnull MessageReceivedEvent event) {

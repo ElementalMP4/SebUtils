@@ -4,7 +4,7 @@ import main.java.elementalmp4.sebutils.annotation.SebUtilsCommand;
 import main.java.elementalmp4.sebutils.command.AbstractCommand;
 import main.java.elementalmp4.sebutils.completer.BooleanTabCompleter;
 import main.java.elementalmp4.sebutils.service.PVPToggleService;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -22,7 +22,7 @@ public class PVPToggleCommand extends AbstractCommand {
         }
 
         if (!Set.of("true", "false").contains(args[0])) {
-            commandSender.sendMessage(ChatColor.RED + "You must specify true or false");
+            commandSender.sendMessage(NamedTextColor.RED + "You must specify true or false");
             return true;
         }
 
@@ -32,7 +32,7 @@ public class PVPToggleCommand extends AbstractCommand {
     }
 
     private String format(boolean toggledOff) {
-        return (toggledOff ? ChatColor.RED + "disabled" : ChatColor.GREEN + "enabled");
+        return (toggledOff ? NamedTextColor.RED + "disabled" : NamedTextColor.GREEN + "enabled");
     }
 
     @Override

@@ -4,8 +4,8 @@ import main.java.elementalmp4.sebutils.annotation.SebUtilsCommand;
 import main.java.elementalmp4.sebutils.command.AbstractCommand;
 import main.java.elementalmp4.sebutils.entity.TeleportRequest;
 import main.java.elementalmp4.sebutils.service.TeleportService;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -21,14 +21,14 @@ public class TeleportHereCommand extends AbstractCommand {
         if (playerOpt.isEmpty()) return true;
         Player player = playerOpt.get();
 
-        commandSender.sendMessage(ChatColor.YELLOW + "Teleport request sent to " + ChatColor.RED + player.getName());
+        commandSender.sendMessage(NamedTextColor.YELLOW + "Teleport request sent to " + NamedTextColor.RED + player.getName());
         TextComponent message = new TextComponent();
-        message.addExtra(ChatColor.DARK_BLUE + "=====================================================");
-        message.addExtra(ChatColor.YELLOW + commandSender.getName() + ChatColor.WHITE + " has requested to teleport you to their location\n\n ");
+        message.addExtra(NamedTextColor.DARK_BLUE + "=====================================================");
+        message.addExtra(NamedTextColor.YELLOW + commandSender.getName() + NamedTextColor.WHITE + " has requested to teleport you to their location\n\n ");
         message.addExtra(TeleportService.ACCEPT_COMPONENT);
-        message.addExtra(ChatColor.WHITE + "          ");
+        message.addExtra(NamedTextColor.WHITE + "          ");
         message.addExtra(TeleportService.DENY_COMPONENT);
-        message.addExtra(ChatColor.DARK_BLUE + "\n=====================================================");
+        message.addExtra(NamedTextColor.DARK_BLUE + "\n=====================================================");
 
         player.spigot().sendMessage(message);
         TeleportService.createNewTeleportRequest(new TeleportRequest(player, ((Player) commandSender), player.getName()));

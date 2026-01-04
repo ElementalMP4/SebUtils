@@ -1,7 +1,7 @@
 package main.java.elementalmp4.sebutils.utils;
 
 import main.java.elementalmp4.sebutils.SebUtils;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 
 public class AfkStatus {
 
@@ -32,11 +32,11 @@ public class AfkStatus {
     }
 
     private void sendReturnMessage() {
-        SebUtils.getPlugin().getServer().broadcastMessage(ChatColor.GRAY + this.playerName + " is no longer AFK");
+        SebUtils.getPlugin().getServer().broadcastMessage(NamedTextColor.GRAY + this.playerName + " is no longer AFK");
     }
 
     private void sendAwayMessage() {
-        SebUtils.getPlugin().getServer().broadcastMessage(ChatColor.GRAY + this.playerName + " is AFK");
+        SebUtils.getPlugin().getServer().broadcastMessage(NamedTextColor.GRAY + this.playerName + " is AFK");
     }
 
 }

@@ -4,7 +4,7 @@ import main.java.elementalmp4.sebutils.annotation.SebUtilsCommand;
 import main.java.elementalmp4.sebutils.command.AbstractCommand;
 import main.java.elementalmp4.sebutils.completer.HomesTabCompleter;
 import main.java.elementalmp4.sebutils.service.HomeService;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -16,9 +16,9 @@ public class DeleteHomeCommand extends AbstractCommand {
         String homeName = args.length == 0 ? "default" : args[0];
         if (HomeService.userHasHome(commandSender.getName(), homeName)) {
             HomeService.deleteHome(commandSender.getName(), homeName);
-            commandSender.sendMessage(ChatColor.RED + "Deleted your home " + ChatColor.YELLOW + homeName);
+            commandSender.sendMessage(NamedTextColor.RED + "Deleted your home " + NamedTextColor.YELLOW + homeName);
         } else {
-            commandSender.sendMessage(ChatColor.RED + "You don't have a home by that name, or you haven't set a default home yet!");
+            commandSender.sendMessage(NamedTextColor.RED + "You don't have a home by that name, or you haven't set a default home yet!");
         }
         return true;
     }

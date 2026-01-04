@@ -4,17 +4,15 @@ import main.java.elementalmp4.sebutils.annotation.SebUtilsCommand;
 import main.java.elementalmp4.sebutils.annotation.SebUtilsListener;
 import main.java.elementalmp4.sebutils.command.AbstractCommand;
 import main.java.elementalmp4.sebutils.config.GlobalConfig;
-import main.java.elementalmp4.sebutils.service.DatabaseService;
-import main.java.elementalmp4.sebutils.service.DiscordService;
+import main.java.elementalmp4.sebutils.modules.*;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
-import main.java.elementalmp4.sebutils.service.OllamaService;
 import main.java.elementalmp4.sebutils.utils.ConsoleColours;
 import main.java.elementalmp4.sebutils.utils.ReflectiveInstantiator;
-import main.java.elementalmp4.sebutils.web.WebServer;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.sql.Connection;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -22,6 +20,7 @@ public class SebUtils extends JavaPlugin {
 
     private static JavaPlugin plugin;
     private static Logger logger;
+    private static ModuleManager moduleManager;
 
     public static Logger getPluginLogger() {
         return logger;
@@ -29,6 +28,14 @@ public class SebUtils extends JavaPlugin {
 
     public static JavaPlugin getPlugin() {
         return plugin;
+    }
+
+    public static ModuleManager getModuleManager() {
+        return moduleManager;
+    }
+
+    public static Connection getDatabaseConnection() {
+        return moduleManager.get(DatabaseModule.class).getConnection();
     }
 
     @Override
@@ -51,13 +58,11 @@ public class SebUtils extends JavaPlugin {
         logger.info(ConsoleColours.YELLOW + "Initialising Global Config" + ConsoleColours.RESET);
         GlobalConfigService.initialiseGlobalConfig();
 
-        logger.info(ConsoleColours.YELLOW + "Initialising Database" + ConsoleColours.RESET);
-        DatabaseService.connect();
-
-        logger.info(ConsoleColours.YELLOW + "Starting web server" + ConsoleColours.RESET);
-        String bind = GlobalConfigService.getValue(GlobalConfig.WEB_BIND);
-        int port = GlobalConfigService.getAsInteger(GlobalConfig.WEB_PORT);
-        WebServer.start(bind, port);
+        moduleManager = new ModuleManager();
+        moduleManager.register(DatabaseModule.class, DatabaseModule::new);
+        moduleManager.register(DiscordModule.class, DiscordModule::new, GlobalConfig.DISCORD_ENABLED);
+        moduleManager.register(WebServerModule.class, WebServerModule::new, GlobalConfig.WEB_ENABLED);
+        moduleManager.register(OllamaModule.class, OllamaModule::new, GlobalConfig.OLLAMA_ENABLED);
 
         logger.info(ConsoleColours.YELLOW + "Registering commands");
         List<AbstractCommand> commands = new ReflectiveInstantiator<AbstractCommand>("main.java.elementalmp4.sebutils.command")
@@ -77,20 +82,12 @@ public class SebUtils extends JavaPlugin {
             getServer().getPluginManager().registerEvents(listener, this);
         }
 
-        boolean discord = DiscordService.connectDiscordOnBoot();
-        if (discord) logger.info(ConsoleColours.YELLOW + "Connected to Discord" + ConsoleColours.RESET);
-
-        boolean ollama = OllamaService.startOllamaOnBoot();
-        if (ollama) logger.info(ConsoleColours.YELLOW + "Started Ollama Client" + ConsoleColours.RESET);
-
         logger.info(ConsoleColours.GREEN + "Ready!" + ConsoleColours.RESET);
     }
 
     @Override
     public void onDisable() {
-        DiscordService.close(true);
-        WebServer.stop();
-        DatabaseService.close();
-        logger.info("Stopped cleanly");
+        moduleManager.stopAll();
+        logger.info("Stopped successfully!");
     }
 }

@@ -1,9 +1,9 @@
 package main.java.elementalmp4.sebutils.service;
 
+import main.java.elementalmp4.sebutils.SebUtils;
 import main.java.elementalmp4.sebutils.config.Config;
 import main.java.elementalmp4.sebutils.config.DataType;
 import main.java.elementalmp4.sebutils.config.GlobalConfig;
-import main.java.elementalmp4.sebutils.SebUtils;
 import main.java.elementalmp4.sebutils.exception.InvalidConfigException;
 import org.json.JSONObject;
 

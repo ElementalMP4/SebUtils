@@ -1,11 +1,11 @@
 package main.java.elementalmp4.sebutils.command.admin;
 
-import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.annotation.SebUtilsCommand;
 import main.java.elementalmp4.sebutils.command.AbstractCommand;
 import main.java.elementalmp4.sebutils.completer.BooleanTabCompleter;
+import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -23,7 +23,7 @@ public class SheepSmiteCommand extends AbstractCommand {
         }
 
         if (!Set.of("true", "false").contains(args[0])) {
-            commandSender.sendMessage(ChatColor.RED + "You must specify true or false");
+            commandSender.sendMessage(NamedTextColor.RED + "You must specify true or false");
             return true;
         }
 
@@ -33,7 +33,7 @@ public class SheepSmiteCommand extends AbstractCommand {
     }
 
     private String format(boolean enabled) {
-        return (enabled ? ChatColor.GREEN + "be smited" : ChatColor.RED + "not be smited");
+        return (enabled ? NamedTextColor.GREEN + "be smited" : NamedTextColor.RED + "not be smited");
     }
 
     @Override

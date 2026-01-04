@@ -1,8 +1,8 @@
 package main.java.elementalmp4.sebutils.listener;
 
-import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.SebUtils;
 import main.java.elementalmp4.sebutils.annotation.SebUtilsListener;
+import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
 import main.java.elementalmp4.sebutils.service.GraveService;
 import main.java.elementalmp4.sebutils.utils.GameruleChecker;
@@ -10,7 +10,10 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
@@ -118,7 +121,7 @@ public class GraveListener implements Listener {
         // Check the player's name against the metadata
         String playerName = player.getName();
         if (!clickedBlock.getMetadata(GRAVE_OWNER_META).get(0).asString().equals(playerName)) {
-            player.sendMessage(ChatColor.RED + "This isn't your grave!");
+            player.sendMessage(NamedTextColor.RED + "This isn't your grave!");
             return;
         }
 
@@ -157,7 +160,7 @@ public class GraveListener implements Listener {
         Player player = event.getPlayer();
         if (block.getType() == Material.DEEPSLATE_BRICK_WALL && block.hasMetadata(GRAVE_OWNER_META)) {
             event.setCancelled(true);
-            player.sendMessage(ChatColor.RED + "You can't destroy graves!");
+            player.sendMessage(NamedTextColor.RED + "You can't destroy graves!");
         }
     }
 

@@ -3,7 +3,7 @@ package main.java.elementalmp4.sebutils.command.admin;
 import main.java.elementalmp4.sebutils.SebUtils;
 import main.java.elementalmp4.sebutils.annotation.SebUtilsCommand;
 import main.java.elementalmp4.sebutils.command.AbstractCommand;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -14,18 +14,18 @@ public class SmiteCommand extends AbstractCommand {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
         if (args.length == 0) {
-            commandSender.sendMessage(ChatColor.RED + "You must specify a player!");
+            commandSender.sendMessage(NamedTextColor.RED + "You must specify a player!");
             return true;
         }
 
         Player player = SebUtils.getPlugin().getServer().getPlayer(args[0]);
         if (player == null) {
-            commandSender.sendMessage(ChatColor.RED + "Player could not be found!");
+            commandSender.sendMessage(NamedTextColor.RED + "Player could not be found!");
             return true;
         }
         player.getWorld().strikeLightning(player.getLocation());
         player.setHealth(0);
-        commandSender.sendMessage(ChatColor.YELLOW + player.getName() + ChatColor.RED + " has been smited");
+        commandSender.sendMessage(NamedTextColor.YELLOW + player.getName() + NamedTextColor.RED + " has been smited");
         return true;
     }
 

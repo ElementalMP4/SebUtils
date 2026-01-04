@@ -1,4 +1,4 @@
-package main.java.elementalmp4.sebutils.service;
+package main.java.elementalmp4.sebutils.modules;
 
 import io.github.ollama4j.Ollama;
 import io.github.ollama4j.exceptions.OllamaException;
@@ -6,7 +6,8 @@ import io.github.ollama4j.models.chat.OllamaChatMessageRole;
 import io.github.ollama4j.models.chat.OllamaChatRequest;
 import io.github.ollama4j.models.chat.OllamaChatResult;
 import main.java.elementalmp4.sebutils.config.GlobalConfig;
-import org.bukkit.ChatColor;
+import main.java.elementalmp4.sebutils.service.GlobalConfigService;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Server;
 
 import java.util.HashMap;
@@ -14,33 +15,27 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class OllamaService {
+import static main.java.elementalmp4.sebutils.SebUtils.getPluginLogger;
+
+public class OllamaModule extends AbstractModule {
 
     private static final String SYSTEM_PROMPT = "Your name is chatgpsteve. Your responses to the following questions should be no longer than 300 characters. Respond with ONLY your answer to this question, and nothing else.";
-    private static final ExecutorService OLLAMA_EXECUTOR = Executors.newSingleThreadExecutor();
-    private static Ollama ollamaAPI;
-    private static final Map<String, OllamaChatResult> CONVERSATIONS = new HashMap<>();
+    private final ExecutorService OLLAMA_EXECUTOR = Executors.newSingleThreadExecutor();
+    private Ollama ollamaAPI;
+    private final Map<String, OllamaChatResult> CONVERSATIONS = new HashMap<>();
 
-    public static boolean startOllamaOnBoot() {
-        if (GlobalConfigService.getAsBoolean(GlobalConfig.OLLAMA_ENABLED)) {
-            startClient();
-            return true;
-        }
-        return false;
-    }
-
-    public static void startClient() {
+    public void onStart() {
+        getPluginLogger().info("Starting Ollama...");
         ollamaAPI = new Ollama(GlobalConfigService.getValue(GlobalConfig.OLLAMA_HOST));
         ollamaAPI.setRequestTimeoutSeconds(60);
-
+        getPluginLogger().info("Ollama ready!");
     }
 
-    public static void stopClient() {
-        ollamaAPI = null;
-        CONVERSATIONS.clear();
+    public void onStop() {
+        getPluginLogger().info("Stopping ollama module");
     }
 
-    public static String getResponse(String prompt, String name) {
+    public String getResponse(String prompt, String name) {
         if (ollamaAPI == null) {
             throw new IllegalStateException("Ollama API not initialized. This shouldn't be possible if Seb programmed the plugin correctly.");
         }
@@ -67,20 +62,16 @@ public class OllamaService {
         }
     }
 
-    public static boolean ollamaEnabled() {
-        return GlobalConfigService.getAsBoolean(GlobalConfig.OLLAMA_ENABLED);
-    }
-
-    public static void askOllama(String prompt, Server server, String name) {
+    public void askOllama(String prompt, Server server, String name) {
         OLLAMA_EXECUTOR.submit(() -> {
             String response = getResponse(prompt, name);
             server.broadcastMessage(
-                    ChatColor.GREEN + name + ": " + ChatColor.WHITE + prompt + "\n"
-                            + ChatColor.GREEN + "ChatGPSteve: " + ChatColor.WHITE + response);
+                    NamedTextColor.GREEN + name + ": " + NamedTextColor.WHITE + prompt + "\n"
+                            + NamedTextColor.GREEN + "ChatGPSteve: " + NamedTextColor.WHITE + response);
         });
     }
 
-    public static void clearConversation(String name) {
+    public void clearConversation(String name) {
         CONVERSATIONS.remove(name);
     }
 }

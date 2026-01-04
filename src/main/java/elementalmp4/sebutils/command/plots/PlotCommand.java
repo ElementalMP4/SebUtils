@@ -4,7 +4,7 @@ import main.java.elementalmp4.sebutils.annotation.SebUtilsCommand;
 import main.java.elementalmp4.sebutils.command.AbstractCommand;
 import main.java.elementalmp4.sebutils.entity.Plot;
 import main.java.elementalmp4.sebutils.service.PlotService;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -21,15 +21,15 @@ public class PlotCommand extends AbstractCommand {
         Optional<Plot> plot = PlotService.blockIsOwned(loc.getBlockX(), loc.getBlockZ(), loc.getWorld().getName());
 
         if (plot.isEmpty()) {
-            commandSender.sendMessage(ChatColor.GOLD + "There is no plot at this location");
+            commandSender.sendMessage(NamedTextColor.GOLD + "There is no plot at this location");
             return true;
         }
 
         Plot p = plot.get();
         if (p.getOwner().equals(commandSender.getName())) {
-            commandSender.sendMessage(ChatColor.GREEN + "You own a plot here with ID " + ChatColor.YELLOW + p.getId());
+            commandSender.sendMessage(NamedTextColor.GREEN + "You own a plot here with ID " + NamedTextColor.YELLOW + p.getId());
         } else {
-            commandSender.sendMessage(ChatColor.RED + "This plot belongs to " + ChatColor.GOLD + p.getOwner());
+            commandSender.sendMessage(NamedTextColor.RED + "This plot belongs to " + NamedTextColor.GOLD + p.getOwner());
         }
         return true;
     }

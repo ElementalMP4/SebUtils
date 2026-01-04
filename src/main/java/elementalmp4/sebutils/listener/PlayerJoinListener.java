@@ -1,35 +1,48 @@
 package main.java.elementalmp4.sebutils.listener;
 
 import main.java.elementalmp4.sebutils.annotation.SebUtilsListener;
-import main.java.elementalmp4.sebutils.service.*;
-import org.bukkit.ChatColor;
+import main.java.elementalmp4.sebutils.config.GlobalConfig;
+import main.java.elementalmp4.sebutils.modules.DiscordModule;
+import main.java.elementalmp4.sebutils.modules.OllamaModule;
+import main.java.elementalmp4.sebutils.service.AfkService;
+import main.java.elementalmp4.sebutils.service.GlobalConfigService;
+import main.java.elementalmp4.sebutils.service.NicknameService;
+import main.java.elementalmp4.sebutils.service.PVPToggleService;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+
+import static main.java.elementalmp4.sebutils.SebUtils.getModuleManager;
 
 @SebUtilsListener
 public class PlayerJoinListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        DiscordService.sendJoinMessage(event.getPlayer());
+        boolean discordRunning = GlobalConfigService.getAsBoolean(GlobalConfig.DISCORD_ENABLED);
+        if (discordRunning) getModuleManager().get(DiscordModule.class).sendJoinMessage(event.getPlayer());
         PVPToggleService.cachePlayer(event.getPlayer().getName());
 
         // Cache profile before sending join message
         NicknameService.cacheProfile(event.getPlayer().getName());
-        event.setJoinMessage(ChatColor.WHITE + "[" + ChatColor.GREEN + "+" + ChatColor.WHITE + "] " + NicknameService.getPlayerNameCustomised(event.getPlayer().getName()));
+        event.setJoinMessage(NamedTextColor.WHITE + "[" + NamedTextColor.GREEN + "+" + NamedTextColor.WHITE + "] " + NicknameService.getPlayerNameCustomised(event.getPlayer().getName()));
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         // Message must be sent before profile cache is cleared
-        event.setQuitMessage(ChatColor.WHITE + "[" + ChatColor.RED + "-" + ChatColor.WHITE + "] " + NicknameService.getPlayerNameCustomised(event.getPlayer().getName()));
+        event.setQuitMessage(NamedTextColor.WHITE + "[" + NamedTextColor.RED + "-" + NamedTextColor.WHITE + "] " + NicknameService.getPlayerNameCustomised(event.getPlayer().getName()));
         AfkService.removeUser(event.getPlayer().getName());
         NicknameService.removeProfileCache(event.getPlayer().getName());
-        DiscordService.sendLeaveMessage(event.getPlayer());
         PVPToggleService.removePlayerCache(event.getPlayer().getName());
-        OllamaService.clearConversation(event.getPlayer().getName());
+
+        boolean discordRunning = GlobalConfigService.getAsBoolean(GlobalConfig.DISCORD_ENABLED);
+        if (discordRunning) getModuleManager().get(DiscordModule.class).sendLeaveMessage(event.getPlayer());
+
+        boolean ollamaRunning = GlobalConfigService.getAsBoolean(GlobalConfig.OLLAMA_ENABLED);
+        if (ollamaRunning) getModuleManager().get(OllamaModule.class).clearConversation(event.getPlayer().getName());
     }
 
 }

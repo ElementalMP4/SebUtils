@@ -4,7 +4,7 @@ import main.java.elementalmp4.sebutils.annotation.SebUtilsCommand;
 import main.java.elementalmp4.sebutils.command.AbstractCommand;
 import main.java.elementalmp4.sebutils.completer.HomesTabCompleter;
 import main.java.elementalmp4.sebutils.service.HomeService;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -18,11 +18,11 @@ public class HomeCommand extends AbstractCommand {
         String homeName = args.length == 0 ? "default" : args[0];
         if (HomeService.userHasHome(commandSender.getName(), homeName)) {
             Player player = (Player) commandSender;
-            commandSender.sendMessage(ChatColor.GOLD + "Teleporting...");
+            commandSender.sendMessage(NamedTextColor.GOLD + "Teleporting...");
             HomeService.teleportUserHome(player, homeName);
         } else {
-            if (args.length == 0) commandSender.sendMessage(ChatColor.RED + "You haven't set any homes!");
-            else commandSender.sendMessage(ChatColor.RED + "You don't have a home with that name!");
+            if (args.length == 0) commandSender.sendMessage(NamedTextColor.RED + "You haven't set any homes!");
+            else commandSender.sendMessage(NamedTextColor.RED + "You don't have a home with that name!");
         }
         return true;
     }

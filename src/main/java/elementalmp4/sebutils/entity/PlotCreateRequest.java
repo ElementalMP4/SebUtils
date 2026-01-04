@@ -1,6 +1,6 @@
 package main.java.elementalmp4.sebutils.entity;
 
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 
 public class PlotCreateRequest extends EphemeralObject {
@@ -57,6 +57,6 @@ public class PlotCreateRequest extends EphemeralObject {
 
     @Override
     public void whenExpired() {
-        this.owner.sendMessage(ChatColor.RED + "Plot creation request expired");
+        this.owner.sendMessage(NamedTextColor.RED + "Plot creation request expired");
     }
 }

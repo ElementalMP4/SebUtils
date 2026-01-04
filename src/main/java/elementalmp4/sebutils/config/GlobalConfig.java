@@ -28,7 +28,8 @@ public enum GlobalConfig {
 
     // Web Server
     WEB_BIND("Web Server Bind", "web_bind", "127.0.0.1", DataType.STRING, "Web"),
-    WEB_PORT("Web Server Port", "web_port", "8080", DataType.NUMBER, "Web");
+    WEB_PORT("Web Server Port", "web_port", "8080", DataType.NUMBER, "Web"),
+    WEB_ENABLED("Web Server Enabled", "web_enabled", "true", DataType.TOGGLE, "Web");
 
     private final String key;
     private final String defaultValue;

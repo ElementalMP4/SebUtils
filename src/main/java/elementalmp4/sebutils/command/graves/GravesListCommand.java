@@ -4,8 +4,8 @@ import main.java.elementalmp4.sebutils.annotation.SebUtilsCommand;
 import main.java.elementalmp4.sebutils.command.AbstractCommand;
 import main.java.elementalmp4.sebutils.entity.Grave;
 import main.java.elementalmp4.sebutils.service.GraveService;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -30,7 +30,7 @@ public class GravesListCommand extends AbstractCommand {
         List<Grave> graves = GraveService.getGraves(target);
 
         if (graves.isEmpty()) {
-            commandSender.sendMessage(ChatColor.RED + "No graves were found!");
+            commandSender.sendMessage(NamedTextColor.RED + "No graves were found!");
             return true;
         }
 
