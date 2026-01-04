@@ -90,8 +90,7 @@ public class GlobalConfigService {
             }
             Files.writeString(pathToExport, json.toString(3));
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
-
 }

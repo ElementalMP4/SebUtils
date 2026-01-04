@@ -9,6 +9,7 @@ import main.java.elementalmp4.sebutils.service.GlobalConfigService;
 import main.java.elementalmp4.sebutils.service.OllamaService;
 import main.java.elementalmp4.sebutils.utils.ConsoleColours;
 import main.java.elementalmp4.sebutils.utils.ReflectiveInstantiator;
+import main.java.elementalmp4.sebutils.web.WebServer;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,7 +21,6 @@ public class SebUtils extends JavaPlugin {
 
     private static JavaPlugin plugin;
     private static Logger logger;
-    private static DatabaseService databaseService;
 
     public static Logger getPluginLogger() {
         return logger;
@@ -28,10 +28,6 @@ public class SebUtils extends JavaPlugin {
 
     public static JavaPlugin getPlugin() {
         return plugin;
-    }
-
-    public static DatabaseService getDatabaseService() {
-        return databaseService;
     }
 
     @Override
@@ -55,7 +51,12 @@ public class SebUtils extends JavaPlugin {
         GlobalConfigService.initialiseGlobalConfig();
 
         logger.info(ConsoleColours.YELLOW + "Initialising Database" + ConsoleColours.RESET);
-        databaseService = new DatabaseService();
+        DatabaseService.connect();
+
+        logger.info(ConsoleColours.YELLOW + "Starting web server" + ConsoleColours.RESET);
+        String bind = GlobalConfigService.getValue(GlobalConfig.WEB_BIND);
+        int port = GlobalConfigService.getAsInteger(GlobalConfig.WEB_PORT);
+        WebServer.start(bind, port);
 
         logger.info(ConsoleColours.YELLOW + "Registering commands");
         List<AbstractCommand> commands = new ReflectiveInstantiator<AbstractCommand>("main.java.elementalmp4.sebutils.command")
@@ -87,7 +88,8 @@ public class SebUtils extends JavaPlugin {
     @Override
     public void onDisable() {
         DiscordService.close(true);
-        logger.info("Stopped.");
-        if (databaseService != null) databaseService.close();
+        WebServer.stop();
+        DatabaseService.close();
+        logger.info("Stopped cleanly");
     }
 }

@@ -15,7 +15,6 @@ public class PlayerJoinListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         DiscordService.sendJoinMessage(event.getPlayer());
         PVPToggleService.cachePlayer(event.getPlayer().getName());
-        SlackService.sendJoinMessage(event.getPlayer().getName());
 
         // Cache profile before sending join message
         NicknameService.cacheProfile(event.getPlayer().getName());
@@ -30,7 +29,6 @@ public class PlayerJoinListener implements Listener {
         NicknameService.removeProfileCache(event.getPlayer().getName());
         DiscordService.sendLeaveMessage(event.getPlayer());
         PVPToggleService.removePlayerCache(event.getPlayer().getName());
-        SlackService.sendLeaveMessage(event.getPlayer().getName());
         OllamaService.clearConversation(event.getPlayer().getName());
     }
 

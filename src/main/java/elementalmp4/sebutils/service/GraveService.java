@@ -14,7 +14,7 @@ public class GraveService {
 
     public static String createGrave(String owner, int x, int y, int z, String world) {
         Grave grave = new Grave(x, y, z, world);
-        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
+        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
             stmt.executeUpdate("INSERT INTO graves (grave_id, grave_owner, pos_x, pos_y, pos_z, world) VALUES ('%s', '%s', %d, %d, %d, '%s')"
                     .formatted(grave.getId(), owner, x, y, z, world));
         } catch (SQLException e) {
@@ -24,7 +24,7 @@ public class GraveService {
     }
 
     public static Optional<Grave> getGrave(String name, String graveId) {
-        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
+        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
             ResultSet rs = stmt.executeQuery("SELECT * FROM graves WHERE grave_id = '%s' AND grave_owner = '%s'".formatted(graveId, name));
             if (rs.next()) return Optional.of(new Grave(
                     rs.getInt("pos_x"),
@@ -40,7 +40,7 @@ public class GraveService {
     }
 
     public static List<Grave> getGraves(String playerName) {
-        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
+        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
             ResultSet rs = stmt.executeQuery("SELECT world, pos_x, pos_y, pos_z, grave_id FROM graves WHERE grave_owner = '%s';"
                     .formatted(playerName));
             List<Grave> graves = new ArrayList<>();
@@ -59,7 +59,7 @@ public class GraveService {
     }
 
     public static void removeGrave(String graveId) {
-        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
+        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
             stmt.executeUpdate("DELETE FROM graves WHERE grave_id = '%s'".formatted(graveId));
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -67,7 +67,7 @@ public class GraveService {
     }
 
     public static List<String> getGraveIds(String name) {
-        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
+        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
             ResultSet rs = stmt.executeQuery("SELECT grave_id FROM graves WHERE grave_owner = '%s';"
                     .formatted(name));
             List<String> graves = new ArrayList<>();

@@ -18,7 +18,7 @@ public class PVPToggleService {
 
     public static void updatePlayerToggle(String playerName, boolean status) {
         if (PVP_TOGGLE_CACHE.containsKey(playerName)) PVP_TOGGLE_CACHE.put(playerName, status);
-        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
+        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
             stmt.executeUpdate("UPDATE pvp_toggles SET toggle = %b WHERE username = '%s';".formatted(status, playerName));
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -27,7 +27,7 @@ public class PVPToggleService {
 
     public static void cachePlayer(String playerName) {
         boolean defaultToggle = false;
-        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
+        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
             ResultSet rs = stmt.executeQuery("SELECT * FROM pvp_toggles WHERE username = '%s'".formatted(playerName));
             if (rs.next()) {
                 boolean toggleStatus = rs.getBoolean("toggle");
@@ -43,7 +43,7 @@ public class PVPToggleService {
     }
 
     private static void addUserPvpToggle(String playerName) {
-        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
+        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
             stmt.executeUpdate("INSERT INTO pvp_toggles VALUES ('%s', %b);".formatted(playerName, false));
         } catch (SQLException e) {
             throw new RuntimeException(e);

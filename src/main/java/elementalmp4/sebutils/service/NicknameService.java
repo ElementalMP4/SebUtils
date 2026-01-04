@@ -56,7 +56,7 @@ public class NicknameService {
 
     public static void cacheProfile(String playerName) {
         Profile defaultProfile = new Profile(playerName, "white");
-        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
+        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
             ResultSet rs = stmt.executeQuery("SELECT nickname, colourName FROM chat_customisation WHERE username = '%s'".formatted(playerName));
             if (rs.next()) {
                 Profile p = new Profile(rs.getString("nickname"), rs.getString("colourName"));
@@ -99,7 +99,7 @@ public class NicknameService {
     }
 
     public static void updateNickname(String name, String nickname) {
-        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
+        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
             stmt.executeUpdate("UPDATE chat_customisation SET nickname = '%s' WHERE username = '%s';".formatted(nickname, name));
             PROFILE_CACHE.get(name).setNickname(nickname);
         } catch (SQLException e) {
@@ -108,7 +108,7 @@ public class NicknameService {
     }
 
     public static void addUser(String name) {
-        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
+        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
             stmt.executeUpdate("INSERT INTO chat_customisation VALUES ('%s', '%s', 'white');".formatted(name, name));
             SebUtils.getPluginLogger().info(ConsoleColours.YELLOW + "Added user " + name);
         } catch (SQLException e) {
@@ -117,7 +117,7 @@ public class NicknameService {
     }
 
     public static void updateColour(String name, String colour) {
-        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
+        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
             stmt.executeUpdate("UPDATE chat_customisation SET colourName = '%s' WHERE username = '%s';".formatted(colour, name));
             PROFILE_CACHE.get(name).setColourName(colour);
         } catch (SQLException e) {

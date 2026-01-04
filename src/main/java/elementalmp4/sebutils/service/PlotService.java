@@ -94,7 +94,7 @@ public class PlotService {
     }
 
     public static Optional<Plot> blockIsOwnedBySomeoneElse(String player, int x, int y, String world) {
-        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
+        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
             ResultSet rs = stmt.executeQuery(createSql(FIND_BOUNDS_CONTAINING_POINT_NOT_OWNED, x, y, player, world));
             if (rs.next()) {
                 return Optional.of(new Plot(rs));
@@ -107,7 +107,7 @@ public class PlotService {
     }
 
     public static Optional<Plot> blockIsOwned(int x, int y, String world) {
-        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
+        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
             ResultSet rs = stmt.executeQuery(createSql(FIND_BOUNDS_CONTAINING_POINT, x, y, "", world));
             if (rs.next()) {
                 return Optional.of(new Plot(rs));
@@ -120,7 +120,7 @@ public class PlotService {
     }
 
     public static void deletePlot(int id) {
-        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
+        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
             stmt.executeUpdate("DELETE FROM block_locker WHERE plot_id = %d".formatted(id));
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -203,7 +203,7 @@ public class PlotService {
     }
 
     private static void createPlot(PlotCreateRequest r) {
-        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
+        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
             stmt.executeUpdate("INSERT INTO block_locker (owner, world, bound_x_a, bound_y_a, bound_x_b, bound_y_b) VALUES ('%s', '%s', %d, %d, %d, %d)"
                     .formatted(r.getPlayerName(), r.getWorld(), r.getXA(), r.getYA(), r.getXB(), r.getYB()));
         } catch (SQLException e) {
@@ -212,7 +212,7 @@ public class PlotService {
     }
 
     public static List<Plot> getUserPlots(String player) {
-        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
+        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
             ResultSet rs = stmt.executeQuery("SELECT * FROM block_locker WHERE owner = '%s'".formatted(player));
             List<Plot> plots = new ArrayList<>();
             while (rs.next()) {
@@ -225,7 +225,7 @@ public class PlotService {
     }
 
     public static Optional<Plot> getPlotByIdAndOwner(int id, String name) {
-        try (Statement stmt = SebUtils.getDatabaseService().getConnection().createStatement()) {
+        try (Statement stmt = DatabaseService.getConnection().createStatement()) {
             ResultSet rs = stmt.executeQuery("SELECT * FROM block_locker WHERE plot_id = %d AND owner = '%s'".formatted(id, name));
             if (rs.next()) return Optional.of(new Plot(rs));
         } catch (SQLException e) {

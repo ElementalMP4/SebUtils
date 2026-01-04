@@ -21,12 +21,12 @@ public class DatabaseService {
         MIGRATIONS.put("pvp toggles", "CREATE TABLE IF NOT EXISTS pvp_toggles (username TEXT, toggle BOOLEAN);");
     }
 
-    private final Connection connection;
+    private static Connection connection;
 
-    public DatabaseService() {
+    public static void connect() {
         try {
             Class.forName("org.postgresql.Driver");
-            this.connection = DriverManager.getConnection(
+            connection = DriverManager.getConnection(
                     GlobalConfigService.getValue(GlobalConfig.DATABASE_URI),
                     GlobalConfigService.getValue(GlobalConfig.DATABASE_USERNAME),
                     GlobalConfigService.getValue(GlobalConfig.DATABASE_PASSWORD)
@@ -37,7 +37,7 @@ public class DatabaseService {
         }
     }
 
-    private void migrate() {
+    private static void migrate() {
         for (String migration : MIGRATIONS.keySet()) {
             try {
                 connection.createStatement().executeUpdate(MIGRATIONS.get(migration));
@@ -48,12 +48,13 @@ public class DatabaseService {
         }
     }
 
-    public Connection getConnection() {
+    public static Connection getConnection() {
         return connection;
     }
 
-    public void close() {
+    public static void close() {
         try {
+            if (connection == null) return;
             connection.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
