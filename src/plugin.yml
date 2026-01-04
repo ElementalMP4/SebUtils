@@ -1,19 +1,19 @@
 api-version: "1.21"
 name: SebUtils
 author: ElementalMP4
-version: '1.9.0'
+version: '2.0.0'
 main: main.java.elementalmp4.sebutils.SebUtils
 description: Homes, Teleportation, Chat customisation and plenty more
 prefix: SebUtils
 permissions:
   sebutils.tpa:
-    description: "Allows players to use the tpa, tpahere, tpaccept and tpdeny commands"
+    description: "Allows players to use the teleportation commands"
     default: true
   sebutils.homes:
-    description: "Allows players to use the home, sethome and delhome commands"
+    description: "Allows players to use the homes commands"
     default: true
   sebutils.nicknames:
-    description: "Allows players to use the nickname and namecolour commands"
+    description: "Allows players to use the customisation commands"
     default: true
   sebutils.admin:
     description: "Allows players access to admin commands"
@@ -168,6 +168,6 @@ commands:
     usage: "/permits [plot ID]"
     permission: "sebutils.plots"
   ask:
-    description: "Ask Llama a question"
+    description: "Ask ChatGPSTEVE a question"
     usage: "/ask [question]"
     permission: "sebutils.ai"
