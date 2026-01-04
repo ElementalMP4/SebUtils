@@ -4,7 +4,7 @@ import io.javalin.Javalin;
 import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
 import main.java.elementalmp4.sebutils.utils.NamedThreadFactory;
-
+import main.java.elementalmp4.sebutils.web.ConfigUpdateHandler;
 import static main.java.elementalmp4.sebutils.SebUtils.getPluginLogger;
 
 public class WebServerModule extends AbstractModule {
@@ -15,6 +15,7 @@ public class WebServerModule extends AbstractModule {
 
     public void onStart() {
         getPluginLogger().info("Starting web server...");
+
         app = Javalin.create(javalinConfig -> {
             javalinConfig.showJavalinBanner = false;
             javalinConfig.staticFiles.add("/static");
@@ -26,6 +27,10 @@ public class WebServerModule extends AbstractModule {
         for (GlobalConfig conf : GlobalConfig.values()) {
             app.get("/config/" + conf.getKey(), ctx -> ctx.json(GlobalConfigService.getAsConfig(conf)));
         }
+
+        app.post("/config", new ConfigUpdateHandler()).exception(IllegalArgumentException.class, (e, ctx) -> {
+           ctx.status(400).result(e.getMessage());
+        });
 
         String bind = GlobalConfigService.getValue(GlobalConfig.WEB_BIND);
         int port = GlobalConfigService.getAsInteger(GlobalConfig.WEB_PORT);

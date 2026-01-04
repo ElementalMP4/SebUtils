@@ -8,8 +8,10 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class ModuleManager {
+
     private final Map<Class<? extends AbstractModule>, Supplier<? extends AbstractModule>> factories = new HashMap<>();
     private final Map<Class<? extends AbstractModule>, AbstractModule> instances = new HashMap<>();
+    private final Map<Class<? extends AbstractModule>, GlobalConfig> toggles = new HashMap<>();
 
     public synchronized <T extends AbstractModule> void register(Class<T> type, Supplier<T> factory) {
         register(type, factory, null);
@@ -17,6 +19,7 @@ public class ModuleManager {
 
     public synchronized <T extends AbstractModule> void register(Class<T> type, Supplier<T> factory, GlobalConfig optionalToggle) {
         factories.put(type, factory);
+        if (optionalToggle != null) toggles.put(type, optionalToggle);
 
         if (optionalToggle == null) {
             start(type);
@@ -47,6 +50,14 @@ public class ModuleManager {
         }
     }
 
+    public synchronized void restart(Class<? extends AbstractModule> type) {
+        if (isRunning(type)) {
+            stop(type);
+        }
+
+        start(type);
+    }
+
     public synchronized void stopAll() {
         for (AbstractModule module : instances.values()) {
             module.stop();
@@ -61,5 +72,8 @@ public class ModuleManager {
     public boolean isRunning(Class<? extends AbstractModule> type) {
         return instances.containsKey(type);
     }
-}
 
+    public GlobalConfig getToggle(Class<? extends AbstractModule> type) {
+        return toggles.get(type);
+    }
+}
