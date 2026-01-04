@@ -5,6 +5,7 @@ import main.java.elementalmp4.sebutils.command.AbstractCommand;
 import main.java.elementalmp4.sebutils.completer.BooleanTabCompleter;
 import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -18,22 +19,24 @@ public class EnableGravesCommand extends AbstractCommand {
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
         if (args.length == 0) {
             boolean gravesEnabled = GlobalConfigService.getAsBoolean(GlobalConfig.GRAVES_ENABLED);
-            commandSender.sendMessage("Graves are currently " + format(gravesEnabled));
+            Component message = Component.text("Graves are currently ").append(format(gravesEnabled));
+            commandSender.sendMessage(message);
             return true;
         }
 
         if (!Set.of("true", "false").contains(args[0])) {
-            commandSender.sendMessage(NamedTextColor.RED + "You must specify true or false");
+            commandSender.sendMessage(Component.text("You must specify true or false", NamedTextColor.RED));
             return true;
         }
 
         GlobalConfigService.set(GlobalConfig.GRAVES_ENABLED, args[0]);
-        commandSender.sendMessage("Graves are now " + format(Boolean.parseBoolean(args[0])));
+        Component message = Component.text("Graves are now ").append(format(Boolean.parseBoolean(args[0])));
+        commandSender.sendMessage(message);
         return true;
     }
 
-    private String format(boolean enabled) {
-        return (enabled ? NamedTextColor.GREEN + "enabled" : NamedTextColor.RED + "disabled");
+    private Component format(boolean enabled) {
+        return Component.text(enabled ? "enabled" : "disabled", enabled ? NamedTextColor.GREEN : NamedTextColor.RED);
     }
 
     @Override

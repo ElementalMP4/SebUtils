@@ -4,6 +4,7 @@ import main.java.elementalmp4.sebutils.annotation.SebUtilsCommand;
 import main.java.elementalmp4.sebutils.command.AbstractCommand;
 import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -27,24 +28,28 @@ public class PlotSizeCommand extends AbstractCommand {
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
         if (args.length == 0) {
             int size = GlobalConfigService.getAsInteger(GlobalConfig.PLOT_MAX_SIZE);
-            commandSender.sendMessage(NamedTextColor.GREEN + "Maximum plot size is currently " + NamedTextColor.YELLOW + size + " blocks");
+            Component message = Component.text("Maximum plot size is currently ", NamedTextColor.GREEN)
+                    .append(Component.text(size + " blocks", NamedTextColor.YELLOW));
+            commandSender.sendMessage(message);
             return true;
         }
 
         Optional<Integer> potentialSize = parseInteger(args[0]);
         if (potentialSize.isEmpty()) {
-            commandSender.sendMessage(NamedTextColor.RED + "Plot size must be a valid whole number!");
+            commandSender.sendMessage(Component.text("Plot size must be a valid whole number!", NamedTextColor.RED));
             return true;
         }
 
         int newSize = potentialSize.get();
         if (newSize < 100 || newSize > 100000) {
-            commandSender.sendMessage(NamedTextColor.RED + "Plot size must be between 100 and 100,000 blocks!");
+            commandSender.sendMessage(Component.text("Plot size must be between 100 and 100,000 blocks!", NamedTextColor.RED));
             return true;
         }
 
         GlobalConfigService.set(GlobalConfig.PLOT_MAX_SIZE, args[0]);
-        commandSender.sendMessage(NamedTextColor.GREEN + "Maximum plot allocation has been set to " + NamedTextColor.YELLOW + newSize + " blocks");
+        Component message = Component.text("Maximum plot allocation has been set to ", NamedTextColor.GREEN)
+                .append(Component.text(newSize + " blocks", NamedTextColor.YELLOW));
+        commandSender.sendMessage(message);
         return true;
     }
 

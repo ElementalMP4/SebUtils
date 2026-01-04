@@ -121,7 +121,7 @@ public class GraveListener implements Listener {
         // Check the player's name against the metadata
         String playerName = player.getName();
         if (!clickedBlock.getMetadata(GRAVE_OWNER_META).get(0).asString().equals(playerName)) {
-            player.sendMessage(NamedTextColor.RED + "This isn't your grave!");
+            player.sendMessage(Component.text("This isn't your grave!", NamedTextColor.RED));
             return;
         }
 
@@ -160,7 +160,7 @@ public class GraveListener implements Listener {
         Player player = event.getPlayer();
         if (block.getType() == Material.DEEPSLATE_BRICK_WALL && block.hasMetadata(GRAVE_OWNER_META)) {
             event.setCancelled(true);
-            player.sendMessage(NamedTextColor.RED + "You can't destroy graves!");
+            player.sendMessage(Component.text("You can't destroy graves!", NamedTextColor.RED));
         }
     }
 

@@ -2,12 +2,11 @@ package main.java.elementalmp4.sebutils.entity;
 
 import main.java.elementalmp4.sebutils.SebUtils;
 import main.java.elementalmp4.sebutils.service.TeleportService;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -40,13 +39,11 @@ public class Grave {
         return uuid.toString();
     }
 
-    public TextComponent toChatComponent() {
-        TextComponent message = new TextComponent();
-        message.addExtra("" + NamedTextColor.RED + location.getBlockX() + ", " + location.getBlockY() + ", " + location.getBlockZ());
-        TextComponent teleportComponent = new TextComponent(" " + NamedTextColor.YELLOW + TextDecoration.BOLD + "[TELEPORT]");
-        teleportComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(uuid.toString()).create()));
-        teleportComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpgrave " + uuid));
-        message.addExtra(teleportComponent);
-        return message;
+    public Component toChatComponent() {
+        Component coords = Component.text(location.getBlockX() + ", " + location.getBlockY() + ", " + location.getBlockZ(), NamedTextColor.RED);
+        Component teleportComponent = Component.text(" [TELEPORT]", NamedTextColor.YELLOW, TextDecoration.BOLD)
+                .hoverEvent(HoverEvent.showText(Component.text(uuid.toString())))
+                .clickEvent(ClickEvent.runCommand("/tpgrave " + uuid));
+        return coords.append(teleportComponent);
     }
 }

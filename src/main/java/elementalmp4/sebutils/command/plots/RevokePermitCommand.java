@@ -8,6 +8,7 @@ import main.java.elementalmp4.sebutils.entity.Plot;
 import main.java.elementalmp4.sebutils.service.PermitService;
 import main.java.elementalmp4.sebutils.service.PlotService;
 import main.java.elementalmp4.sebutils.utils.Converter;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -26,31 +27,38 @@ public class RevokePermitCommand extends AbstractCommand {
 
         Player playerToRevoke = SebUtils.getPlugin().getServer().getPlayer(args[0]);
         if (playerToRevoke == null) {
-            commandSender.sendMessage(NamedTextColor.RED + "Player could not be found!");
+            commandSender.sendMessage(Component.text("Player could not be found!", NamedTextColor.RED));
             return true;
         }
 
         Optional<Integer> id = Converter.tryStringToInt(args[1]);
         if (id.isEmpty()) {
-            commandSender.sendMessage(NamedTextColor.RED + "Plot ID must be a valid number!");
+            commandSender.sendMessage(Component.text("Plot ID must be a valid number!", NamedTextColor.RED));
             return true;
         }
 
         Optional<Plot> plot = PlotService.getPlotByIdAndOwner(id.get(), commandSender.getName());
         if (plot.isEmpty()) {
-            commandSender.sendMessage(NamedTextColor.RED + "Plot not found - Try the " + NamedTextColor.YELLOW + "/plots" + NamedTextColor.RED
-                    + " command to see a list of your plots, and use " + NamedTextColor.YELLOW + "/plot" + NamedTextColor.RED
-                    + " to see details about the plot you are currently in");
+            Component message = Component.text("Plot not found - Try the ", NamedTextColor.RED)
+                    .append(Component.text("/plots", NamedTextColor.YELLOW))
+                    .append(Component.text(" command to see a list of your plots, and use ", NamedTextColor.RED))
+                    .append(Component.text("/plot", NamedTextColor.YELLOW))
+                    .append(Component.text(" to see details about the plot you are currently in", NamedTextColor.RED));
+            commandSender.sendMessage(message);
             return true;
         }
 
         if (!PermitService.userHasPermit(id.get(), playerToRevoke.getName())) {
-            commandSender.sendMessage(NamedTextColor.RED + playerToRevoke.getName() + " does not have a permit on this plot!");
+            commandSender.sendMessage(Component.text(playerToRevoke.getName() + " does not have a permit on this plot!", NamedTextColor.RED));
             return true;
         }
 
         PermitService.revokePermit(id.get(), playerToRevoke.getName());
-        commandSender.sendMessage(NamedTextColor.GREEN + "Removed " + NamedTextColor.YELLOW + playerToRevoke.getName() + NamedTextColor.GREEN + " from plot " + NamedTextColor.YELLOW + id.get());
+        Component message = Component.text("Removed ", NamedTextColor.GREEN)
+                .append(Component.text(playerToRevoke.getName(), NamedTextColor.YELLOW))
+                .append(Component.text(" from plot ", NamedTextColor.GREEN))
+                .append(Component.text(String.valueOf(id.get()), NamedTextColor.YELLOW));
+        commandSender.sendMessage(message);
         return true;
     }
 

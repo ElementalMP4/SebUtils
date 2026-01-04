@@ -4,6 +4,7 @@ import main.java.elementalmp4.sebutils.annotation.SebUtilsCommand;
 import main.java.elementalmp4.sebutils.command.AbstractCommand;
 import main.java.elementalmp4.sebutils.completer.ColourTabCompleter;
 import main.java.elementalmp4.sebutils.service.NicknameService;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -19,13 +20,16 @@ public class SetColourCommand extends AbstractCommand {
 
         String colour = args[0];
         if (!NicknameService.getColourNamesList().contains(colour)) {
-            sender.sendMessage(NamedTextColor.RED + "Nickname colour must be one of the following: " +
-                    NamedTextColor.WHITE + String.join(", ", NicknameService.getColourNamesList()));
+            Component message = Component.text("Nickname colour must be one of the following: ", NamedTextColor.RED)
+                    .append(Component.text(String.join(", ", NicknameService.getColourNamesList()), NamedTextColor.WHITE));
+            sender.sendMessage(message);
             return true;
         }
 
         NicknameService.updateColour(sender.getName(), colour);
-        sender.sendMessage("Updated colour to " + NicknameService.getColourByNameAsChatColour(colour) + colour);
+        Component message = Component.text("Updated colour to ", NamedTextColor.WHITE)
+                .append(Component.text(colour, NicknameService.getColour(colour)));
+        sender.sendMessage(message);
         return true;
     }
 

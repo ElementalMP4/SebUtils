@@ -6,6 +6,7 @@ import main.java.elementalmp4.sebutils.completer.GraveCompleter;
 import main.java.elementalmp4.sebutils.entity.Grave;
 import main.java.elementalmp4.sebutils.service.GraveService;
 import main.java.elementalmp4.sebutils.utils.GameruleChecker;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -29,13 +30,13 @@ public class TeleportGraveCommand extends AbstractCommand {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
         if (args.length == 0) {
-            commandSender.sendMessage(NamedTextColor.RED + "You need to specify a grave ID!");
+            commandSender.sendMessage(Component.text("You need to specify a grave ID!", NamedTextColor.RED));
             return true;
         }
 
         Optional<Grave> grave = GraveService.getGrave(commandSender.getName(), args[0]);
         if (grave.isEmpty()) {
-            commandSender.sendMessage(NamedTextColor.RED + "Grave not found!");
+            commandSender.sendMessage(Component.text("Grave not found!", NamedTextColor.RED));
             return true;
         }
 

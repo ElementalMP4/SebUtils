@@ -8,6 +8,7 @@ import main.java.elementalmp4.sebutils.entity.Plot;
 import main.java.elementalmp4.sebutils.service.PermitService;
 import main.java.elementalmp4.sebutils.service.PlotService;
 import main.java.elementalmp4.sebutils.utils.Converter;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -26,31 +27,36 @@ public class GrantPermitCommand extends AbstractCommand {
 
         Player playerToAdd = SebUtils.getPlugin().getServer().getPlayer(args[0]);
         if (playerToAdd == null) {
-            commandSender.sendMessage(NamedTextColor.RED + "Player could not be found!");
+            commandSender.sendMessage(Component.text("Player could not be found!", NamedTextColor.RED));
             return true;
         }
 
         Optional<Integer> id = Converter.tryStringToInt(args[1]);
         if (id.isEmpty()) {
-            commandSender.sendMessage(NamedTextColor.RED + "Plot ID must be a valid number!");
+            commandSender.sendMessage(Component.text("Plot ID must be a valid number!", NamedTextColor.RED));
             return true;
         }
 
         Optional<Plot> plot = PlotService.getPlotByIdAndOwner(id.get(), commandSender.getName());
         if (plot.isEmpty()) {
-            commandSender.sendMessage(NamedTextColor.RED + "Plot not found - Try the " + NamedTextColor.YELLOW + "/plots" + NamedTextColor.RED
-                    + " command to see a list of your plots, and use " + NamedTextColor.YELLOW + "/plot" + NamedTextColor.RED
-                    + " to see details about the plot you are currently in");
+            commandSender.sendMessage(Component.text("Plot not found - Try the ", NamedTextColor.RED)
+                    .append(Component.text("/plots", NamedTextColor.YELLOW))
+                    .append(Component.text(" command to see a list of your plots, and use ", NamedTextColor.RED))
+                    .append(Component.text("/plot", NamedTextColor.YELLOW))
+                    .append(Component.text(" to see details about the plot you are currently in", NamedTextColor.RED)));
             return true;
         }
 
         if (PermitService.userHasPermit(id.get(), playerToAdd.getName())) {
-            commandSender.sendMessage(NamedTextColor.RED + playerToAdd.getName() + " is already added to this plot!");
+            commandSender.sendMessage(Component.text(playerToAdd.getName() + " is already added to this plot!", NamedTextColor.RED));
             return true;
         }
 
         PermitService.grantPermit(id.get(), playerToAdd.getName());
-        commandSender.sendMessage(NamedTextColor.GREEN + "Added " + NamedTextColor.YELLOW + playerToAdd.getName() + NamedTextColor.GREEN + " to plot " + NamedTextColor.YELLOW + id.get());
+        commandSender.sendMessage(Component.text("Added ", NamedTextColor.GREEN)
+                .append(Component.text(playerToAdd.getName(), NamedTextColor.YELLOW))
+                .append(Component.text(" to plot ", NamedTextColor.GREEN))
+                .append(Component.text(String.valueOf(id.get()), NamedTextColor.YELLOW)));
         return true;
     }
 

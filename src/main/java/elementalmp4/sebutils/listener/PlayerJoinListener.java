@@ -8,6 +8,7 @@ import main.java.elementalmp4.sebutils.service.AfkService;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
 import main.java.elementalmp4.sebutils.service.NicknameService;
 import main.java.elementalmp4.sebutils.service.PVPToggleService;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,13 +28,21 @@ public class PlayerJoinListener implements Listener {
 
         // Cache profile before sending join message
         NicknameService.cacheProfile(event.getPlayer().getName());
-        event.setJoinMessage(NamedTextColor.WHITE + "[" + NamedTextColor.GREEN + "+" + NamedTextColor.WHITE + "] " + NicknameService.getPlayerNameCustomised(event.getPlayer().getName()));
+        event.joinMessage(Component.text("[", NamedTextColor.WHITE)
+                .append(Component.text("+", NamedTextColor.GREEN))
+                .append(Component.text("] ", NamedTextColor.WHITE))
+                .append(NicknameService.getPlayerNameCustomised(event.getPlayer().getName()))
+        );
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         // Message must be sent before profile cache is cleared
-        event.setQuitMessage(NamedTextColor.WHITE + "[" + NamedTextColor.RED + "-" + NamedTextColor.WHITE + "] " + NicknameService.getPlayerNameCustomised(event.getPlayer().getName()));
+        event.quitMessage(Component.text("[", NamedTextColor.WHITE)
+                .append(Component.text("-", NamedTextColor.RED))
+                .append(Component.text("] ", NamedTextColor.WHITE))
+                .append(NicknameService.getPlayerNameCustomised(event.getPlayer().getName()))
+        );
         AfkService.removeUser(event.getPlayer().getName());
         NicknameService.removeProfileCache(event.getPlayer().getName());
         PVPToggleService.removePlayerCache(event.getPlayer().getName());

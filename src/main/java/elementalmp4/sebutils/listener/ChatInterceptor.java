@@ -7,8 +7,10 @@ import main.java.elementalmp4.sebutils.modules.DiscordModule;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
 import main.java.elementalmp4.sebutils.service.NicknameService;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,16 +27,11 @@ public class ChatInterceptor implements Listener {
         }
 
         String realName = event.getPlayer().getName();
-        String displayName = NicknameService.getPlayerNameCustomised(realName);
-
-        Component nameComponent = Component.text(displayName)
-                .hoverEvent(
-                        HoverEvent.showText(Component.text(realName, NamedTextColor.YELLOW))
-                );
-
-        Component finalMessage = nameComponent
+        TextComponent displayName = NicknameService.getPlayerNameCustomised(realName);
+        TextComponent finalMessage = displayName
+                .hoverEvent(HoverEvent.showText(Component.text(realName, NamedTextColor.YELLOW)))
                 .append(Component.text(": ", NamedTextColor.GRAY))
-                .append(event.message());
+                .append(event.message().style(Style.style(NamedTextColor.WHITE)));
 
         event.renderer((source, sourceDisplayName, message, viewer) -> finalMessage);
 

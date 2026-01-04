@@ -19,9 +19,9 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
@@ -133,10 +133,9 @@ public class DiscordModule extends AbstractModule {
     }
 
     private void forwardDiscordMessage(String name, String contentStripped) {
-        TextComponent component = new TextComponent();
-        component.addExtra("" + NamedTextColor.BLUE + TextDecoration.BOLD + "[DISCORD] ");
-        component.addExtra(NamedTextColor.YELLOW + "[%s] ".formatted(name));
-        component.addExtra(NamedTextColor.WHITE + contentStripped);
+        Component component = Component.text("[DISCORD] ", NamedTextColor.BLUE, TextDecoration.BOLD)
+                .append(Component.text("[%s] ".formatted(name), NamedTextColor.YELLOW))
+                .append(Component.text(contentStripped, NamedTextColor.WHITE));
         SebUtils.getPlugin().getServer().broadcast(component);
         SebUtils.getPluginLogger().info("%s[DISCORD] %s[%s] %s%s"
                 .formatted(ConsoleColours.BLUE, ConsoleColours.YELLOW, name, ConsoleColours.WHITE, contentStripped));

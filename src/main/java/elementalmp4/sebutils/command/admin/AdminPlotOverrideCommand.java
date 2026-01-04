@@ -12,28 +12,44 @@ import org.bukkit.command.TabCompleter;
 
 import java.util.Set;
 
+import net.kyori.adventure.text.Component;
+
 @SebUtilsCommand
 public class AdminPlotOverrideCommand extends AbstractCommand {
+
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
         if (args.length == 0) {
             boolean adminOverride = GlobalConfigService.getAsBoolean(GlobalConfig.ADMIN_PLOT_OVERRIDE);
-            commandSender.sendMessage("Admin plot override is currently " + format(adminOverride));
+            commandSender.sendMessage(
+                    Component.text("Admin plot override is currently ")
+                            .append(format(adminOverride))
+            );
             return true;
         }
 
-        if (!Set.of("true", "false").contains(args[0])) {
-            commandSender.sendMessage(NamedTextColor.RED + "You must specify true or false");
+        if (!Set.of("true", "false").contains(args[0].toLowerCase())) {
+            commandSender.sendMessage(
+                    Component.text("You must specify true or false", NamedTextColor.RED)
+            );
             return true;
         }
 
+        boolean enabled = Boolean.parseBoolean(args[0]);
         GlobalConfigService.set(GlobalConfig.ADMIN_PLOT_OVERRIDE, args[0]);
-        commandSender.sendMessage("Admin plot override is now " + format(Boolean.parseBoolean(args[0])));
+
+        commandSender.sendMessage(
+                Component.text("Admin plot override is now ")
+                        .append(format(enabled))
+        );
         return true;
     }
 
-    private String format(boolean enabled) {
-        return (enabled ? NamedTextColor.GREEN + "enabled" : NamedTextColor.RED + "disabled");
+    private Component format(boolean enabled) {
+        return Component.text(
+                enabled ? "enabled" : "disabled",
+                enabled ? NamedTextColor.GREEN : NamedTextColor.RED
+        );
     }
 
     @Override
@@ -46,4 +62,5 @@ public class AdminPlotOverrideCommand extends AbstractCommand {
         return new BooleanTabCompleter();
     }
 }
+
 

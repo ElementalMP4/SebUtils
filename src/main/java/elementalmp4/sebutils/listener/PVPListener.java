@@ -4,6 +4,7 @@ import main.java.elementalmp4.sebutils.annotation.SebUtilsListener;
 import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
 import main.java.elementalmp4.sebutils.service.PVPToggleService;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,10 +22,10 @@ public class PVPListener implements Listener {
             Player target = (Player) event.getEntity();
 
             if (PVPToggleService.playerHasDisabledPvp(attacker.getName())) {
-                attacker.sendMessage(NamedTextColor.RED + "You cannot attack other players if you have disabled PVP!");
+                attacker.sendMessage(Component.text("You cannot attack other players if you have disabled PVP!", NamedTextColor.RED));
                 event.setCancelled(true);
             } else if (PVPToggleService.playerHasDisabledPvp(target.getName())) {
-                attacker.sendMessage(NamedTextColor.RED + target.getName() + " has PVP disabled!");
+                attacker.sendMessage(Component.text(target.getName() + " has PVP disabled!", NamedTextColor.RED));
                 event.setCancelled(true);
             }
         }

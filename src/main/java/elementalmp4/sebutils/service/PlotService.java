@@ -4,6 +4,7 @@ import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.entity.Plot;
 import main.java.elementalmp4.sebutils.entity.PlotCreateRequest;
 import main.java.elementalmp4.sebutils.utils.NamedThreadFactory;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -143,11 +144,12 @@ public class PlotService {
             if (plotIsValid) {
                 if (canCreatePlot(request, e.getPlayer())) {
                     createPlot(request);
-                    e.getPlayer().sendMessage(NamedTextColor.GREEN + "Created plot! Used " + NamedTextColor.YELLOW +
-                            Plot.getPlotArea(request) + NamedTextColor.GREEN + " blocks");
+                    Component message = Component.text("Created plot! Used ", NamedTextColor.GREEN)
+                            .append(Component.text(Plot.getPlotArea(request) + " blocks", NamedTextColor.YELLOW));
+                    e.getPlayer().sendMessage(message);
                 }
             } else {
-                e.getPlayer().sendMessage(NamedTextColor.RED + "Your plot is invalid! Try making it larger");
+                e.getPlayer().sendMessage(Component.text("Your plot is invalid! Try making it larger", NamedTextColor.RED));
             }
             requests.remove(e.getPlayer().getName());
         } else {
@@ -158,7 +160,8 @@ public class PlotService {
                     e.getPlayer().getWorld().getName(),
                     x, y
             ));
-            e.getPlayer().sendMessage(NamedTextColor.GOLD + "Started a new plot at " + NamedTextColor.YELLOW + x + ", " + y);
+            e.getPlayer().sendMessage(Component.text("Started a new plot at ", NamedTextColor.GOLD)
+                    .append(Component.text(x + ", " + y, NamedTextColor.YELLOW)));
         }
     }
 
@@ -174,8 +177,10 @@ public class PlotService {
         for (List<Integer> permutation : permutations) {
             Optional<Plot> blockOwner = blockIsOwnedBySomeoneElse(r.getPlayerName(), permutation.get(0), permutation.get(1), r.getWorld());
             if (blockOwner.isPresent()) {
-                p.sendMessage(NamedTextColor.RED + "Your plot overlaps " + NamedTextColor.GOLD
-                        + blockOwner.get().getOwner() + NamedTextColor.RED + "'s plot");
+                Component message = Component.text("Your plot overlaps ", NamedTextColor.RED)
+                        .append(Component.text(blockOwner.get().getOwner(), NamedTextColor.GOLD))
+                        .append(Component.text("'s plot", NamedTextColor.RED));
+                p.sendMessage(message);
                 return false;
             }
         }
@@ -185,7 +190,9 @@ public class PlotService {
         int newPlotSize = Plot.getPlotArea(r);
 
         if (newPlotSize > maxPlotSize) {
-            p.sendMessage(NamedTextColor.RED + "This plot exceeds the maximum plot size of " + NamedTextColor.GOLD + maxPlotSize + " blocks");
+            Component message = Component.text("This plot exceeds the maximum plot size of ", NamedTextColor.RED)
+                    .append(Component.text(maxPlotSize + " blocks", NamedTextColor.GOLD));
+            p.sendMessage(message);
             return false;
         }
 
@@ -195,7 +202,9 @@ public class PlotService {
         for (Plot plot : plots) {
             totalPlotSize += Plot.getPlotArea(plot);
             if (totalPlotSize > maxPlotSize) {
-                p.sendMessage(NamedTextColor.RED + "This plot, along with your existing plots, will exceed the maximum plot size of " + NamedTextColor.GOLD + maxPlotSize + " blocks");
+                Component message = Component.text("This plot, along with your existing plots, will exceed the maximum plot size of ", NamedTextColor.RED)
+                        .append(Component.text(maxPlotSize + " blocks", NamedTextColor.GOLD));
+                p.sendMessage(message);
                 return false;
             }
         }

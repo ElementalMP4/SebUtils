@@ -1,6 +1,7 @@
 package main.java.elementalmp4.sebutils.entity;
 
 import main.java.elementalmp4.sebutils.service.TeleportService;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 
@@ -21,15 +22,24 @@ public class TeleportRequest extends EphemeralObject {
         player.teleport(target);
         TeleportService.playTeleportEffects(player);
         TeleportService.playTeleportEffects(target);
-        player.sendMessage(NamedTextColor.GREEN + "Teleported " + NamedTextColor.YELLOW + player.getName() + NamedTextColor.GREEN + " to " + NamedTextColor.YELLOW + target.getName());
-        target.sendMessage(NamedTextColor.GREEN + "Teleported " + NamedTextColor.YELLOW + player.getName() + NamedTextColor.GREEN + " to " + NamedTextColor.YELLOW + target.getName());
+        Component message = Component.text("Teleported ", NamedTextColor.GREEN)
+                .append(Component.text(player.getName(), NamedTextColor.YELLOW))
+                .append(Component.text(" to ", NamedTextColor.GREEN))
+                .append(Component.text(target.getName(), NamedTextColor.YELLOW));
+        player.sendMessage(message);
+        target.sendMessage(message);
     }
 
     public void deny(Player denier) {
-        player.sendMessage(NamedTextColor.YELLOW + (denier.getName().equals(player.getName()) ? "You" : denier.getName())
-                + NamedTextColor.RED + " denied teleport request");
-        target.sendMessage(NamedTextColor.YELLOW + (denier.getName().equals(target.getName()) ? "You" : denier.getName())
-                + NamedTextColor.RED + " denied teleport request");
+        String denierName = denier.getName().equals(player.getName()) ? "You" : denier.getName();
+        Component denyMessage = Component.text(denierName, NamedTextColor.YELLOW)
+                .append(Component.text(" denied teleport request", NamedTextColor.RED));
+        player.sendMessage(denyMessage);
+        
+        denierName = denier.getName().equals(target.getName()) ? "You" : denier.getName();
+        denyMessage = Component.text(denierName, NamedTextColor.YELLOW)
+                .append(Component.text(" denied teleport request", NamedTextColor.RED));
+        target.sendMessage(denyMessage);
     }
 
     public String getAuthority() {
@@ -42,7 +52,8 @@ public class TeleportRequest extends EphemeralObject {
 
     @Override
     public void whenExpired() {
-        player.sendMessage(NamedTextColor.RED + "Teleport request expired");
-        target.sendMessage(NamedTextColor.RED + "Teleport request expired");
+        Component expiredMessage = Component.text("Teleport request expired", NamedTextColor.RED);
+        player.sendMessage(expiredMessage);
+        target.sendMessage(expiredMessage);
     }
 }

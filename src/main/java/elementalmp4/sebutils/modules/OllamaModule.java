@@ -7,6 +7,7 @@ import io.github.ollama4j.models.chat.OllamaChatRequest;
 import io.github.ollama4j.models.chat.OllamaChatResult;
 import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Server;
 
@@ -65,9 +66,13 @@ public class OllamaModule extends AbstractModule {
     public void askOllama(String prompt, Server server, String name) {
         OLLAMA_EXECUTOR.submit(() -> {
             String response = getResponse(prompt, name);
-            server.broadcastMessage(
-                    NamedTextColor.GREEN + name + ": " + NamedTextColor.WHITE + prompt + "\n"
-                            + NamedTextColor.GREEN + "ChatGPSteve: " + NamedTextColor.WHITE + response);
+            Component message = Component.text(name, NamedTextColor.GREEN)
+                    .append(Component.text(": ", NamedTextColor.WHITE))
+                    .append(Component.text(prompt, NamedTextColor.WHITE))
+                    .append(Component.text("\n", NamedTextColor.WHITE))
+                    .append(Component.text("ChatGPSteve: ", NamedTextColor.GREEN))
+                    .append(Component.text(response, NamedTextColor.WHITE));
+            server.broadcast(message);
         });
     }
 

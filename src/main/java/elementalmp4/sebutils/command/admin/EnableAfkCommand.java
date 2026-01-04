@@ -5,6 +5,7 @@ import main.java.elementalmp4.sebutils.command.AbstractCommand;
 import main.java.elementalmp4.sebutils.completer.BooleanTabCompleter;
 import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -19,22 +20,24 @@ public class EnableAfkCommand extends AbstractCommand {
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
         if (args.length == 0) {
             boolean tntEnabled = GlobalConfigService.getAsBoolean(GlobalConfig.AFK_ENABLED);
-            commandSender.sendMessage("AFK is currently " + format(tntEnabled));
+            Component message = Component.text("AFK is currently ").append(format(tntEnabled));
+            commandSender.sendMessage(message);
             return true;
         }
 
         if (!Set.of("true", "false").contains(args[0])) {
-            commandSender.sendMessage(NamedTextColor.RED + "You must specify true or false");
+            commandSender.sendMessage(Component.text("You must specify true or false", NamedTextColor.RED));
             return true;
         }
 
         GlobalConfigService.set(GlobalConfig.AFK_ENABLED, args[0]);
-        commandSender.sendMessage("AFK is now " + format(Boolean.parseBoolean(args[0])));
+        Component message = Component.text("AFK is now ").append(format(Boolean.parseBoolean(args[0])));
+        commandSender.sendMessage(message);
         return true;
     }
 
-    private String format(boolean enabled) {
-        return (enabled ? NamedTextColor.GREEN + "enabled" : NamedTextColor.RED + "disabled");
+    private Component format(boolean enabled) {
+        return Component.text(enabled ? "enabled" : "disabled", enabled ? NamedTextColor.GREEN : NamedTextColor.RED);
     }
 
     @Override

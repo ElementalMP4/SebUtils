@@ -3,15 +3,14 @@ package main.java.elementalmp4.sebutils.service;
 import main.java.elementalmp4.sebutils.SebUtils;
 import main.java.elementalmp4.sebutils.entity.Profile;
 import main.java.elementalmp4.sebutils.utils.ConsoleColours;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.format.TextFormat;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,8 +18,7 @@ import static main.java.elementalmp4.sebutils.SebUtils.getDatabaseConnection;
 
 public class NicknameService {
 
-    private static final Map<String, TextFormat> COLOURS = new HashMap<>();
-    private static final List<String> RAINBOW_ORDER = List.of("red", "orange", "yellow", "green", "blue", "purple", "pink");
+    private static final Map<String, NamedTextColor> COLOURS = new HashMap<>();
     private static final Map<String, Profile> PROFILE_CACHE = new HashMap<>();
 
     static {
@@ -40,22 +38,20 @@ public class NicknameService {
         COLOURS.put("pink", NamedTextColor.LIGHT_PURPLE);
         COLOURS.put("yellow", NamedTextColor.YELLOW);
         COLOURS.put("white", NamedTextColor.WHITE);
-        COLOURS.put("magic", TextDecoration.OBFUSCATED);
-        COLOURS.put("bold", TextDecoration.BOLD);
-        COLOURS.put("strikethrough", TextDecoration.STRIKETHROUGH);
-        COLOURS.put("italic", TextDecoration.ITALIC);
-        COLOURS.put("underline", TextDecoration.UNDERLINED);
-        COLOURS.put("rainbow", null);
     }
 
     public static Set<String> getColourNamesList() {
         return COLOURS.keySet();
     }
 
-    public static String getPlayerNameCustomised(String playerName) {
+    public static NamedTextColor getColour(String name) {
+        return COLOURS.get(name);
+    }
+
+    public static TextComponent getPlayerNameCustomised(String playerName) {
         String userColour = getUserColour(playerName);
         String nickname = getUserNickname(playerName);
-        return applyColour(userColour, nickname) + NamedTextColor.WHITE;
+        return applyColour(userColour, nickname);
     }
 
     public static void cacheProfile(String playerName) {
@@ -79,19 +75,8 @@ public class NicknameService {
         PROFILE_CACHE.remove(playerName);
     }
 
-    private static String applyColour(String userColour, String nickname) {
-        if (userColour.equals("rainbow")) {
-            StringBuilder rainbowNameBuilder = new StringBuilder();
-            int index = 0;
-            for (String nameChar : nickname.split("")) {
-                if (index == RAINBOW_ORDER.size()) index = 0;
-                rainbowNameBuilder.append(getColourByName(RAINBOW_ORDER.get(index))).append(nameChar);
-                index++;
-            }
-            return rainbowNameBuilder.toString();
-        } else {
-            return getColourByName(userColour) + nickname;
-        }
+    private static TextComponent applyColour(String userColour, String nickname) {
+        return Component.text(nickname, getColour(userColour));
     }
 
     private static String getUserNickname(String playerName) {
@@ -99,7 +84,7 @@ public class NicknameService {
     }
 
     private static String getUserColour(String playerName) {
-       return PROFILE_CACHE.get(playerName).getColourName();
+        return PROFILE_CACHE.get(playerName).getColourName();
     }
 
     public static void updateNickname(String name, String nickname) {
@@ -127,13 +112,5 @@ public class NicknameService {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public static TextFormat getColourByName(String name) {
-        return name.equals("rainbow") ? NamedTextColor.WHITE : COLOURS.get(name);
-    }
-
-    public static TextFormat getColourByNameAsChatColour(String name) {
-        return name.equals("rainbow") ? NamedTextColor.WHITE : COLOURS.get(name);
     }
 }

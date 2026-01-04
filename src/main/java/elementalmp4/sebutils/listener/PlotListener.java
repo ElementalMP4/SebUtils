@@ -6,6 +6,7 @@ import main.java.elementalmp4.sebutils.entity.Plot;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
 import main.java.elementalmp4.sebutils.service.PermitService;
 import main.java.elementalmp4.sebutils.service.PlotService;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -38,7 +39,9 @@ public class PlotListener implements Listener {
             if (cancel) {
                 e.setCancelled(true);
                 e.getPlayer().getWorld().spawnParticle(Particle.LARGE_SMOKE, e.getBlock().getLocation(), 3);
-                e.getPlayer().sendMessage(NamedTextColor.RED + "Only " + NamedTextColor.GOLD + blockOwner.get().getOwner() + NamedTextColor.RED + " can build here!");
+                e.getPlayer().sendMessage(Component.text("Only ", NamedTextColor.RED)
+                        .append(Component.text(blockOwner.get().getOwner(), NamedTextColor.GOLD))
+                        .append(Component.text(" can build here!", NamedTextColor.RED)));
             }
         }
     }
@@ -57,7 +60,9 @@ public class PlotListener implements Listener {
             if (cancel) {
                 e.setCancelled(true);
                 e.getPlayer().getWorld().spawnParticle(Particle.LARGE_SMOKE, e.getBlock().getLocation(), 3);
-                e.getPlayer().sendMessage(NamedTextColor.RED + "Only " + NamedTextColor.GOLD + blockOwner.get().getOwner() + NamedTextColor.RED + " can build here!");
+                e.getPlayer().sendMessage(Component.text("Only ", NamedTextColor.RED)
+                        .append(Component.text(blockOwner.get().getOwner(), NamedTextColor.GOLD))
+                        .append(Component.text(" can build here!", NamedTextColor.RED)));
             }
         }
     }
@@ -81,7 +86,9 @@ public class PlotListener implements Listener {
                 if (cancelEvent) {
                     e.setCancelled(true);
                     e.getDamager().getWorld().spawnParticle(Particle.LARGE_SMOKE, e.getEntity().getLocation(), 3);
-                    e.getDamager().sendMessage(NamedTextColor.RED + "Only " + NamedTextColor.GOLD + blockOwner.get().getOwner() + NamedTextColor.RED + " can interact with that!");
+                    e.getDamager().sendMessage(Component.text("Only ", NamedTextColor.RED)
+                            .append(Component.text(blockOwner.get().getOwner(), NamedTextColor.GOLD))
+                            .append(Component.text(" can interact with that!", NamedTextColor.RED)));
                 }
             }
         }
@@ -104,7 +111,9 @@ public class PlotListener implements Listener {
             if (cancelEvent) {
                 e.setCancelled(true);
                 e.getPlayer().getWorld().spawnParticle(Particle.LARGE_SMOKE, e.getClickedBlock().getLocation(), 3);
-                e.getPlayer().sendMessage(NamedTextColor.RED + "Only " + NamedTextColor.GOLD + blockOwner.get().getOwner() + NamedTextColor.RED + " can interact with that!");
+                e.getPlayer().sendMessage(Component.text("Only ", NamedTextColor.RED)
+                        .append(Component.text(blockOwner.get().getOwner(), NamedTextColor.GOLD))
+                        .append(Component.text(" can interact with that!", NamedTextColor.RED)));
                 return;
             }
         }

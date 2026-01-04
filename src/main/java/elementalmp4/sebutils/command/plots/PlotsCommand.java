@@ -6,6 +6,7 @@ import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.entity.Plot;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
 import main.java.elementalmp4.sebutils.service.PlotService;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -20,19 +21,29 @@ public class PlotsCommand extends AbstractCommand {
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
         List<Plot> plots = PlotService.getUserPlots(commandSender.getName());
         if (plots.isEmpty()) {
-            commandSender.sendMessage(NamedTextColor.RED + "You don't have any plots!");
+            commandSender.sendMessage(Component.text("You don't have any plots!", NamedTextColor.RED));
         } else {
-            List<String> out = new ArrayList<>();
-            for (Plot plot : plots) {
-                out.add(NamedTextColor.GREEN.toString() + plot.getId()
-                        + " " + NamedTextColor.YELLOW + plot.getXA() + " " + plot.getYA() + NamedTextColor.AQUA
-                        + " > " + NamedTextColor.YELLOW + plot.getXB() + " " + plot.getYB() + NamedTextColor.AQUA
-                        + " - " + NamedTextColor.GOLD +  plot.getWorld());
+            Component message = Component.empty();
+            for (int i = 0; i < plots.size(); i++) {
+                Plot plot = plots.get(i);
+                Component plotLine = Component.text(plot.getId(), NamedTextColor.GREEN)
+                        .append(Component.text(" ", NamedTextColor.WHITE))
+                        .append(Component.text(plot.getXA() + " " + plot.getYA(), NamedTextColor.YELLOW))
+                        .append(Component.text(" > ", NamedTextColor.AQUA))
+                        .append(Component.text(plot.getXB() + " " + plot.getYB(), NamedTextColor.YELLOW))
+                        .append(Component.text(" - ", NamedTextColor.AQUA))
+                        .append(Component.text(plot.getWorld(), NamedTextColor.GOLD));
+                message = message.append(plotLine);
+                if (i < plots.size() - 1) message = message.append(Component.text("\n"));
             }
             int usedArea = plots.stream().map(Plot::getPlotArea).reduce(0, Integer::sum);
             int remainingArea = GlobalConfigService.getAsInteger(GlobalConfig.PLOT_MAX_SIZE) - usedArea;
-            out.add(NamedTextColor.GREEN + "Used: " + NamedTextColor.YELLOW + usedArea + " blocks" + NamedTextColor.GREEN + " Remaining: " + NamedTextColor.YELLOW + remainingArea);
-            commandSender.sendMessage(String.join("\n", out));
+            Component summary = Component.text("\nUsed: ", NamedTextColor.GREEN)
+                    .append(Component.text(usedArea + " blocks", NamedTextColor.YELLOW))
+                    .append(Component.text(" Remaining: ", NamedTextColor.GREEN))
+                    .append(Component.text(remainingArea + "", NamedTextColor.YELLOW));
+            message = message.append(summary);
+            commandSender.sendMessage(message);
         }
         return true;
     }

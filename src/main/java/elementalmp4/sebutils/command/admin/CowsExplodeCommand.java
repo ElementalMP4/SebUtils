@@ -5,6 +5,7 @@ import main.java.elementalmp4.sebutils.command.AbstractCommand;
 import main.java.elementalmp4.sebutils.completer.BooleanTabCompleter;
 import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -18,22 +19,24 @@ public class CowsExplodeCommand extends AbstractCommand {
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
         if (args.length == 0) {
             boolean tntEnabled = GlobalConfigService.getAsBoolean(GlobalConfig.COWS_EXPLODE);
-            commandSender.sendMessage("Cows will currently " + format(tntEnabled));
+            Component message = Component.text("Cows will currently ").append(format(tntEnabled));
+            commandSender.sendMessage(message);
             return true;
         }
 
         if (!Set.of("true", "false").contains(args[0])) {
-            commandSender.sendMessage(NamedTextColor.RED + "You must specify true or false");
+            commandSender.sendMessage(Component.text("You must specify true or false", NamedTextColor.RED));
             return true;
         }
 
         GlobalConfigService.set(GlobalConfig.COWS_EXPLODE, args[0]);
-        commandSender.sendMessage("Cows will now " + format(Boolean.parseBoolean(args[0])));
+        Component message = Component.text("Cows will now ").append(format(Boolean.parseBoolean(args[0])));
+        commandSender.sendMessage(message);
         return true;
     }
 
-    private String format(boolean enabled) {
-        return (enabled ? NamedTextColor.GREEN + "explode" : NamedTextColor.RED + "not explode");
+    private Component format(boolean enabled) {
+        return Component.text(enabled ? "explode" : "not explode", enabled ? NamedTextColor.GREEN : NamedTextColor.RED);
     }
 
     @Override
