@@ -1,7 +1,6 @@
 package main.java.elementalmp4.sebutils.service;
 
-import main.java.elementalmp4.sebutils.GlobalConfig;
-import main.java.elementalmp4.sebutils.SebUtils;
+import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.entity.Plot;
 import main.java.elementalmp4.sebutils.entity.PlotCreateRequest;
 import main.java.elementalmp4.sebutils.utils.NamedThreadFactory;

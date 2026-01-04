@@ -1,6 +1,6 @@
 package main.java.elementalmp4.sebutils.command.admin;
 
-import main.java.elementalmp4.sebutils.GlobalConfig;
+import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.annotation.SebUtilsCommand;
 import main.java.elementalmp4.sebutils.command.AbstractCommand;
 import main.java.elementalmp4.sebutils.completer.OllamaTabCompleter;

@@ -1,6 +1,8 @@
 package main.java.elementalmp4.sebutils.service;
 
-import main.java.elementalmp4.sebutils.GlobalConfig;
+import main.java.elementalmp4.sebutils.config.Config;
+import main.java.elementalmp4.sebutils.config.DataType;
+import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.SebUtils;
 import main.java.elementalmp4.sebutils.exception.InvalidConfigException;
 import org.json.JSONObject;
@@ -59,8 +61,22 @@ public class GlobalConfigService {
         return CACHE.get(config.getKey());
     }
 
-    public static Map<String, String> getAllConfig() {
-        return CACHE;
+    public static Config getAsConfig(GlobalConfig conf) {
+        String value;
+        if (conf.getType() == DataType.SECURE_STRING) {
+            value = "REDACTED";
+        } else {
+            value = getValue(conf);
+        }
+        return new Config(conf, value);
+    }
+
+    public static Map<String, Config> listConfig() {
+        Map<String, Config> result = new LinkedHashMap<>();
+        for (GlobalConfig conf : GlobalConfig.values()) {
+            result.put(conf.getKey(), getAsConfig(conf));
+        }
+        return result;
     }
 
     public static boolean getAsBoolean(GlobalConfig config) {

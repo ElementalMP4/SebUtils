@@ -1,6 +1,6 @@
 package main.java.elementalmp4.sebutils.service;
 
-import main.java.elementalmp4.sebutils.GlobalConfig;
+import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.utils.AfkStatus;
 import main.java.elementalmp4.sebutils.utils.NamedThreadFactory;
 

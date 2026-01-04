@@ -66,6 +66,12 @@
         </plugins>
         <resources>
             <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+            <resource>
                 <directory>src/</directory>
                 <includes>
                     <include>plugin.yml</include>

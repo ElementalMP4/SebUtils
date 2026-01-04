@@ -4,7 +4,7 @@ import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.WebhookClientBuilder;
 import club.minnced.discord.webhook.send.WebhookMessage;
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
-import main.java.elementalmp4.sebutils.GlobalConfig;
+import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.SebUtils;
 import main.java.elementalmp4.sebutils.utils.ConsoleColours;
 import main.java.elementalmp4.sebutils.utils.NamedThreadFactory;

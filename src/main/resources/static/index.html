@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plugin Configuration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #fdb76c 0%, #ff552f 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .menu-bar {
+            position: sticky;
+            top: 20px;
+            background: white;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 100;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .menu-label {
+            font-weight: 600;
+            color: #667eea;
+            margin-right: 10px;
+        }
+
+        .menu-btn {
+            padding: 8px 16px;
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #4a5568;
+            transition: all 0.2s;
+        }
+
+        .menu-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .quick-settings, .config-group {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .group-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 15px;
+            text-transform: capitalize;
+        }
+
+        .config-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #f7fafc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .config-item:last-child {
+            border-bottom: none;
+        }
+
+        .config-label {
+            font-weight: 500;
+            color: #2d3748;
+            flex: 1;
+        }
+
+        .config-input {
+            flex: 1;
+            max-width: 300px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border 0.2s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 48px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+        }
+
+        .power-button {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            width: 48px;
+            height: 48px;
+            background-color: #ef4444;
+            transition: all 0.3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .power-button:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transform: scale(1.05);
+        }
+
+        .power-button:before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 3px solid white;
+            border-radius: 50%;
+            border-top-color: transparent;
+        }
+
+        .power-button:after {
+            content: "";
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 12px;
+            background-color: white;
+            border-radius: 2px;
+        }
+
+        input:checked + .power-button {
+            background-color: #22c55e;
+        }
+
+        .save-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 10px;
+        }
+
+        .save-btn:hover {
+            background: #5568d3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .save-btn:active {
+            transform: translateY(0);
+        }
+
+        .status-message {
+            margin-top: 10px;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .status-message.success {
+            background: #c6f6d5;
+            color: #22543d;
+            display: block;
+        }
+
+        .status-message.error {
+            background: #fed7d7;
+            color: #742a2a;
+            display: block;
+        }
+
+        .secure-indicator {
+            font-size: 12px;
+            color: #718096;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Plugin Configuration</h1>
+            <p class="subtitle">Manage your server settings</p>
+        </div>
+
+        <div class="menu-bar" id="menu-bar">
+            <span class="menu-label">Jump to:</span>
+            <button class="menu-btn" onclick="scrollToSection('quick-settings')">Quick Settings</button>
+        </div>
+
+        <div id="quick-settings" class="quick-settings">
+            <h2 class="section-title">Quick Settings</h2>
+            <div id="quick-settings-content"></div>
+            <button class="save-btn" onclick="saveConfig()">Save Changes</button>
+            <div id="status-message" class="status-message"></div>
+        </div>
+
+        <div id="config-groups"></div>
+    </div>
+
+    <script>
+        let configData = {};
+        const API_BASE = window.location.origin;
+
+        async function loadConfig() {
+            try {
+                const response = await fetch(`${API_BASE}/config`);
+                configData = await response.json();
+                renderDashboard();
+            } catch (error) {
+                console.error('Error loading config:', error);
+                showStatus('Failed to load configuration', 'error');
+            }
+        }
+
+        function renderDashboard() {
+            renderQuickSettings();
+            renderConfigGroups();
+            renderMenuBar();
+        }
+
+        function renderMenuBar() {
+            const groups = {};
+            Object.entries(configData).forEach(([key, cfg]) => {
+                groups[cfg.group] = true;
+            });
+
+            const menuBar = document.getElementById('menu-bar');
+            const groupButtons = Object.keys(groups).sort().map(groupName => 
+                `<button class="menu-btn" onclick="scrollToSection('${groupName}')">${capitalize(groupName)}</button>`
+            ).join('');
+
+            menuBar.innerHTML = `
+                <span class="menu-label">Jump to:</span>
+                <button class="menu-btn" onclick="scrollToSection('quick-settings')">Quick Settings</button>
+                ${groupButtons}
+            `;
+        }
+
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        function renderQuickSettings() {
+            const container = document.getElementById('quick-settings-content');
+            const toggles = Object.entries(configData).filter(([_, cfg]) => cfg.type === 'TOGGLE');
+            
+            container.innerHTML = toggles.map(([key, cfg]) => `
+                <div class="config-item">
+                    <span class="config-label">${cfg.displayName}</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="quick-${key}" 
+                               ${cfg.value === 'true' ? 'checked' : ''}
+                               onchange="updateValue('${key}', this.checked)">
+                        <span class="power-button"></span>
+                    </label>
+                </div>
+            `).join('');
+        }
+
+        function renderConfigGroups() {
+            const container = document.getElementById('config-groups');
+            const groups = {};
+            
+            Object.entries(configData).forEach(([key, cfg]) => {
+                if (!groups[cfg.group]) groups[cfg.group] = [];
+                groups[cfg.group].push([key, cfg]);
+            });
+
+            container.innerHTML = Object.entries(groups).map(([groupName, items]) => `
+                <div id="${groupName}" class="config-group">
+                    <h3 class="group-title">${groupName}</h3>
+                    ${items.map(([key, cfg]) => renderConfigItem(key, cfg)).join('')}
+                    <button class="save-btn" onclick="saveConfig()">Save Changes</button>
+                </div>
+            `).join('');
+        }
+
+        function renderConfigItem(key, cfg) {
+            const inputId = `input-${key}`;
+            let inputHtml = '';
+
+            switch(cfg.type) {
+                case 'TOGGLE':
+                    inputHtml = `
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="${inputId}" 
+                                   ${cfg.value === 'true' ? 'checked' : ''}
+                                   onchange="updateValue('${key}', this.checked)">
+                            <span class="power-button"></span>
+                        </label>
+                    `;
+                    break;
+                case 'NUMBER':
+                    inputHtml = `
+                        <input type="number" id="${inputId}" 
+                               value="${cfg.value}"
+                               onchange="updateValue('${key}', this.value)">
+                    `;
+                    break;
+                case 'SECURE_STRING':
+                    inputHtml = `
+                        <div style="flex: 1; max-width: 300px;">
+                            <input type="password" id="${inputId}" 
+                                   value="${cfg.value}"
+                                   onchange="updateValue('${key}', this.value)"
+                                   placeholder="Enter secure value">
+                            <div class="secure-indicator">Value is encrypted</div>
+                        </div>
+                    `;
+                    break;
+                default: // STRING
+                    inputHtml = `
+                        <input type="text" id="${inputId}" 
+                               value="${cfg.value}"
+                               onchange="updateValue('${key}', this.value)">
+                    `;
+            }
+
+            return `
+                <div class="config-item">
+                    <span class="config-label">${cfg.displayName}</span>
+                    <div class="config-input">${inputHtml}</div>
+                </div>
+            `;
+        }
+
+        function updateValue(key, value) {
+            if (configData[key]) {
+                configData[key].value = value.toString();
+                
+                if (configData[key].type === 'TOGGLE') {
+                    const quickToggle = document.getElementById(`quick-${key}`);
+                    const groupToggle = document.getElementById(`input-${key}`);
+                    if (quickToggle) quickToggle.checked = value;
+                    if (groupToggle) groupToggle.checked = value;
+                }
+            }
+        }
+
+        async function saveConfig() {
+            try {
+                const updates = {};
+                Object.entries(configData).forEach(([key, cfg]) => {
+                    updates[key] = cfg.value;
+                });
+
+                const response = await fetch(`${API_BASE}/config`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(updates)
+                });
+
+                if (response.ok) {
+                    showStatus('Configuration saved successfully!', 'success');
+                } else {
+                    showStatus('Failed to save configuration', 'error');
+                }
+            } catch (error) {
+                console.error('Error saving config:', error);
+                showStatus('Error saving configuration', 'error');
+            }
+        }
+
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('status-message');
+            statusEl.textContent = message;
+            statusEl.className = `status-message ${type}`;
+            setTimeout(() => {
+                statusEl.style.display = 'none';
+            }, 3000);
+        }
+
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        loadConfig();
+    </script>
+</body>
+</html>

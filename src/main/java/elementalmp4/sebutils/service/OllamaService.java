@@ -5,7 +5,7 @@ import io.github.ollama4j.exceptions.OllamaException;
 import io.github.ollama4j.models.chat.OllamaChatMessageRole;
 import io.github.ollama4j.models.chat.OllamaChatRequest;
 import io.github.ollama4j.models.chat.OllamaChatResult;
-import main.java.elementalmp4.sebutils.GlobalConfig;
+import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 

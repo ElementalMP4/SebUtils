@@ -1,6 +1,6 @@
 package main.java.elementalmp4.sebutils.service;
 
-import main.java.elementalmp4.sebutils.GlobalConfig;
+import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import org.bukkit.Particle;
 import org.bukkit.entity.Cow;
 import org.bukkit.entity.Sheep;

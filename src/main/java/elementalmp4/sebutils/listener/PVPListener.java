@@ -1,6 +1,6 @@
 package main.java.elementalmp4.sebutils.listener;
 
-import main.java.elementalmp4.sebutils.GlobalConfig;
+import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.annotation.SebUtilsListener;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
 import main.java.elementalmp4.sebutils.service.PVPToggleService;
