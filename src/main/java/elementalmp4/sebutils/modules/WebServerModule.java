@@ -5,6 +5,8 @@ import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
 import main.java.elementalmp4.sebutils.utils.NamedThreadFactory;
 import main.java.elementalmp4.sebutils.web.ConfigUpdateHandler;
+
+import static main.java.elementalmp4.sebutils.SebUtils.getModuleManager;
 import static main.java.elementalmp4.sebutils.SebUtils.getPluginLogger;
 
 public class WebServerModule extends AbstractModule {
@@ -30,6 +32,14 @@ public class WebServerModule extends AbstractModule {
 
         app.post("/config", new ConfigUpdateHandler()).exception(IllegalArgumentException.class, (e, ctx) -> {
            ctx.status(400).result(e.getMessage());
+        });
+
+        app.get("/tiles/{world}/{tile}", ctx -> {
+            if (!GlobalConfigService.getAsBoolean(GlobalConfig.MAP_ENABLED)) {
+                ctx.status(400).result("Tiles disabled");
+                return;
+            }
+            getModuleManager().get(MapModule.class).serveTile(ctx);
         });
 
         String bind = GlobalConfigService.getValue(GlobalConfig.WEB_BIND);

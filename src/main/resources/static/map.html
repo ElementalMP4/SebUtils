@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>World Map</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+    </script>
+
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: #1b1b1b;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .leaflet-container {
+            background: #1b1b1b;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="map"></div>
+
+    <script>
+        const TILE_SIZE = 128;
+
+        const map = L.map('map', {
+            crs: L.CRS.Simple,
+            minZoom: -3,
+            maxZoom: 3,
+            zoomSnap: 1,
+            zoomDelta: 1
+        });
+
+        const tiles = L.tileLayer('http://localhost:8080/tiles/world/{x}_{y}.png', {
+            tileSize: TILE_SIZE,
+            noWrap: true,
+            bounds: [
+                [-8192, -8192],
+                [8192, 8192]
+            ],
+            maxNativeZoom: 0,
+            minNativeZoom: 0,
+            minZoom: -3,
+            maxZoom: 3
+        }).addTo(map);
+
+        map.setView([0, 0], 0);
+
+
+        // Debug helper: log tile requests
+        tiles.on('tileerror', e => {
+            console.warn('Missing tile:', e.coords);
+        });
+    </script>
+
+</body>
+
+</html>

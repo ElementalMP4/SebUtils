@@ -63,6 +63,7 @@ public class SebUtils extends JavaPlugin {
         moduleManager.register(DiscordModule.class, DiscordModule::new, GlobalConfig.DISCORD_ENABLED);
         moduleManager.register(WebServerModule.class, WebServerModule::new, GlobalConfig.WEB_ENABLED);
         moduleManager.register(OllamaModule.class, OllamaModule::new, GlobalConfig.OLLAMA_ENABLED);
+        moduleManager.register(MapModule.class, MapModule::new, GlobalConfig.MAP_ENABLED);
 
         logger.info(ConsoleColours.YELLOW + "Registering commands");
         List<AbstractCommand> commands = new ReflectiveInstantiator<AbstractCommand>("main.java.elementalmp4.sebutils.command")

@@ -31,7 +31,8 @@ public enum GlobalConfig {
     // Web Server
     WEB_BIND("Web Server Bind", "web_bind", "127.0.0.1", DataType.STRING, "Web", WebServerModule.class),
     WEB_PORT("Web Server Port", "web_port", "8080", DataType.NUMBER, "Web", WebServerModule.class),
-    WEB_ENABLED("Web Server Enabled", "web_enabled", "true", DataType.TOGGLE, "Web", WebServerModule.class);
+    WEB_ENABLED("Web Server Enabled", "web_enabled", "true", DataType.TOGGLE, "Web", WebServerModule.class),
+    MAP_ENABLED("Map Enabled", "map_enabled", "true", DataType.TOGGLE, "Web", MapModule.class);
 
     private final String key;
     private final String defaultValue;
