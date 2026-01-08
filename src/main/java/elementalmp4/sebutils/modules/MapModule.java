@@ -212,6 +212,7 @@ public class MapModule extends AbstractModule implements Listener {
         }
 
         try {
+            ctx.header("Cache-Control", "max-age=600");
             ctx.header("Content-Type", "image/png");
             ctx.result(Files.newInputStream(tilePath));
         } catch (IOException e) {
