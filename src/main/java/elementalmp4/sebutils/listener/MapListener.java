@@ -41,7 +41,8 @@ public class MapListener implements Listener {
         Chunk c = event.getChunk();
         Path tileDir = getPlugin().getDataFolder()
                 .toPath()
-                .resolve("tiles");
+                .resolve("tiles")
+                .resolve(event.getWorld().getName());
 
         if (!MapModule.tileExists(tileDir, c.getX(), c.getZ())) {
             getModuleManager().get(MapModule.class).markForRender(c);

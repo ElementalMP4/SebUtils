@@ -45,7 +45,7 @@
             zoomDelta: 1,
         });
 
-        const tiles = L.tileLayer('/tiles/world/{z}/{x}_{y}.png', {
+        const tiles = L.tileLayer('/tiles/world/{z}/{x}/{y}', {
             tileSize: TILE_SIZE,
             noWrap: true,
             bounds: [
