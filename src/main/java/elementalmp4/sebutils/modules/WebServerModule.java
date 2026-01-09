@@ -34,7 +34,7 @@ public class WebServerModule extends AbstractModule {
            ctx.status(400).result(e.getMessage());
         });
 
-        app.get("/tiles/{world}/{tile}", ctx -> {
+        app.get("/tiles/{world}/{zoom}/{tile}", ctx -> {
             if (!GlobalConfigService.getAsBoolean(GlobalConfig.MAP_ENABLED)) {
                 ctx.status(400).result("Tiles disabled");
                 return;

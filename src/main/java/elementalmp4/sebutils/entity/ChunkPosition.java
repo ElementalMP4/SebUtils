@@ -1,3 +1,9 @@
 package main.java.elementalmp4.sebutils.entity;
 
-public record ChunkPosition(int x, int z) {}
+public record ChunkPosition(
+        String world,
+        int x,
+        int z,
+        int zoom
+) {}
+
