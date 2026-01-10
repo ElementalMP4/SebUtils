@@ -8,8 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WebAuthService {
 
     private static final SecureRandom RNG = new SecureRandom();
-    private static final String CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    private static final int OTP_LENGTH = 8;
+    private static final String CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private static final int OTP_LENGTH = 6;
 
     private static final Map<String, String> otps = new ConcurrentHashMap<>();
     private static final Map<String, String> userTokens = new ConcurrentHashMap<>();

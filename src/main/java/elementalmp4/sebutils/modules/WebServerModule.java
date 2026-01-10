@@ -14,7 +14,7 @@ import static main.java.elementalmp4.sebutils.SebUtils.getPluginLogger;
 
 public class WebServerModule extends AbstractModule {
 
-    private static final List<String> OPEN_ENDPOINTS = List.of("/login", "/health", "/login.html");
+    private static final List<String> OPEN_ENDPOINTS = List.of("/login", "/health", "/login.html", "/styles.css");
 
     private final NamedThreadFactory namedThreadFactory = new NamedThreadFactory("web");
     private Javalin app;
