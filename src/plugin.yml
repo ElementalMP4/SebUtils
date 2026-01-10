@@ -30,6 +30,9 @@ permissions:
   sebutils.ai:
     description: "Allows players to use AI commands"
     default: true
+  sebutils.web:
+    description: "Allows players to access the web dashboard (only OP members can view/edit the configuration)"
+    default: true
 commands:
   pvptoggle:
     description: "Toggle whether or not you can attack and be attacked by other players"
@@ -171,3 +174,7 @@ commands:
     description: "Ask ChatGPSTEVE a question"
     usage: "/ask [question]"
     permission: "sebutils.ai"
+  register:
+    description: "Generate a one-time password for web dashboard login"
+    usage: "/register"
+    permission: "sebutils.web"
