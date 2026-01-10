@@ -39,7 +39,6 @@ public class WebServerModule extends AbstractModule {
             if (user == null) {
                 ctx.status(401);
                 ctx.result("Invalid token");
-                ctx.redirect("/login.html");
                 ctx.skipRemainingHandlers();
             } else {
                 ctx.attribute("authenticatedUser", user);
