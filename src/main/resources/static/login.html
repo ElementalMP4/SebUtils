@@ -1,26 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Login - SebUtils</title>
     <link rel="stylesheet" type="text/css" href="/styles.css">
 </head>
+
 <body>
-<div class="box">
-    <h1>Login to SebUtils</h1>
-    <form action="/login" method="POST">
-        <div>
-            <label>Minecraft Username</label>
-            <input name="username" required placeholder="Your Minecraft username"/>
+    <h2 style="margin-bottom: 20px; text-align: center;">Login Page Preview</h2>
+    <div style="display: flex; justify-content: center;">
+        <div class="box">
+            <h1>Login to SebUtils</h1>
+            <form action="/login" method="POST">
+                <div>
+                    <label>Minecraft Username</label>
+                    <input name="username" type="text" placeholder="Your Minecraft username" required>
+                </div>
+                <div>
+                    <label>One-Time Password</label>
+                    <input name="otp" type="password" placeholder="One-Time Password" required>
+                </div>
+                <button type="submit">Login</button>
+            </form>
         </div>
-        <div>
-            <label>One-Time Password</label>
-            <input name="otp" required placeholder="8 character password"/>
-        </div>
-        <button type="submit">Login</button>
-    </form>
-    <div id="status" class="note"></div>
-</div>
+    </div>
 </body>
+
 </html>

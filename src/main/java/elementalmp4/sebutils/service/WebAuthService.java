@@ -1,5 +1,10 @@
 package main.java.elementalmp4.sebutils.service;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 import java.security.SecureRandom;
 import java.util.Map;
 import java.util.UUID;
@@ -17,25 +22,30 @@ public class WebAuthService {
 
     public static String generateOtpForUser(String username) {
         String otp = randomString(OTP_LENGTH);
-        otps.put(username.toLowerCase(), otp);
+        otps.put(username, otp);
         return otp;
     }
 
     public static synchronized String verifyOtpAndIssueToken(String username, String otp) {
-        String key = username.toLowerCase();
-        String expected = otps.get(key);
+        String expected = otps.get(username);
         if (expected == null) return null;
         if (!expected.equals(otp)) return null;
 
-        otps.remove(key);
+        otps.remove(username);
 
         String token = UUID.randomUUID().toString();
 
-        String old = userTokens.put(key, token);
+        String old = userTokens.put(username, token);
         if (old != null) {
             tokenToUser.remove(old);
         }
-        tokenToUser.put(token, key);
+        tokenToUser.put(token, username);
+
+        Player player = Bukkit.getPlayer(username);
+        if (player != null) {
+            player.sendMessage(Component.text("You can now access the web dashboard!", NamedTextColor.GREEN));
+        }
+
         return token;
     }
 
@@ -45,8 +55,7 @@ public class WebAuthService {
     }
 
     public static synchronized void invalidateTokenForUser(String username) {
-        String key = username.toLowerCase();
-        String tok = userTokens.remove(key);
+        String tok = userTokens.remove(username);
         if (tok != null) tokenToUser.remove(tok);
     }
 

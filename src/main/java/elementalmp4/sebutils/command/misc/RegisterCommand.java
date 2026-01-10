@@ -16,12 +16,11 @@ public class RegisterCommand extends AbstractCommand {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
         String username = commandSender.getName();
-        // invalidate any existing token when generating a new registration OTP
         WebAuthService.invalidateTokenForUser(username);
         String otp = WebAuthService.generateOtpForUser(username);
-        commandSender.sendMessage(Component.text("Registration OTP generated: ", NamedTextColor.GREEN)
+        commandSender.sendMessage(Component.text("One-Time Password: ", NamedTextColor.GREEN)
                 .append(Component.text(otp, NamedTextColor.AQUA)));
-        commandSender.sendMessage(Component.text("Use this one-time password on the web login page to obtain your token.", NamedTextColor.GRAY));
+        commandSender.sendMessage(Component.text("Use this one-time password to access the web dashboard and map!", NamedTextColor.GRAY));
         return true;
     }
 

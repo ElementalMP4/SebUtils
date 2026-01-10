@@ -4,3 +4,4 @@ dependency-reduced-pom.xml
 .DS_Store
 venv
 dev-server
+postgres-data
