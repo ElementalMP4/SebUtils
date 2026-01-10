@@ -37,15 +37,19 @@ public class WebServerModule extends AbstractModule {
             String token = ctx.cookie("web_token");
             String user = WebAuthService.validateToken(token);
             if (user == null) {
-                ctx.status(401);
-                ctx.result("Invalid token");
+                if (path.startsWith("/api")) {
+                    ctx.status(401);
+                    ctx.result("Invalid token");
+                } else {
+                    ctx.redirect("/login.html");
+                }
                 ctx.skipRemainingHandlers();
             } else {
                 ctx.attribute("authenticatedUser", user);
             }
         });
 
-        app.get("/config", ctx -> ctx.json(GlobalConfigService.listConfig()));
+        app.get("/api/config", ctx -> ctx.json(GlobalConfigService.listConfig()));
         app.get("/health", ctx -> ctx.result("OK"));
 
         app.post("/login", ctx -> {
@@ -70,14 +74,14 @@ public class WebServerModule extends AbstractModule {
         app.get("/status", ctx -> ctx.result("Logged in"));
 
         for (GlobalConfig conf : GlobalConfig.values()) {
-            app.get("/config/" + conf.getKey(), ctx -> ctx.json(GlobalConfigService.getAsConfig(conf)));
+            app.get("/api/config/" + conf.getKey(), ctx -> ctx.json(GlobalConfigService.getAsConfig(conf)));
         }
 
-        app.post("/config", new ConfigUpdateHandler()).exception(IllegalArgumentException.class, (e, ctx) -> {
+        app.post("/api/config", new ConfigUpdateHandler()).exception(IllegalArgumentException.class, (e, ctx) -> {
             ctx.status(400).result(e.getMessage());
         });
 
-        app.get("/tiles/{world}/{zoom}/{x}/{z}", ctx -> {
+        app.get("/api/tiles/{world}/{zoom}/{x}/{z}", ctx -> {
             if (!GlobalConfigService.getAsBoolean(GlobalConfig.MAP_ENABLED)) {
                 ctx.status(400).result("Tiles disabled");
                 return;
