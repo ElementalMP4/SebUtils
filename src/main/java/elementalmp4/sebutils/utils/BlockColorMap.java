@@ -100,18 +100,36 @@ public final class BlockColorMap {
                 Material.CHERRY_PLANKS, Material.CHERRY_FENCE, Material.CHERRY_FENCE_GATE, Material.CHERRY_DOOR, Material.CHERRY_TRAPDOOR,
                 Material.CHERRY_STAIRS, Material.CHERRY_SLAB);
 
-        // Leaves
-        put(0xFF4F7F3A,
-                Material.OAK_LEAVES,
-                Material.SPRUCE_LEAVES,
-                Material.BIRCH_LEAVES,
-                Material.JUNGLE_LEAVES,
-                Material.ACACIA_LEAVES,
-                Material.DARK_OAK_LEAVES,
-                Material.MANGROVE_LEAVES,
-                Material.CHERRY_LEAVES,
-                Material.AZALEA_LEAVES,
-                Material.FLOWERING_AZALEA_LEAVES);
+        // Leaves - each type with distinct color
+        put(0xFF4E7F3A, Material.OAK_LEAVES);           // Standard green
+        put(0xFF3D5F2E, Material.SPRUCE_LEAVES);        // Dark green
+        put(0xFF6BA85E, Material.BIRCH_LEAVES);         // Bright green
+        put(0xFF4A8C3B, Material.JUNGLE_LEAVES);        // Rich green
+        put(0xFF6E9E4D, Material.ACACIA_LEAVES);        // Olive green
+        put(0xFF3A5528, Material.DARK_OAK_LEAVES);      // Very dark green
+        put(0xFF5A8847, Material.MANGROVE_LEAVES);      // Medium green
+        put(0xFFFFB7D5, Material.CHERRY_LEAVES);        // Pink
+        put(0xFF5C8F4D, Material.AZALEA_LEAVES);        // Greenish
+        put(0xFFD98FCC, Material.FLOWERING_AZALEA_LEAVES); // Light pink-purple
+
+        // Flowers and petals
+        put(0xFFFFE4E1, Material.PINK_PETALS);          // Light pink
+        put(0xFFFFD700, Material.DANDELION);            // Yellow
+        put(0xFFFF6B6B, Material.POPPY);                // Red
+        put(0xFF6BA3FF, Material.BLUE_ORCHID);          // Blue
+        put(0xFFB5B5B5, Material.ALLIUM);               // Purple-gray
+        put(0xFFFF9999, Material.AZURE_BLUET);          // Light pink-white
+        put(0xFFFF4444, Material.RED_TULIP);            // Red
+        put(0xFFFFAA66, Material.ORANGE_TULIP);         // Orange
+        put(0xFFE5E5E5, Material.WHITE_TULIP);          // White
+        put(0xFFFFB5C5, Material.PINK_TULIP);           // Pink
+        put(0xFFFFE5B4, Material.OXEYE_DAISY);          // White-yellow
+        put(0xFFFF8888, Material.CORNFLOWER);           // Blue
+        put(0xFFFF6666, Material.LILY_OF_THE_VALLEY);   // White
+        put(0xFFD4AF37, Material.SUNFLOWER);            // Yellow
+        put(0xFFCC88DD, Material.LILAC);                // Purple
+        put(0xFFFF99AA, Material.ROSE_BUSH);            // Pink-red
+        put(0xFFCC99DD, Material.PEONY);                // Pink-purple
 
         // Ores & metals
         put(0xFFB87333,
