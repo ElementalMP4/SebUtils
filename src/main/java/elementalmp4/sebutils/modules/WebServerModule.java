@@ -67,6 +67,8 @@ public class WebServerModule extends AbstractModule {
             }
         });
 
+        app.get("/status", ctx -> ctx.result("Logged in"));
+
         for (GlobalConfig conf : GlobalConfig.values()) {
             app.get("/config/" + conf.getKey(), ctx -> ctx.json(GlobalConfigService.getAsConfig(conf)));
         }
