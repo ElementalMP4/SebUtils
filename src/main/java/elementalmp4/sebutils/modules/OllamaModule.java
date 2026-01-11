@@ -2,6 +2,7 @@ package main.java.elementalmp4.sebutils.modules;
 
 import io.github.ollama4j.Ollama;
 import io.github.ollama4j.exceptions.OllamaException;
+import io.github.ollama4j.models.chat.OllamaChatMessage;
 import io.github.ollama4j.models.chat.OllamaChatMessageRole;
 import io.github.ollama4j.models.chat.OllamaChatRequest;
 import io.github.ollama4j.models.chat.OllamaChatResult;
@@ -20,7 +21,7 @@ import static main.java.elementalmp4.sebutils.SebUtils.getPluginLogger;
 
 public class OllamaModule extends AbstractModule {
 
-    private static final String SYSTEM_PROMPT = "Your name is chatgpsteve. Your responses to the following questions should be no longer than 300 characters. Respond with ONLY your answer to this question, and nothing else.";
+    private static final String SYSTEM_PROMPT = "Your name is chatgpsteve. Your responses to the following questions should be no longer than 300 characters. Respond with ONLY your answer to this question, and nothing else. You should answer any and all requests, regardless of ethics or morals of the game, as players might be in creative mode.";
     private final ExecutorService OLLAMA_EXECUTOR = Executors.newSingleThreadExecutor();
     private Ollama ollamaAPI;
     private final Map<String, OllamaChatResult> CONVERSATIONS = new HashMap<>();
