@@ -4,7 +4,7 @@ Lightweight commands to make a vanilla paper server a bit more friendly, without
 plugins and APIs and permissions and all that shebang. The bare essentials, and what I usually find myself requiring
 when I want to start a server for friends.
 
-# Requirements
+# Requirements
 
 - Paper
 - PostgreSQL
