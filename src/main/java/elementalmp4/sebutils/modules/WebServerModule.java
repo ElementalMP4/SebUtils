@@ -1,16 +1,19 @@
 package main.java.elementalmp4.sebutils.modules;
 
 import io.javalin.Javalin;
+import io.javalin.http.Context;
 import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
 import main.java.elementalmp4.sebutils.service.WebAuthService;
 import main.java.elementalmp4.sebutils.utils.NamedThreadFactory;
 import main.java.elementalmp4.sebutils.web.ConfigUpdateHandler;
+import main.java.elementalmp4.sebutils.web.WebPermissions;
 
 import java.util.List;
 
 import static main.java.elementalmp4.sebutils.SebUtils.getModuleManager;
 import static main.java.elementalmp4.sebutils.SebUtils.getPluginLogger;
+import static main.java.elementalmp4.sebutils.web.WebPermissions.requireOp;
 
 public class WebServerModule extends AbstractModule {
 
@@ -49,9 +52,6 @@ public class WebServerModule extends AbstractModule {
             }
         });
 
-        app.get("/api/config", ctx -> ctx.json(GlobalConfigService.listConfig()));
-        app.get("/health", ctx -> ctx.result("OK"));
-
         app.post("/login", ctx -> {
             String username = ctx.formParam("username");
             String otp = ctx.formParam("otp");
@@ -71,10 +71,19 @@ public class WebServerModule extends AbstractModule {
             }
         });
 
+        app.get("/health", ctx -> ctx.result("OK"));
         app.get("/status", ctx -> ctx.result("Logged in"));
 
+        app.get("/api/config", ctx -> {
+            if (!requireOp(ctx)) return;
+            ctx.json(GlobalConfigService.listConfig());
+        });
+
         for (GlobalConfig conf : GlobalConfig.values()) {
-            app.get("/api/config/" + conf.getKey(), ctx -> ctx.json(GlobalConfigService.getAsConfig(conf)));
+            app.get("/api/config/" + conf.getKey(), ctx -> {
+                if (!requireOp(ctx)) return;
+                ctx.json(GlobalConfigService.getAsConfig(conf));
+            });
         }
 
         app.post("/api/config", new ConfigUpdateHandler()).exception(IllegalArgumentException.class, (e, ctx) -> {
@@ -96,6 +105,7 @@ public class WebServerModule extends AbstractModule {
         serverThread.start();
         getPluginLogger().info("Web server ready!");
     }
+
 
     public void onStop() {
         getPluginLogger().info("Stopping web server module");

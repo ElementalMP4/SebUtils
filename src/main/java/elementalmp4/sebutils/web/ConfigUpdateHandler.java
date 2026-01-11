@@ -12,11 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static main.java.elementalmp4.sebutils.SebUtils.getModuleManager;
+import static main.java.elementalmp4.sebutils.web.WebPermissions.requireOp;
 
 public class ConfigUpdateHandler implements Handler {
 
     @Override
     public void handle(@NotNull Context ctx) throws Exception {
+        if (!requireOp(ctx)) return;
         JSONObject configChanges = new JSONObject(ctx.body());
         for (String key : configChanges.keySet()) {
             if (!GlobalConfigService.listConfig().containsKey(key)) {

@@ -4,60 +4,33 @@ Lightweight commands to make a vanilla paper server a bit more friendly, without
 plugins and APIs and permissions and all that shebang. The bare essentials, and what I usually find myself requiring
 when I want to start a server for friends.
 
-## What it do
+## Requirements
+
+- Paper
+- PostgreSQL
+
+## What it does
 
 - AFK messages (After 10 minutes of inactivity)
 - Homes (multiple per user)
-- Teleportation
+- Teleportation Requests
+- Graves
 - Chat nicknames and colours
-- Disabling TNT
-- Simple permissions
-- Cows can explode when milked
-- Sheep can be smited when sheared
-- Players can be smited by admins
-- Nitwit Villagers can sell expensive items
-- Graves to save your items when you die
-- Plots to protect your builds from griefing
+- Browser-based Map
 - Discord integrations
 - Ollama integration
+- Web Dashboard
 
 It's super easy to configure, and your configuration can easily be exported and shared between your servers.
 
-# Installing
+## Installing 
 
-Either download this repo and compile it yourself - or download the latest release from
-the [releases tab](https://github.com/ElementalMP4/SebUtils/releases/)
+There's some ongoing work to improve the features and reliability of SebUtils, so the installation docs will be updated once this work is finished. Thank you for your patience!
 
-## Compiling with Maven
-
-You'll need:
-
-- Java 21
-- Maven
-
-Then:
-
-1. Clone this repository
-
-```
-git clone https://github.com/ElementalMP4/SebUtils
-```
-
-2. Build with Maven
-
-```
-mvn clean package
-```
-
-3. Move the SebUtils jar to your server's plugins directory
-
-```
-mv target/SebUtils.*.jar /path/to/server/plugins/
-```
-
-# Commands
-
-All permissions are granted by default, but can be customised if required. Using a plugin such as LuckPerms is
-recommended for this.
+## Commands
 
 For a list of all the commands, please read the [commands documentation](COMMANDS.md)
+
+## Permissions
+
+There's some ongoing work to improve the features and reliability of SebUtils, so the permissions docs will be updated once this work is finished. Thank you for your patience!
