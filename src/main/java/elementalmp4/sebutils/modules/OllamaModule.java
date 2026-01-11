@@ -2,15 +2,16 @@ package main.java.elementalmp4.sebutils.modules;
 
 import io.github.ollama4j.Ollama;
 import io.github.ollama4j.exceptions.OllamaException;
-import io.github.ollama4j.models.chat.OllamaChatMessage;
 import io.github.ollama4j.models.chat.OllamaChatMessageRole;
 import io.github.ollama4j.models.chat.OllamaChatRequest;
 import io.github.ollama4j.models.chat.OllamaChatResult;
+import io.github.ollama4j.models.request.ThinkMode;
 import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Server;
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +30,7 @@ public class OllamaModule extends AbstractModule {
     public void onStart() {
         getPluginLogger().info("Starting Ollama...");
         ollamaAPI = new Ollama(GlobalConfigService.getValue(GlobalConfig.OLLAMA_HOST));
-        ollamaAPI.setRequestTimeoutSeconds(60);
+        ollamaAPI.setRequestTimeoutSeconds(300);
         getPluginLogger().info("Ollama ready!");
     }
 
@@ -55,19 +56,26 @@ public class OllamaModule extends AbstractModule {
                 builder.withMessage(OllamaChatMessageRole.USER, prompt);
             }
 
-            OllamaChatRequest requestModel = builder.build();
+            OllamaChatRequest requestModel = builder.withThinking(ThinkMode.ENABLED).build();
             conversation = ollamaAPI.chat(requestModel, null);
             CONVERSATIONS.put(name, conversation);
+
             return conversation.getResponseModel().getMessage().getResponse();
-        } catch (OllamaException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            getPluginLogger().severe(e.getMessage());
+            return null;
         }
     }
 
-    public void askOllama(String prompt, Server server, String name) {
+    public void askOllama(String prompt, Server server, Player sender) {
         OLLAMA_EXECUTOR.submit(() -> {
-            String response = getResponse(prompt, name);
-            Component message = Component.text(name, NamedTextColor.GREEN)
+            String response = getResponse(prompt, sender.getName());
+            if (response == null) {
+                sender.sendMessage(Component.text("An error has occurred", NamedTextColor.RED));
+                return;
+            }
+
+            Component message = Component.text(sender.getName(), NamedTextColor.GREEN)
                     .append(Component.text(": ", NamedTextColor.WHITE))
                     .append(Component.text(prompt, NamedTextColor.WHITE))
                     .append(Component.text("\n", NamedTextColor.WHITE))

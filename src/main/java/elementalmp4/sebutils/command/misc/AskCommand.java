@@ -12,6 +12,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 @SebUtilsCommand
@@ -35,7 +36,7 @@ public class AskCommand extends AbstractCommand {
         }
         commandSender.sendMessage(Component.text("Thinking...", NamedTextColor.GOLD));
         String prompt = String.join(" ", args);
-        SebUtils.getModuleManager().get(OllamaModule.class).askOllama(prompt, SebUtils.getPlugin().getServer(), commandSender.getName());
+        SebUtils.getModuleManager().get(OllamaModule.class).askOllama(prompt, SebUtils.getPlugin().getServer(), (Player) commandSender);
         return true;
     }
 }
