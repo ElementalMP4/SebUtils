@@ -34,3 +34,7 @@ For a list of all the commands, please read the [commands documentation](COMMAND
 # Permissions
 
 There's some ongoing work to improve the features and reliability of SebUtils, so the permissions docs will be updated once this work is finished. Thank you for your patience!
+
+# Contributing
+
+All contributions are welcome, please feel free to start a discussion on the issue tab, or open a pull request! 
