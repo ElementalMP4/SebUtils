@@ -4,12 +4,12 @@ Lightweight commands to make a vanilla paper server a bit more friendly, without
 plugins and APIs and permissions and all that shebang. The bare essentials, and what I usually find myself requiring
 when I want to start a server for friends.
 
-## Requirements
+# Requirements
 
 - Paper
 - PostgreSQL
 
-## What it does
+# What it does
 
 - AFK messages (After 10 minutes of inactivity)
 - Homes (multiple per user)
@@ -23,14 +23,14 @@ when I want to start a server for friends.
 
 It's super easy to configure, and your configuration can easily be exported and shared between your servers.
 
-## Installing 
+# Installing 
 
 There's some ongoing work to improve the features and reliability of SebUtils, so the installation docs will be updated once this work is finished. Thank you for your patience!
 
-## Commands
+# Commands
 
 For a list of all the commands, please read the [commands documentation](COMMANDS.md)
 
-## Permissions
+# Permissions
 
 There's some ongoing work to improve the features and reliability of SebUtils, so the permissions docs will be updated once this work is finished. Thank you for your patience!
