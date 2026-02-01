@@ -27,10 +27,48 @@
         .leaflet-container {
             background: #1b1b1b;
         }
+
+        #dimension-selector {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: rgba(27, 27, 27, 0.9);
+            padding: 10px;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        #dimension-selector select {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #444;
+            border-radius: 4px;
+            background: #2b2b2b;
+            color: #fff;
+            cursor: pointer;
+            outline: none;
+        }
+
+        #dimension-selector select:hover {
+            border-color: #666;
+        }
+
+        #dimension-selector select:focus {
+            border-color: #888;
+        }
     </style>
 </head>
 
 <body>
+
+    <div id="dimension-selector">
+        <select id="dimension-dropdown">
+            <option value="world">Overworld</option>
+            <option value="world_the_nether">The Nether</option>
+            <option value="world_the_end">The End</option>
+        </select>
+    </div>
 
     <div id="map"></div>
 
@@ -45,7 +83,7 @@
             zoomDelta: 1,
         });
 
-        const tiles = L.tileLayer('/api/tiles/world/{z}/{x}/{y}', {
+        let tiles = L.tileLayer('/api/tiles/world/{z}/{x}/{y}', {
             tileSize: TILE_SIZE,
             noWrap: true,
             bounds: [
@@ -60,6 +98,33 @@
         }).addTo(map);
 
         map.setView([0, 0], 0);
+
+        // Handle dimension changes
+        const dropdown = document.getElementById('dimension-dropdown');
+        dropdown.addEventListener('change', function() {
+            const dimension = this.value;
+            
+            // Remove old tile layer
+            map.removeLayer(tiles);
+            
+            // Create new tile layer with selected dimension
+            tiles = L.tileLayer(`/api/tiles/${dimension}/{z}/{x}/{y}`, {
+                tileSize: TILE_SIZE,
+                noWrap: true,
+                bounds: [
+                    [-8192, -8192],
+                    [8192, 8192]
+                ],
+                maxNativeZoom: 4,
+                minNativeZoom: 0,
+                minZoom: 0,
+                maxZoom: 4,
+                zoomReverse: true
+            }).addTo(map);
+            
+            // Reset view to center
+            map.setView([0, 0], 0);
+        });
     </script>
 
 </body>
