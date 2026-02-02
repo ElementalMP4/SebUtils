@@ -6,9 +6,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.security.SecureRandom;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static main.java.elementalmp4.sebutils.SebUtils.getDatabaseConnection;
 
 public class WebAuthService {
 
@@ -16,9 +22,8 @@ public class WebAuthService {
     private static final String CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final int OTP_LENGTH = 6;
 
+    // OTPs stay in-memory
     private static final Map<String, String> otps = new ConcurrentHashMap<>();
-    private static final Map<String, String> userTokens = new ConcurrentHashMap<>();
-    private static final Map<String, String> tokenToUser = new ConcurrentHashMap<>();
 
     public static String generateOtpForUser(String username) {
         String otp = randomString(OTP_LENGTH);
@@ -28,35 +33,87 @@ public class WebAuthService {
 
     public static synchronized String verifyOtpAndIssueToken(String username, String otp) {
         String expected = otps.get(username);
-        if (expected == null) return null;
-        if (!expected.equals(otp)) return null;
+        if (expected == null || !expected.equals(otp)) {
+            return null;
+        }
 
         otps.remove(username);
 
-        String token = UUID.randomUUID().toString();
+        UUID token = UUID.randomUUID();
 
-        String old = userTokens.put(username, token);
-        if (old != null) {
-            tokenToUser.remove(old);
+        // Store token in DB
+        try (Connection conn = getDatabaseConnection();
+             PreparedStatement ps = conn.prepareStatement(
+                     """
+                             INSERT INTO web_auth_tokens (username, token)
+                             VALUES (?, ?)
+                             ON CONFLICT (username)
+                             DO UPDATE SET token = EXCLUDED.token, issued_at = NOW()
+                             """
+             )) {
+
+            ps.setString(1, username);
+            ps.setObject(2, token);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
-        tokenToUser.put(token, username);
 
         Player player = Bukkit.getPlayer(username);
         if (player != null) {
-            player.sendMessage(Component.text("You can now access the web dashboard!", NamedTextColor.GREEN));
+            player.sendMessage(
+                    Component.text(
+                            "You can now access the web dashboard!",
+                            NamedTextColor.GREEN
+                    )
+            );
         }
 
-        return token;
+        return token.toString();
     }
 
+    /**
+     * Returns the username for a valid token, or null if invalid
+     */
     public static String validateToken(String token) {
         if (token == null) return null;
-        return tokenToUser.get(token);
+
+        try (Connection conn = getDatabaseConnection();
+             PreparedStatement ps = conn.prepareStatement(
+                     "SELECT username FROM web_auth_tokens WHERE token = ?"
+             )) {
+
+            ps.setObject(1, UUID.fromString(token));
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("username");
+                }
+            }
+
+        } catch (IllegalArgumentException ignored) {
+            // Invalid UUID string
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public static synchronized void invalidateTokenForUser(String username) {
-        String tok = userTokens.remove(username);
-        if (tok != null) tokenToUser.remove(tok);
+        try (Connection conn = getDatabaseConnection();
+             PreparedStatement ps = conn.prepareStatement(
+                     "DELETE FROM web_auth_tokens WHERE username = ?"
+             )) {
+
+            ps.setString(1, username);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private static String randomString(int length) {

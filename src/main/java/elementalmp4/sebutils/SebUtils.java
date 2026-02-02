@@ -13,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -34,7 +35,7 @@ public class SebUtils extends JavaPlugin {
         return moduleManager;
     }
 
-    public static Connection getDatabaseConnection() {
+    public static Connection getDatabaseConnection() throws SQLException {
         return moduleManager.get(DatabaseModule.class).getConnection();
     }
 

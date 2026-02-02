@@ -81,6 +81,7 @@
             maxZoom: 4,
             zoomSnap: 1,
             zoomDelta: 1,
+            renderer: L.canvas()
         });
 
         let tiles = L.tileLayer('/api/tiles/world/{z}/{x}/{y}', {
@@ -99,15 +100,12 @@
 
         map.setView([0, 0], 0);
 
-        // Handle dimension changes
         const dropdown = document.getElementById('dimension-dropdown');
-        dropdown.addEventListener('change', function() {
+        dropdown.addEventListener('change', function () {
+
             const dimension = this.value;
-            
-            // Remove old tile layer
             map.removeLayer(tiles);
-            
-            // Create new tile layer with selected dimension
+
             tiles = L.tileLayer(`/api/tiles/${dimension}/{z}/{x}/{y}`, {
                 tileSize: TILE_SIZE,
                 noWrap: true,
@@ -121,8 +119,7 @@
                 maxZoom: 4,
                 zoomReverse: true
             }).addTo(map);
-            
-            // Reset view to center
+
             map.setView([0, 0], 0);
         });
     </script>
