@@ -9,9 +9,10 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -22,63 +23,6 @@ import static main.java.elementalmp4.sebutils.SebUtils.getDatabaseConnection;
 
 public class PlotService {
 
-    private static final String FIND_BOUNDS_CONTAINING_POINT_NOT_OWNED = """
-            SELECT
-                *
-            FROM
-                block_locker
-            WHERE
-                (
-                    (
-                        {{input_pos_x}} <= bound_x_a
-                        AND {{input_pos_x}} >= bound_x_b
-                    )
-                    OR (
-                        {{input_pos_x}} <= bound_x_b
-                        AND {{input_pos_x}} >= bound_x_a
-                    )
-                )
-                AND (
-                    (
-                        {{input_pos_y}} <= bound_y_a
-                        AND {{input_pos_y}} >= bound_y_b
-                    )
-                    OR (
-                        {{input_pos_y}} <= bound_y_b
-                        AND {{input_pos_y}} >= bound_y_a
-                    )
-                ) AND owner != '{{username}}'
-                AND world = '{{world}}';
-            """;
-
-    private static final String FIND_BOUNDS_CONTAINING_POINT = """
-            SELECT
-                *
-            FROM
-                block_locker
-            WHERE
-                (
-                    (
-                        {{input_pos_x}} <= bound_x_a
-                        AND {{input_pos_x}} >= bound_x_b
-                    )
-                    OR (
-                        {{input_pos_x}} <= bound_x_b
-                        AND {{input_pos_x}} >= bound_x_a
-                    )
-                )
-                AND (
-                    (
-                        {{input_pos_y}} <= bound_y_a
-                        AND {{input_pos_y}} >= bound_y_b
-                    )
-                    OR (
-                        {{input_pos_y}} <= bound_y_b
-                        AND {{input_pos_y}} >= bound_y_a
-                    )
-                );
-            """;
-
     private static final Map<String, PlotCreateRequest> requests = new HashMap<>();
 
     static {
@@ -87,56 +31,147 @@ public class PlotService {
     }
 
     private static void expireRequests() {
-        List<PlotCreateRequest> expired = requests.keySet().stream()
-                .map(PlotService.requests::get)
-                .filter(PlotCreateRequest::expired).toList();
+        List<PlotCreateRequest> expired = requests.values().stream()
+                .filter(PlotCreateRequest::expired)
+                .toList();
         for (PlotCreateRequest t : expired) {
             requests.remove(t.getPlayerName());
         }
     }
 
     public static Optional<Plot> blockIsOwnedBySomeoneElse(String player, int x, int y, String world) {
-        try (Statement stmt = getDatabaseConnection().createStatement()) {
-            ResultSet rs = stmt.executeQuery(createSql(FIND_BOUNDS_CONTAINING_POINT_NOT_OWNED, x, y, player, world));
-            if (rs.next()) {
-                return Optional.of(new Plot(rs));
-            } else {
+        String sql = """
+                SELECT * FROM block_locker
+                WHERE ((? <= bound_x_a AND ? >= bound_x_b) OR (? <= bound_x_b AND ? >= bound_x_a))
+                  AND ((? <= bound_y_a AND ? >= bound_y_b) OR (? <= bound_y_b AND ? >= bound_y_a))
+                  AND owner != ?
+                  AND world = ?;
+                """;
+
+        try (Connection conn = getDatabaseConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            for (int i = 1; i <= 4; i++) ps.setInt(i, x); // x positions
+            for (int i = 5; i <= 8; i++) ps.setInt(i, y); // y positions
+            ps.setString(9, player);
+            ps.setString(10, world);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return Optional.of(new Plot(rs));
                 return Optional.empty();
             }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     public static Optional<Plot> blockIsOwned(int x, int y, String world) {
-        try (Statement stmt = getDatabaseConnection().createStatement()) {
-            ResultSet rs = stmt.executeQuery(createSql(FIND_BOUNDS_CONTAINING_POINT, x, y, "", world));
-            if (rs.next()) {
-                return Optional.of(new Plot(rs));
-            } else {
+        String sql = """
+                SELECT * FROM block_locker
+                WHERE ((? <= bound_x_a AND ? >= bound_x_b) OR (? <= bound_x_b AND ? >= bound_x_a))
+                  AND ((? <= bound_y_a AND ? >= bound_y_b) OR (? <= bound_y_b AND ? >= bound_y_a))
+                  AND world = ?;
+                """;
+
+        try (Connection conn = getDatabaseConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            for (int i = 1; i <= 4; i++) ps.setInt(i, x);
+            for (int i = 5; i <= 8; i++) ps.setInt(i, y);
+            ps.setString(9, world);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return Optional.of(new Plot(rs));
                 return Optional.empty();
             }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     public static void deletePlot(int id) {
-        try (Statement stmt = getDatabaseConnection().createStatement()) {
-            stmt.executeUpdate("DELETE FROM block_locker WHERE plot_id = %d".formatted(id));
+        String sql = "DELETE FROM block_locker WHERE plot_id = ?";
+
+        try (Connection conn = getDatabaseConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            ps.executeUpdate();
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static String createSql(String sql, int x, int y, String username, String world) {
-        return sql
-                .replace("{{input_pos_x}}", String.valueOf(x))
-                .replace("{{input_pos_y}}", String.valueOf(y))
-                .replace("{{username}}", username)
-                .replace("{{world}}", world);
+    private static void createPlot(PlotCreateRequest r) {
+        String sql = "INSERT INTO block_locker (owner, world, bound_x_a, bound_y_a, bound_x_b, bound_y_b) VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = getDatabaseConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, r.getPlayerName());
+            ps.setString(2, r.getWorld());
+            ps.setInt(3, r.getXA());
+            ps.setInt(4, r.getYA());
+            ps.setInt(5, r.getXB());
+            ps.setInt(6, r.getYB());
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
+    public static List<Plot> getUserPlots(String player) {
+        String sql = "SELECT * FROM block_locker WHERE owner = ?";
+        List<Plot> plots = new ArrayList<>();
+
+        try (Connection conn = getDatabaseConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, player);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) plots.add(new Plot(rs));
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return plots;
+    }
+
+    public static Optional<Plot> getPlotByIdAndOwner(int id, String name) {
+        String sql = "SELECT * FROM block_locker WHERE plot_id = ? AND owner = ?";
+
+        try (Connection conn = getDatabaseConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            ps.setString(2, name);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return Optional.of(new Plot(rs));
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return Optional.empty();
+    }
+
+    public static List<String> getPlotIdList(String player) {
+        return getUserPlots(player).stream()
+                .map(Plot::getId)
+                .map(String::valueOf)
+                .collect(Collectors.toList());
+    }
+
+    // The PlayerInteractEvent logic remains unchanged since it doesn’t use SQL directly
     public static void handleIronNuggetClick(PlayerInteractEvent e) {
         if (requests.containsKey(e.getPlayer().getName())) {
             PlotCreateRequest request = requests.get(e.getPlayer().getName());
@@ -166,7 +201,6 @@ public class PlotService {
     }
 
     public static boolean canCreatePlot(PlotCreateRequest r, Player p) {
-        //Check for overlaps
         List<List<Integer>> permutations = List.of(
                 List.of(r.getXA(), r.getYA()),
                 List.of(r.getXA(), r.getYB()),
@@ -185,69 +219,20 @@ public class PlotService {
             }
         }
 
-        //Check plot size
         int maxPlotSize = GlobalConfigService.getAsInteger(GlobalConfig.PLOT_MAX_SIZE);
         int newPlotSize = Plot.getPlotArea(r);
 
-        if (newPlotSize > maxPlotSize) {
-            Component message = Component.text("This plot exceeds the maximum plot size of ", NamedTextColor.RED)
+        int totalPlotSize = newPlotSize + getUserPlots(p.getName()).stream()
+                .mapToInt(Plot::getPlotArea)
+                .sum();
+
+        if (totalPlotSize > maxPlotSize) {
+            Component message = Component.text("This plot, along with your existing plots, will exceed the maximum plot size of ", NamedTextColor.RED)
                     .append(Component.text(maxPlotSize + " blocks", NamedTextColor.GOLD));
             p.sendMessage(message);
             return false;
         }
 
-        //Check cumulative plot size
-        List<Plot> plots = getUserPlots(p.getName());
-        int totalPlotSize = newPlotSize;
-        for (Plot plot : plots) {
-            totalPlotSize += Plot.getPlotArea(plot);
-            if (totalPlotSize > maxPlotSize) {
-                Component message = Component.text("This plot, along with your existing plots, will exceed the maximum plot size of ", NamedTextColor.RED)
-                        .append(Component.text(maxPlotSize + " blocks", NamedTextColor.GOLD));
-                p.sendMessage(message);
-                return false;
-            }
-        }
-
         return true;
-    }
-
-    private static void createPlot(PlotCreateRequest r) {
-        try (Statement stmt = getDatabaseConnection().createStatement()) {
-            stmt.executeUpdate("INSERT INTO block_locker (owner, world, bound_x_a, bound_y_a, bound_x_b, bound_y_b) VALUES ('%s', '%s', %d, %d, %d, %d)"
-                    .formatted(r.getPlayerName(), r.getWorld(), r.getXA(), r.getYA(), r.getXB(), r.getYB()));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static List<Plot> getUserPlots(String player) {
-        try (Statement stmt = getDatabaseConnection().createStatement()) {
-            ResultSet rs = stmt.executeQuery("SELECT * FROM block_locker WHERE owner = '%s'".formatted(player));
-            List<Plot> plots = new ArrayList<>();
-            while (rs.next()) {
-                plots.add(new Plot(rs));
-            }
-            return plots;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static Optional<Plot> getPlotByIdAndOwner(int id, String name) {
-        try (Statement stmt = getDatabaseConnection().createStatement()) {
-            ResultSet rs = stmt.executeQuery("SELECT * FROM block_locker WHERE plot_id = %d AND owner = '%s'".formatted(id, name));
-            if (rs.next()) return Optional.of(new Plot(rs));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return Optional.empty();
-    }
-
-    public static List<String> getPlotIdList(String player) {
-        return PlotService.getUserPlots(player).stream()
-                .map(Plot::getId)
-                .map(String::valueOf)
-                .collect(Collectors.toList());
     }
 }

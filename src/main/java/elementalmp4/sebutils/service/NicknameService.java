@@ -7,9 +7,10 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -56,15 +57,23 @@ public class NicknameService {
 
     public static void cacheProfile(String playerName) {
         Profile defaultProfile = new Profile(playerName, "white");
-        try (Statement stmt = getDatabaseConnection().createStatement()) {
-            ResultSet rs = stmt.executeQuery("SELECT nickname, colourName FROM chat_customisation WHERE username = '%s'".formatted(playerName));
-            if (rs.next()) {
-                Profile p = new Profile(rs.getString("nickname"), rs.getString("colourName"));
-                PROFILE_CACHE.put(playerName, p);
-            } else {
-                PROFILE_CACHE.put(playerName, defaultProfile);
-                addUser(playerName);
+        String sql = "SELECT nickname, colourName FROM chat_customisation WHERE username = ?";
+
+        try (Connection conn = getDatabaseConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, playerName);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Profile p = new Profile(rs.getString("nickname"), rs.getString("colourName"));
+                    PROFILE_CACHE.put(playerName, p);
+                } else {
+                    PROFILE_CACHE.put(playerName, defaultProfile);
+                    addUser(playerName);
+                }
             }
+
         } catch (SQLException e) {
             PROFILE_CACHE.put(playerName, defaultProfile);
             throw new RuntimeException(e);
@@ -88,27 +97,51 @@ public class NicknameService {
     }
 
     public static void updateNickname(String name, String nickname) {
-        try (Statement stmt = getDatabaseConnection().createStatement()) {
-            stmt.executeUpdate("UPDATE chat_customisation SET nickname = '%s' WHERE username = '%s';".formatted(nickname, name));
+        String sql = "UPDATE chat_customisation SET nickname = ? WHERE username = ?";
+
+        try (Connection conn = getDatabaseConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, nickname);
+            ps.setString(2, name);
+            ps.executeUpdate();
+
             PROFILE_CACHE.get(name).setNickname(nickname);
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     public static void addUser(String name) {
-        try (Statement stmt = getDatabaseConnection().createStatement()) {
-            stmt.executeUpdate("INSERT INTO chat_customisation VALUES ('%s', '%s', 'white');".formatted(name, name));
+        String sql = "INSERT INTO chat_customisation (username, nickname, colourName) VALUES (?, ?, 'white')";
+
+        try (Connection conn = getDatabaseConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, name);
+            ps.setString(2, name);
+            ps.executeUpdate();
+
             SebUtils.getPluginLogger().info(ConsoleColours.YELLOW + "Added user " + name);
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     public static void updateColour(String name, String colour) {
-        try (Statement stmt = getDatabaseConnection().createStatement()) {
-            stmt.executeUpdate("UPDATE chat_customisation SET colourName = '%s' WHERE username = '%s';".formatted(colour, name));
+        String sql = "UPDATE chat_customisation SET colourName = ? WHERE username = ?";
+
+        try (Connection conn = getDatabaseConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, colour);
+            ps.setString(2, name);
+            ps.executeUpdate();
+
             PROFILE_CACHE.get(name).setColourName(colour);
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
