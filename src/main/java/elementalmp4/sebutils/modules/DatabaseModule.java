@@ -46,8 +46,8 @@ public class DatabaseModule extends AbstractModule {
             config.setPassword(GlobalConfigService.getValue(GlobalConfig.DATABASE_PASSWORD));
             config.setDriverClassName("org.postgresql.Driver");
 
-            config.setMaximumPoolSize(20);
-            config.setMinimumIdle(5);
+            config.setMaximumPoolSize(10);
+            config.setMinimumIdle(2);
             config.setConnectionTimeout(10_000);
             config.setIdleTimeout(600_000);
             config.setMaxLifetime(1_800_000);
