@@ -2,6 +2,8 @@ package main.java.elementalmp4.sebutils.config;
 
 import main.java.elementalmp4.sebutils.modules.*;
 
+import static main.java.elementalmp4.sebutils.service.GlobalConfigService.UNSET_VALUE;
+
 public enum GlobalConfig {
     // Misc
     TNT_EXPLODES("Explosions Cause Damage", "tnt_enabled", "true", DataType.TOGGLE, "Misc", null),
@@ -14,8 +16,8 @@ public enum GlobalConfig {
     PVP_TOGGLE_ENABLED("Per-Player PVP Toggle", "pvp_toggle_enabled", "true", DataType.TOGGLE, "Misc", null),
 
     // Discord
-    DISCORD_TOKEN("Discord Token", "discord_token", "unset", DataType.SECURE_STRING, "Discord", DiscordModule.class),
-    DISCORD_CHANNEL("Discord Channel", "discord_channel", "unset", DataType.STRING, "Discord", DiscordModule.class),
+    DISCORD_TOKEN("Discord Token", "discord_token", UNSET_VALUE, DataType.SECURE_STRING, "Discord", DiscordModule.class),
+    DISCORD_CHANNEL("Discord Channel", "discord_channel", UNSET_VALUE, DataType.STRING, "Discord", DiscordModule.class),
     DISCORD_ENABLED("Discord Integration Enabled", "discord_enabled", "false", DataType.TOGGLE, "Discord", DiscordModule.class),
 
     // Ollama
@@ -24,9 +26,9 @@ public enum GlobalConfig {
     OLLAMA_MODEL("Ollama Model", "ollama_model", "gemma3:12b", DataType.STRING, "Ollama", OllamaModule.class),
 
     // Database
-    DATABASE_URI("Database URI", "db_uri", "unset", DataType.STRING, "Database", DatabaseModule.class),
-    DATABASE_USERNAME("Database Username", "db_username", "unset", DataType.STRING, "Database", DatabaseModule.class),
-    DATABASE_PASSWORD("Database Password", "db_password", "unset", DataType.SECURE_STRING, "Database", DatabaseModule.class),
+    DATABASE_URI("Database URI", "db_uri", UNSET_VALUE, DataType.STRING, "Database", DatabaseModule.class),
+    DATABASE_USERNAME("Database Username", "db_username", UNSET_VALUE, DataType.STRING, "Database", DatabaseModule.class),
+    DATABASE_PASSWORD("Database Password", "db_password", UNSET_VALUE, DataType.SECURE_STRING, "Database", DatabaseModule.class),
 
     // Web Server
     WEB_BIND("Web Server Bind", "web_bind", "127.0.0.1", DataType.STRING, "Web", WebServerModule.class),

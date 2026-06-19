@@ -16,6 +16,8 @@ import java.util.Set;
 
 public class GlobalConfigService {
 
+    public static final String UNSET_VALUE = "unset";
+
     private static final Set<GlobalConfig> DATABASE_PARAMETERS = Set.of(
             GlobalConfig.DATABASE_URI,
             GlobalConfig.DATABASE_USERNAME,
@@ -51,7 +53,7 @@ public class GlobalConfigService {
     private static void checkDatabaseParameters() {
         for (GlobalConfig conf : DATABASE_PARAMETERS) {
             String value = getValue(conf);
-            if (value.equals("unset")) {
+            if (value.equals(UNSET_VALUE)) {
                 throw new InvalidConfigException(conf.getKey() + " needs to be set!");
             }
         }
