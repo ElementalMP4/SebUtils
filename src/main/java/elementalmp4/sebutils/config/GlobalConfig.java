@@ -7,8 +7,6 @@ import static main.java.elementalmp4.sebutils.service.GlobalConfigService.UNSET_
 public enum GlobalConfig {
     // Misc
     TNT_EXPLODES("Explosions Cause Damage", "tnt_enabled", "true", DataType.TOGGLE, "Misc", null),
-    COWS_EXPLODE("Cows Explode When Milked", "cows_explode", "false", DataType.TOGGLE, "Misc", null),
-    SHEEP_SMITE("Sheep Smite When Sheared", "sheep_smite", "false", DataType.TOGGLE, "Misc", null),
     ADMIN_PLOT_OVERRIDE("Admins Override Plot Permissions", "admin_plot_override", "true", DataType.TOGGLE, "Misc", null),
     PLOT_MAX_SIZE("Maximum Plot Area Per User", "plot_max_size", "10000", DataType.NUMBER, "Misc", null),
     AFK_ENABLED("Auto AFK", "afk_enabled", "true", DataType.TOGGLE, "Misc", null),
