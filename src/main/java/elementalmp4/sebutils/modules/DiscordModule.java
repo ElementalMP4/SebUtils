@@ -8,6 +8,7 @@ import io.papermc.paper.ban.BanListType;
 import main.java.elementalmp4.sebutils.SebUtils;
 import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
+import main.java.elementalmp4.sebutils.service.PendingAccessService;
 import main.java.elementalmp4.sebutils.utils.ConsoleColours;
 import main.java.elementalmp4.sebutils.utils.NamedThreadFactory;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -226,8 +227,10 @@ public class DiscordModule extends AbstractModule {
             UUID userId = UUID.fromString(id.split(":")[3]);
             if (id.startsWith("sebutils:access:approve")) {
                 approveAccessRequest(userId, event);
+                PendingAccessService.removePendingRequest(userId);
             } else if (id.startsWith("sebutils:access:deny")) {
                 denyAccessRequest(userId, event);
+                PendingAccessService.removePendingRequest(userId);
             } else {
                 getPluginLogger().warning("Unknown interaction type: " + id);
             }

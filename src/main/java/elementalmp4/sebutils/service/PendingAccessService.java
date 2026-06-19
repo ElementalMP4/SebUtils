@@ -15,9 +15,8 @@ public class PendingAccessService {
     public static boolean accessRequestPending(UUID userId) {
         try (Connection conn = getDatabaseConnection();
              PreparedStatement ps = conn.prepareStatement(
-                     "SELECT messageId FROM pending_access WHERE uuid = ?"
+                     "SELECT * FROM pending_access WHERE uuid = ?"
              )) {
-
             ps.setObject(1, userId);
 
             try (ResultSet rs = ps.executeQuery()) {
@@ -32,7 +31,7 @@ public class PendingAccessService {
     }
 
     public static void createAccessRequest(UUID userId, String playerName) {
-        String sql = "INSERT INTO pending_access (uuid, messageId) VALUES (?, ?)";
+        String sql = "INSERT INTO pending_access (uuid) VALUES (?)";
         try (Connection conn = getDatabaseConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -45,5 +44,18 @@ public class PendingAccessService {
 
         // No need to check if discord is enabled here, because we just checked it
         getModuleManager().get(DiscordModule.class).sendAccessRequest(userId, playerName);
+    }
+
+    public static void removePendingRequest(UUID userId) {
+        String sql = "DELETE FROM pending_access WHERE uuid = ?";
+        try (Connection conn = getDatabaseConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setObject(1, userId);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

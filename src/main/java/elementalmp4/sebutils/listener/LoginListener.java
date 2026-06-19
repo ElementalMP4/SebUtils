@@ -1,5 +1,6 @@
 package main.java.elementalmp4.sebutils.listener;
 
+import main.java.elementalmp4.sebutils.annotation.SebUtilsListener;
 import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
 import main.java.elementalmp4.sebutils.service.PendingAccessService;
@@ -14,6 +15,7 @@ import java.util.UUID;
 
 import static org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result.KICK_WHITELIST;
 
+@SebUtilsListener
 public class LoginListener implements Listener {
 
     @EventHandler
@@ -37,13 +39,13 @@ public class LoginListener implements Listener {
 
         // Create an access request if one does not exist
         boolean hasRequest = PendingAccessService.accessRequestPending(userId);
-        if (hasRequest) {
+        if (!hasRequest) {
             PendingAccessService.createAccessRequest(userId, event.getPlayerProfile().getName());
         }
 
         // Send disallowed message
         Component message = Component.text()
-                .append(Component.text("Your application is still awaiting approval.\n"))
+                .append(Component.text("Your application to join the server is awaiting approval.\n"))
                 .append(Component.text("Please check back later!"))
                 .build();
         event.disallow(KICK_WHITELIST, message);
