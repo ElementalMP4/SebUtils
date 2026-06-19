@@ -4,7 +4,7 @@ import main.java.elementalmp4.sebutils.annotation.SebUtilsListener;
 import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
 import main.java.elementalmp4.sebutils.service.PendingAccessService;
-import main.java.elementalmp4.sebutils.utils.WhitelistCache;
+import main.java.elementalmp4.sebutils.utils.StatusCache;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -25,9 +25,9 @@ public class LoginListener implements Listener {
             return;
         }
 
-        // Skip if the user is already whitelisted
+        // Skip if the user is already whitelisted or banned
         UUID userId = event.getPlayerProfile().getId();
-        if (WhitelistCache.isWhitelisted(userId)) {
+        if (StatusCache.isWhitelisted(userId) || StatusCache.isBanned(userId)) {
             return;
         }
 
