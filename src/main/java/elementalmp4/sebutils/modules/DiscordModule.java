@@ -4,6 +4,7 @@ import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.WebhookClientBuilder;
 import club.minnced.discord.webhook.send.WebhookMessage;
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
+import com.destroystokyo.paper.profile.PlayerProfile;
 import io.papermc.paper.ban.BanListType;
 import main.java.elementalmp4.sebutils.SebUtils;
 import main.java.elementalmp4.sebutils.config.GlobalConfig;
@@ -235,6 +236,7 @@ public class DiscordModule extends AbstractModule {
 
         private void denyAccessRequest(UUID uuid, ButtonInteractionEvent event) {
             OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+            player.getPlayerProfile().complete();
 
             Bukkit.getScheduler().runTask(getPlugin(), () -> {
                 Bukkit.getBanList(BanListType.PROFILE).addBan(
@@ -256,6 +258,7 @@ public class DiscordModule extends AbstractModule {
 
         private void approveAccessRequest(UUID uuid, ButtonInteractionEvent event) {
             OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+            player.getPlayerProfile().complete();
 
             Bukkit.getScheduler().runTask(getPlugin(), () -> {
                 player.setWhitelisted(true);
@@ -266,7 +269,7 @@ public class DiscordModule extends AbstractModule {
                     .setColor(Color.GREEN)
                     .setTitle("Access Granted")
                     .setImage(getBodyUrl(uuid))
-                    .setDescription("**" + player.getName() + "** has been granted access to the server")
+                    .setDescription("**" + profile.getName() + "** has been granted access to the server")
                     .build();
             event.getMessage().editMessageEmbeds(approvedEmbed).setComponents().queue();
         }
