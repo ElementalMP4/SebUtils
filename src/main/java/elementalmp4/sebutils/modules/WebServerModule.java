@@ -1,13 +1,11 @@
 package main.java.elementalmp4.sebutils.modules;
 
 import io.javalin.Javalin;
-import io.javalin.http.Context;
 import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
 import main.java.elementalmp4.sebutils.service.WebAuthService;
 import main.java.elementalmp4.sebutils.utils.NamedThreadFactory;
 import main.java.elementalmp4.sebutils.web.ConfigUpdateHandler;
-import main.java.elementalmp4.sebutils.web.WebPermissions;
 
 import java.util.List;
 
