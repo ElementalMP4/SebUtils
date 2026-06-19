@@ -152,19 +152,10 @@ public class DiscordModule extends AbstractModule {
 
     private void forwardDiscordMessage(String name, String contentStripped) {
         Component component = Component
-                .text("[Discord] ", NamedTextColor.BLUE, TextDecoration.BOLD)
+                .text("[Discord] ", NamedTextColor.BLUE)
                 .append(Component.text("[%s] ".formatted(name), NamedTextColor.YELLOW))
                 .append(Component.text(contentStripped, NamedTextColor.WHITE));
-
-        String logMessage = "%s[Discord] %s[%s] %s%s".formatted(
-                ConsoleColours.BLUE,
-                ConsoleColours.YELLOW,
-                name,
-                ConsoleColours.WHITE,
-                contentStripped
-        );
         SebUtils.getPlugin().getServer().broadcast(component);
-        SebUtils.getPluginLogger().info(logMessage);
     }
 
     public void sendAccessRequest(UUID uuid, String playerName) {
