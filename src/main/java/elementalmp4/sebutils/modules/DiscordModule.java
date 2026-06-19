@@ -269,7 +269,7 @@ public class DiscordModule extends AbstractModule {
                     .setColor(Color.GREEN)
                     .setTitle("Access Granted")
                     .setImage(getBodyUrl(uuid))
-                    .setDescription("**" + profile.getName() + "** has been granted access to the server")
+                    .setDescription("**" + player.getName() + "** has been granted access to the server")
                     .build();
             event.getMessage().editMessageEmbeds(approvedEmbed).setComponents().queue();
         }
