@@ -17,8 +17,10 @@ public enum GlobalConfig {
 
     // Discord
     DISCORD_TOKEN("Discord Token", "discord_token", UNSET_VALUE, DataType.SECURE_STRING, "Discord", DiscordModule.class),
-    DISCORD_CHANNEL("Discord Channel", "discord_channel", UNSET_VALUE, DataType.STRING, "Discord", DiscordModule.class),
+    DISCORD_CHAT_CHANNEL("Chat Channel", "discord_channel", UNSET_VALUE, DataType.STRING, "Discord", DiscordModule.class),
+    DISCORD_ACCESS_REQUEST_CHANNEL("Access Request Channel", "access_request_channel", UNSET_VALUE, DataType.STRING, "Discord", DiscordModule.class),
     DISCORD_ENABLED("Discord Integration Enabled", "discord_enabled", "false", DataType.TOGGLE, "Discord", DiscordModule.class),
+    DISCORD_ACCESS_APPROVAL_ROLE("Access Request Approval Role", "discord_access_approval_role", UNSET_VALUE, DataType.STRING, "Discord", DiscordModule.class),
 
     // Ollama
     OLLAMA_HOST("Ollama Host", "ollama_host", "http://localhost:11434", DataType.STRING, "Ollama", OllamaModule.class),

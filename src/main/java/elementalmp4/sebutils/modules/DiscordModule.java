@@ -4,6 +4,7 @@ import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.WebhookClientBuilder;
 import club.minnced.discord.webhook.send.WebhookMessage;
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
+import io.papermc.paper.ban.BanListType;
 import main.java.elementalmp4.sebutils.SebUtils;
 import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
@@ -12,29 +13,38 @@ import main.java.elementalmp4.sebutils.utils.NamedThreadFactory;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.Webhook;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.components.ActionComponent;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
+import static main.java.elementalmp4.sebutils.SebUtils.getPlugin;
 import static main.java.elementalmp4.sebutils.SebUtils.getPluginLogger;
 
 public class DiscordModule extends AbstractModule {
 
     private static final String HEAD_URL_FORMAT = "https://api.mineatar.io/head/%s?scale=16";
     private static final String FACE_URL_FORMAT = "https://api.mineatar.io/face/%s?scale=16";
+    private static final String BODY_URL_FORMAT = "https://api.mineatar.io/body/full/%s?scale=4";
     private static final String WEBHOOK_NAME = "sebutils_chat";
 
     private JDA jda;
@@ -44,28 +54,36 @@ public class DiscordModule extends AbstractModule {
         return HEAD_URL_FORMAT.formatted(player.getUniqueId().toString());
     }
 
-    private String getFaceUrlFormat(Player player) {
+    private String getFaceUrl(Player player) {
         return FACE_URL_FORMAT.formatted(player.getUniqueId().toString());
     }
 
+    private String getBodyUrl(UUID uuid) {
+        return BODY_URL_FORMAT.formatted(uuid.toString());
+    }
+
     public void sendJoinMessage(Player player) {
-        if (GlobalConfigService.getAsBoolean(GlobalConfig.DISCORD_ENABLED)) {
-            MessageEmbed joinEmbed = new EmbedBuilder()
-                    .setColor(Color.GREEN)
-                    .setAuthor(player.getName() + " joined the game", getHeadUrl(player), getHeadUrl(player))
-                    .build();
-            sendEmbed(joinEmbed);
+        if (!GlobalConfigService.getAsBoolean(GlobalConfig.DISCORD_ENABLED)) {
+            return;
         }
+        String channelId = GlobalConfigService.getValue(GlobalConfig.DISCORD_CHAT_CHANNEL);
+        MessageEmbed joinEmbed = new EmbedBuilder()
+                .setColor(Color.GREEN)
+                .setAuthor(player.getName() + " joined the game", getHeadUrl(player), getHeadUrl(player))
+                .build();
+        sendEmbed(joinEmbed, channelId);
     }
 
     public void sendLeaveMessage(Player player) {
-        if (GlobalConfigService.getAsBoolean(GlobalConfig.DISCORD_ENABLED)) {
-            MessageEmbed joinEmbed = new EmbedBuilder()
-                    .setColor(Color.RED)
-                    .setAuthor(player.getName() + " disconnected", getHeadUrl(player), getHeadUrl(player))
-                    .build();
-            sendEmbed(joinEmbed);
+        if (!GlobalConfigService.getAsBoolean(GlobalConfig.DISCORD_ENABLED)) {
+            return;
         }
+        String channelId = GlobalConfigService.getValue(GlobalConfig.DISCORD_CHAT_CHANNEL);
+        MessageEmbed joinEmbed = new EmbedBuilder()
+                .setColor(Color.RED)
+                .setAuthor(player.getName() + " disconnected", getHeadUrl(player), getHeadUrl(player))
+                .build();
+        sendEmbed(joinEmbed, channelId);
     }
 
     @Override
@@ -73,7 +91,7 @@ public class DiscordModule extends AbstractModule {
         try {
             getPluginLogger().info("Connecting to discord...");
             jda = JDABuilder.createLight(GlobalConfigService.getValue(GlobalConfig.DISCORD_TOKEN))
-                    .addEventListeners(new DiscordMessageListener())
+                    .addEventListeners(new DiscordListener())
                     .enableIntents(GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT)
                     .setActivity(Activity.of(Activity.ActivityType.PLAYING, "Minecraft"))
                     .build()
@@ -90,11 +108,10 @@ public class DiscordModule extends AbstractModule {
         jda.shutdown();
     }
 
-    private void sendEmbed(MessageEmbed embed) {
-        String channelId = GlobalConfigService.getValue(GlobalConfig.DISCORD_CHANNEL);
-        TextChannel channel = jda.getTextChannelById(channelId);
+    private void sendEmbed(MessageEmbed embed, String channelID) {
+        TextChannel channel = jda.getTextChannelById(channelID);
         if (channel == null) {
-            SebUtils.getPluginLogger().warning("Text channel " + channelId + " is inaccessible");
+            SebUtils.getPluginLogger().warning("Text channel " + channelID + " is inaccessible");
         } else {
             channel.sendMessageEmbeds(embed).queue();
         }
@@ -102,8 +119,7 @@ public class DiscordModule extends AbstractModule {
 
     private WebhookClient getOrCreateWebhookClient() {
         if (webhookClient != null) return webhookClient;
-
-        TextChannel channel = jda.getTextChannelById(GlobalConfigService.getValue(GlobalConfig.DISCORD_CHANNEL));
+        TextChannel channel = jda.getTextChannelById(GlobalConfigService.getValue(GlobalConfig.DISCORD_CHAT_CHANNEL));
         List<Webhook> webhooks = channel.retrieveWebhooks().complete();
         Optional<Webhook> optHook = webhooks.stream().filter(w -> w.getName().equals(WEBHOOK_NAME)).findFirst();
         Webhook webhook = optHook.orElseGet(() -> channel.createWebhook(WEBHOOK_NAME).complete());
@@ -121,7 +137,7 @@ public class DiscordModule extends AbstractModule {
             WebhookClient client = getOrCreateWebhookClient();
             WebhookMessage msg = new WebhookMessageBuilder()
                     .setUsername(author.getName())
-                    .setAvatarUrl(getFaceUrlFormat(author))
+                    .setAvatarUrl(getFaceUrl(author))
                     .setContent(removeVolatileMentions(message))
                     .build();
             client.send(msg);
@@ -133,23 +149,131 @@ public class DiscordModule extends AbstractModule {
     }
 
     private void forwardDiscordMessage(String name, String contentStripped) {
-        Component component = Component.text("[DISCORD] ", NamedTextColor.BLUE, TextDecoration.BOLD)
+        Component component = Component
+                .text("[Discord] ", NamedTextColor.BLUE, TextDecoration.BOLD)
                 .append(Component.text("[%s] ".formatted(name), NamedTextColor.YELLOW))
                 .append(Component.text(contentStripped, NamedTextColor.WHITE));
+
+        String logMessage = "%s[Discord] %s[%s] %s%s".formatted(
+                ConsoleColours.BLUE,
+                ConsoleColours.YELLOW,
+                name,
+                ConsoleColours.WHITE,
+                contentStripped
+        );
         SebUtils.getPlugin().getServer().broadcast(component);
-        SebUtils.getPluginLogger().info("%s[DISCORD] %s[%s] %s%s"
-                .formatted(ConsoleColours.BLUE, ConsoleColours.YELLOW, name, ConsoleColours.WHITE, contentStripped));
+        SebUtils.getPluginLogger().info(logMessage);
     }
 
-    private class DiscordMessageListener extends ListenerAdapter {
+    public void sendAccessRequest(UUID uuid, String playerName) {
+        MessageEmbed accessEmbed = new EmbedBuilder()
+                .setColor(Color.YELLOW)
+                .setTitle("Pending Access Request")
+                .setImage(getBodyUrl(uuid))
+                .setDescription("**" + playerName + "** has requested to join the server")
+                .build();
+        TextChannel channel = jda.getTextChannelById(GlobalConfigService.getValue(GlobalConfig.DISCORD_ACCESS_REQUEST_CHANNEL));
+        channel.sendMessageEmbeds(accessEmbed).setActionRow(createApprovalButtons(uuid)).queue();
+    }
+
+    private List<ActionComponent> createApprovalButtons(UUID uuid) {
+        List<ActionComponent> approvalButtons = new ArrayList<>();
+        approvalButtons.add(Button.success("sebutils:access:approve:" + uuid.toString(), "Approve"));
+        approvalButtons.add(Button.danger("sebutils:access:deny:" + uuid.toString(), "Deny"));
+        return approvalButtons;
+    }
+
+    private class DiscordListener extends ListenerAdapter {
 
         @Override
         public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
-            if (event.isWebhookMessage()) return;
-            if (event.getAuthor().getId().equals(jda.getSelfUser().getId())) return;
+            // Ignore webhooks
+            if (event.isWebhookMessage()) {
+                return;
+            }
+
+            // Ignore self
+            if (event.getAuthor().getId().equals(jda.getSelfUser().getId())) {
+                return;
+            }
+
+            // Only listen to messages in specific channel
+            if (!event.getChannel().getId().equals(GlobalConfigService.getValue(GlobalConfig.DISCORD_CHAT_CHANNEL))) {
+                return;
+            }
+
             forwardDiscordMessage(event.getAuthor().getName(), event.getMessage().getContentStripped());
         }
 
-    }
+        @Override
+        public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
+            if (!event.getChannel().getId().equals(GlobalConfigService.getValue(GlobalConfig.DISCORD_ACCESS_REQUEST_CHANNEL))) {
+                return;
+            }
 
+            if (event.getMember() == null) {
+                return;
+            }
+
+            if (!hasApproverRole(event.getMember())) {
+                return;
+            }
+
+            // Let discord know we're gonna update the message
+            event.deferEdit().queue();
+
+            String id = event.getComponentId();
+            UUID userId = UUID.fromString(id.split(":")[3]);
+            if (id.startsWith("sebutils:access:approve")) {
+                approveAccessRequest(userId, event);
+            } else if (id.startsWith("sebutils:access:deny")) {
+                denyAccessRequest(userId, event);
+            } else {
+                getPluginLogger().warning("Unknown interaction type: " + id);
+            }
+        }
+
+        private void denyAccessRequest(UUID uuid, ButtonInteractionEvent event) {
+            OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+
+            Bukkit.getScheduler().runTask(getPlugin(), () -> {
+                Bukkit.getBanList(BanListType.PROFILE).addBan(
+                        player.getPlayerProfile(),
+                        "Your access request was rejected.",
+                        (Instant) null,
+                        "Server Access Requests"
+                );
+            });
+
+            MessageEmbed approvedEmbed = new EmbedBuilder()
+                    .setColor(Color.RED)
+                    .setTitle("Access Denied")
+                    .setImage(getBodyUrl(uuid))
+                    .setDescription("**" + player.getName() + "** has been denied access to the server")
+                    .build();
+            event.getMessage().editMessageEmbeds(approvedEmbed).setComponents().queue();
+        }
+
+        private void approveAccessRequest(UUID uuid, ButtonInteractionEvent event) {
+            OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+
+            Bukkit.getScheduler().runTask(getPlugin(), () -> {
+                player.setWhitelisted(true);
+                Bukkit.reloadWhitelist();
+            });
+
+            MessageEmbed approvedEmbed = new EmbedBuilder()
+                    .setColor(Color.GREEN)
+                    .setTitle("Access Granted")
+                    .setImage(getBodyUrl(uuid))
+                    .setDescription("**" + player.getName() + "** has been granted access to the server")
+                    .build();
+            event.getMessage().editMessageEmbeds(approvedEmbed).setComponents().queue();
+        }
+
+        private boolean hasApproverRole(Member member) {
+            String roleId = GlobalConfigService.getValue(GlobalConfig.DISCORD_ACCESS_APPROVAL_ROLE);
+            return member.getRoles().stream().map(ISnowflake::getId).collect(Collectors.toSet()).contains(roleId);
+        }
+    }
 }

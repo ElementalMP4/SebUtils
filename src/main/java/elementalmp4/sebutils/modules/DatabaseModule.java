@@ -31,6 +31,8 @@ public class DatabaseModule extends AbstractModule {
                 "CREATE TABLE IF NOT EXISTS pvp_toggles (username TEXT, toggle BOOLEAN);");
         MIGRATIONS.put("web auth",
                 "CREATE TABLE IF NOT EXISTS web_auth_tokens (username TEXT PRIMARY KEY, token UUID NOT NULL UNIQUE, issued_at TIMESTAMPTZ NOT NULL DEFAULT NOW());");
+        MIGRATIONS.put("pending access list",
+                "CREATE TABLE IF NOT EXISTS pending_access (uuid UUID PRIMARY KEY, messageId TEXT)");
     }
 
     private HikariDataSource dataSource;

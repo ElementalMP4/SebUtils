@@ -8,6 +8,7 @@ import main.java.elementalmp4.sebutils.modules.*;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
 import main.java.elementalmp4.sebutils.utils.ConsoleColours;
 import main.java.elementalmp4.sebutils.utils.ReflectiveInstantiator;
+import main.java.elementalmp4.sebutils.utils.WhitelistCache;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,6 +17,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Logger;
+
+import static org.bukkit.Bukkit.getScheduler;
 
 public class SebUtils extends JavaPlugin {
 
@@ -49,7 +52,7 @@ public class SebUtils extends JavaPlugin {
         logger.info(ConsoleColours.GREEN + "  \\__ \\/ _ \\/ __ \\/ / / / __/ / / ___/" + ConsoleColours.RESET);
         logger.info(ConsoleColours.BLUE + " ___/ /  __/ /_/ / /_/ / /_/ / (__  ) " + ConsoleColours.RESET);
         logger.info(ConsoleColours.PURPLE + "/____/\\___/_.___/\\____/\\__/_/_/____/  " + ConsoleColours.RESET);
-        logger.info("");
+        logger.info(ConsoleColours.RESET);
 
         if (!plugin.getDataFolder().exists()) {
             logger.info(ConsoleColours.YELLOW + "Creating data directory" + ConsoleColours.RESET);
@@ -84,6 +87,7 @@ public class SebUtils extends JavaPlugin {
             getServer().getPluginManager().registerEvents(listener, this);
         }
 
+        getScheduler().runTaskTimer(this, WhitelistCache::refresh, 20L * 30, 20L * 30);
         logger.info(ConsoleColours.GREEN + "Ready!" + ConsoleColours.RESET);
     }
 
