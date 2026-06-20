@@ -33,16 +33,18 @@
 | revokepermit      | /revokepermit [player] [plot ID] | sebutils.plots     | Revokes a plot permit from a player on your plot                                                                          |
 | permits           | /permits [plot ID]               | sebutils.plots     | Views the permits for a plot                                                                                              |
 | ask               | /ask [question]                  | sebutils.ai        | Ask ChatGPSTEVE a question                                                                                                |
+| register          | /register                        | sebutils.web       | Generate a one-time password for web dashboard login                                                                      |
 
 # Permissions
 
-| Permission         | Description                                      |
-|--------------------|--------------------------------------------------|
-| sebutils.tpa       | Allows players to use the teleportation commands |
-| sebutils.homes     | Allows players to use the homes commands         |
-| sebutils.nicknames | Allows players to use the customisation commands |
-| sebutils.admin     | Allows players access to admin commands          |
-| sebutils.plots     | Allows players to create and delete plots        |
-| sebutils.graves    | Allows players to use grave commands             |
-| sebutils.pvp       | Allows players to use pvp commands               |
-| sebutils.ai        | Allows players to use AI commands                |
+| Permission         | Description                                                                                  |
+|--------------------|----------------------------------------------------------------------------------------------|
+| sebutils.tpa       | Allows players to use the teleportation commands                                             |
+| sebutils.homes     | Allows players to use the homes commands                                                     |
+| sebutils.nicknames | Allows players to use the customisation commands                                             |
+| sebutils.admin     | Allows players access to admin commands                                                      |
+| sebutils.plots     | Allows players to create and delete plots                                                    |
+| sebutils.graves    | Allows players to use grave commands                                                         |
+| sebutils.pvp       | Allows players to use pvp commands                                                           |
+| sebutils.ai        | Allows players to use AI commands                                                            |
+| sebutils.web       | Allows players to access the web dashboard (only OP members can view/edit the configuration) |
