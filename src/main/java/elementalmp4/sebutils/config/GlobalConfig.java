@@ -32,7 +32,7 @@ public enum GlobalConfig {
     DATABASE_PASSWORD("Database Password", "db_password", "password", DataType.SECURE_STRING, "Database", DatabaseModule.class),
 
     // Web Server
-    WEB_BIND("Web Server Bind", "web_bind", "127.0.0.1", DataType.STRING, "Web", WebServerModule.class),
+    WEB_BIND("Web Server Bind", "web_bind", "0.0.0.0", DataType.STRING, "Web", WebServerModule.class),
     WEB_PORT("Web Server Port", "web_port", "2289", DataType.NUMBER, "Web", WebServerModule.class),
     WEB_ENABLED("Web Server Enabled", "web_enabled", "true", DataType.TOGGLE, "Web", WebServerModule.class),
     MAP_ENABLED("Map Enabled", "map_enabled", "false", DataType.TOGGLE, "Web", MapModule.class);
