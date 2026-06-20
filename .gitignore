@@ -3,5 +3,5 @@ target
 dependency-reduced-pom.xml
 .DS_Store
 venv
-dev-server
-postgres-data
+example-server/minecraft
+example-server/postgres

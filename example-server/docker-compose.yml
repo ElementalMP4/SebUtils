@@ -15,7 +15,7 @@ services:
     volumes:
       - ./minecraft:/data
     depends_on:
-      sebutils-postgres:
+      sebutils-database:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "nc -z localhost 25565"]
