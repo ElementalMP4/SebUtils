@@ -4,6 +4,7 @@ import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.WebhookClientBuilder;
 import club.minnced.discord.webhook.send.WebhookMessage;
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
+import com.destroystokyo.paper.profile.PlayerProfile;
 import io.papermc.paper.ban.BanListType;
 import main.java.elementalmp4.sebutils.SebUtils;
 import main.java.elementalmp4.sebutils.config.GlobalConfig;
@@ -163,14 +164,19 @@ public class DiscordModule extends AbstractModule {
                 .setImage(getBodyUrl(uuid))
                 .setDescription("**" + playerName + "** has requested to join the server")
                 .build();
+
         TextChannel channel = jda.getTextChannelById(GlobalConfigService.getValue(GlobalConfig.DISCORD_ACCESS_REQUEST_CHANNEL));
+        if (channel == null) {
+            getPluginLogger().severe("Couldn't send access request message to Discord - channel ID may be incorrect");
+            return;
+        }
         channel.sendMessageEmbeds(accessEmbed).setActionRow(createApprovalButtons(uuid)).queue();
     }
 
     private List<ActionComponent> createApprovalButtons(UUID uuid) {
         List<ActionComponent> approvalButtons = new ArrayList<>();
-        approvalButtons.add(Button.success("sebutils:access:approve:" + uuid.toString(), "Approve"));
-        approvalButtons.add(Button.danger("sebutils:access:deny:" + uuid.toString(), "Deny"));
+        approvalButtons.add(Button.success("sebutils:access:approve:" + uuid, "Approve"));
+        approvalButtons.add(Button.danger("sebutils:access:deny:" + uuid, "Deny"));
         return approvalButtons;
     }
 
@@ -198,19 +204,27 @@ public class DiscordModule extends AbstractModule {
 
         @Override
         public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
+            // Ignore if the approval system has been turned off
+            if (!GlobalConfigService.getAsBoolean(GlobalConfig.DISCORD_APPROVAL_ENABLED)) {
+                return;
+            }
+
+            // Ignore if the button press didn't come from the access request channel
             if (!event.getChannel().getId().equals(GlobalConfigService.getValue(GlobalConfig.DISCORD_ACCESS_REQUEST_CHANNEL))) {
                 return;
             }
 
+            // Ignore if it's not from a server member
             if (event.getMember() == null) {
                 return;
             }
 
-            if (!hasApproverRole(event.getMember())) {
+            // Ignore if they don't have the approval role
+            if (!hasApprovalRole(event.getMember())) {
                 return;
             }
 
-            // Let discord know we're gonna update the message
+            // Let discord know we will update the message soon
             event.deferEdit().queue();
 
             String id = event.getComponentId();
@@ -233,7 +247,8 @@ public class DiscordModule extends AbstractModule {
 
         private void denyAccessRequest(UUID uuid, ButtonInteractionEvent event) {
             OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
-            player.getPlayerProfile().complete();
+            PlayerProfile profile = player.getPlayerProfile();
+            profile.complete();
 
             Bukkit.getScheduler().runTask(getPlugin(), () -> {
                 Bukkit.getBanList(BanListType.PROFILE).addBan(
@@ -248,14 +263,15 @@ public class DiscordModule extends AbstractModule {
                     .setColor(Color.RED)
                     .setTitle("Access Denied")
                     .setImage(getBodyUrl(uuid))
-                    .setDescription("**" + player.getName() + "** has been denied access to the server")
+                    .setDescription("**" + profile.getName() + "** has been denied access to the server")
                     .build();
             event.getMessage().editMessageEmbeds(approvedEmbed).setComponents().queue();
         }
 
         private void approveAccessRequest(UUID uuid, ButtonInteractionEvent event) {
             OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
-            player.getPlayerProfile().complete();
+            PlayerProfile profile = player.getPlayerProfile();
+            profile.complete();
 
             Bukkit.getScheduler().runTask(getPlugin(), () -> {
                 player.setWhitelisted(true);
@@ -266,12 +282,12 @@ public class DiscordModule extends AbstractModule {
                     .setColor(Color.GREEN)
                     .setTitle("Access Granted")
                     .setImage(getBodyUrl(uuid))
-                    .setDescription("**" + player.getName() + "** has been granted access to the server")
+                    .setDescription("**" + profile.getName() + "** has been granted access to the server")
                     .build();
             event.getMessage().editMessageEmbeds(approvedEmbed).setComponents().queue();
         }
 
-        private boolean hasApproverRole(Member member) {
+        private boolean hasApprovalRole(Member member) {
             String roleId = GlobalConfigService.getValue(GlobalConfig.DISCORD_ACCESS_APPROVAL_ROLE);
             return member.getRoles().stream().map(ISnowflake::getId).collect(Collectors.toSet()).contains(roleId);
         }
