@@ -33,7 +33,8 @@ public class LoginListener implements Listener {
 
         // Skip if Discord integration is turned off
         boolean discordRunning = GlobalConfigService.getAsBoolean(GlobalConfig.DISCORD_ENABLED);
-        if (!discordRunning) {
+        boolean accessControlEnabled = GlobalConfigService.getAsBoolean(GlobalConfig.DISCORD_APPROVAL_ENABLED);
+        if (!discordRunning || !accessControlEnabled) {
             return;
         }
 

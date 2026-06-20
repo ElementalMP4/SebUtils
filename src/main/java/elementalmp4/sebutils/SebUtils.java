@@ -93,7 +93,9 @@ public class SebUtils extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        moduleManager.stopAll();
+        if (moduleManager != null) {
+            moduleManager.stopAll();
+        }
         logger.info("Stopped successfully!");
     }
 }

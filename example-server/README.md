@@ -11,6 +11,8 @@ Ensure you have Docker installed first. It's available on Windows, MacOS and Lin
 3. Download the latest SebUtils release and copy it into `minecraft/plugins`
 4. Run the server with `docker compose up -d`
 
+You shouldn't need to edit any configurations at this point, unless you want to change the database password or the SebUtils features.
+
 ### Some useful commands:
 
 `docker compose logs --follow` - show the logs from the server
