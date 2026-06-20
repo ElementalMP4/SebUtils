@@ -1,19 +1,19 @@
 name: minecraft-server-stack
 services:
-  paper-server:
+  minecraft-server:
     image: itzg/minecraft-server
     tty: true
     stdin_open: true
     ports:
       - "25565:25565"
-      - "8080:8080"
+      - "2289:2289"
     environment:
       EULA: "TRUE"
       TYPE: "PAPER"
-      VERSION: "1.21.11"
+      VERSION: "26.1.2"
       MEMORY: "2G"
     volumes:
-      - ./server-data:/data
+      - ./minecraft:/data
     depends_on:
       sebutils-postgres:
         condition: service_healthy
@@ -31,7 +31,7 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: sebutils
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - ./postgres:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U sebutils -d sebutils"]
       interval: 3s

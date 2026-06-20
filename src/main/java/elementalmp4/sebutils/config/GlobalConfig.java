@@ -26,15 +26,15 @@ public enum GlobalConfig {
     OLLAMA_MODEL("Ollama Model", "ollama_model", "gemma3:12b", DataType.STRING, "Ollama", OllamaModule.class),
 
     // Database
-    DATABASE_URI("Database URI", "db_uri", UNSET_VALUE, DataType.STRING, "Database", DatabaseModule.class),
-    DATABASE_USERNAME("Database Username", "db_username", UNSET_VALUE, DataType.STRING, "Database", DatabaseModule.class),
-    DATABASE_PASSWORD("Database Password", "db_password", UNSET_VALUE, DataType.SECURE_STRING, "Database", DatabaseModule.class),
+    DATABASE_URI("Database URI", "db_uri", "jdbc:postgresql://sebutils-database/sebutils", DataType.STRING, "Database", DatabaseModule.class),
+    DATABASE_USERNAME("Database Username", "db_username", "sebutils", DataType.STRING, "Database", DatabaseModule.class),
+    DATABASE_PASSWORD("Database Password", "db_password", "password", DataType.SECURE_STRING, "Database", DatabaseModule.class),
 
     // Web Server
     WEB_BIND("Web Server Bind", "web_bind", "127.0.0.1", DataType.STRING, "Web", WebServerModule.class),
-    WEB_PORT("Web Server Port", "web_port", "8080", DataType.NUMBER, "Web", WebServerModule.class),
+    WEB_PORT("Web Server Port", "web_port", "2289", DataType.NUMBER, "Web", WebServerModule.class),
     WEB_ENABLED("Web Server Enabled", "web_enabled", "true", DataType.TOGGLE, "Web", WebServerModule.class),
-    MAP_ENABLED("Map Enabled", "map_enabled", "true", DataType.TOGGLE, "Web", MapModule.class);
+    MAP_ENABLED("Map Enabled", "map_enabled", "false", DataType.TOGGLE, "Web", MapModule.class);
 
     private final String key;
     private final String defaultValue;
