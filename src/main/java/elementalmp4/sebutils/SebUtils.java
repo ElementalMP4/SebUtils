@@ -87,6 +87,8 @@ public class SebUtils extends JavaPlugin {
             getServer().getPluginManager().registerEvents(listener, this);
         }
 
+        // Fill the cache immediately, and also schedule a refresh task
+        StatusCache.refresh();
         getScheduler().runTaskTimer(this, StatusCache::refresh, 20L * 30, 20L * 30);
         logger.info(ConsoleColours.GREEN + "Ready!" + ConsoleColours.RESET);
     }
