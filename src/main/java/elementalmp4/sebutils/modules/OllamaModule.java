@@ -38,10 +38,11 @@ public class OllamaModule extends AbstractModule {
     }
 
     public String getResponse(String prompt, String name) {
-        if (ollamaAPI == null) {
-            throw new IllegalStateException("Ollama API not initialized. This shouldn't be possible if Seb programmed the plugin correctly.");
-        }
         try {
+            if (ollamaAPI == null) {
+                throw new IllegalStateException("Ollama API not initialized. This shouldn't be possible if Seb programmed the plugin correctly.");
+            }
+
             OllamaChatRequest builder = OllamaChatRequest.builder();
             builder.withModel(GlobalConfigService.getValue(GlobalConfig.OLLAMA_MODEL));
 
