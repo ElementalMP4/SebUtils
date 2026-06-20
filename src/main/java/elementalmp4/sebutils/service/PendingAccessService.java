@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.UUID;
 
 import static main.java.elementalmp4.sebutils.SebUtils.*;
@@ -14,11 +15,9 @@ public class PendingAccessService {
 
     public static boolean accessRequestPending(UUID userId) {
         try (Connection conn = getDatabaseConnection();
-             PreparedStatement ps = conn.prepareStatement(
-                     "SELECT * FROM pending_access WHERE uuid = ?"
-             )) {
+             PreparedStatement ps = conn.prepareStatement("SELECT username FROM pending_access WHERE uuid = ?")
+        ) {
             ps.setObject(1, userId);
-
             try (ResultSet rs = ps.executeQuery()) {
                 return rs.next();
             }
@@ -31,13 +30,13 @@ public class PendingAccessService {
     }
 
     public static void createAccessRequest(UUID userId, String playerName) {
-        String sql = "INSERT INTO pending_access (uuid) VALUES (?)";
+        String sql = "INSERT INTO pending_access (uuid, username) VALUES (?, ?)";
         try (Connection conn = getDatabaseConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
+             PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
             ps.setObject(1, userId);
+            ps.setString(2, playerName);
             ps.executeUpdate();
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -49,13 +48,30 @@ public class PendingAccessService {
     public static void removePendingRequest(UUID userId) {
         String sql = "DELETE FROM pending_access WHERE uuid = ?";
         try (Connection conn = getDatabaseConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
+             PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
             ps.setObject(1, userId);
             ps.executeUpdate();
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static Optional<String> getUsernameFromPendingAccessRequest(UUID userId) {
+        try (Connection conn = getDatabaseConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT username FROM pending_access WHERE uuid = ?")
+        ) {
+            ps.setObject(1, userId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                rs.next();
+                return Optional.of(rs.getString("username"));
+            }
+        } catch (SQLException e) {
+            getPluginLogger().severe(e.getMessage());
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
     }
 }

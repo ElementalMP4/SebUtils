@@ -32,7 +32,7 @@ public class DatabaseModule extends AbstractModule {
         MIGRATIONS.put("web auth",
                 "CREATE TABLE IF NOT EXISTS web_auth_tokens (username TEXT PRIMARY KEY, token UUID NOT NULL UNIQUE, issued_at TIMESTAMPTZ NOT NULL DEFAULT NOW());");
         MIGRATIONS.put("pending access list",
-                "CREATE TABLE IF NOT EXISTS pending_access (uuid UUID PRIMARY KEY)");
+                "CREATE TABLE IF NOT EXISTS pending_access (uuid UUID PRIMARY KEY, username TEXT NOT NULL);");
     }
 
     private HikariDataSource dataSource;

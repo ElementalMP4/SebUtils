@@ -80,11 +80,11 @@ public class DiscordModule extends AbstractModule {
         try {
             getPluginLogger().info("Connecting to discord...");
             jda = JDABuilder.createLight(GlobalConfigService.getValue(GlobalConfig.DISCORD_TOKEN))
-                    .addEventListeners(new DiscordListener(jda))
                     .enableIntents(GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT)
                     .setActivity(Activity.of(Activity.ActivityType.PLAYING, "Minecraft"))
                     .build()
                     .awaitReady();
+            jda.addEventListener(new DiscordListener(jda));
             getPluginLogger().info("Discord ready!");
         } catch (InterruptedException e) {
             throw new RuntimeException(e);

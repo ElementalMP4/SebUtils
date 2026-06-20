@@ -24,7 +24,6 @@ import javax.annotation.Nonnull;
 import java.awt.*;
 import java.time.Instant;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static main.java.elementalmp4.sebutils.SebUtils.getPlugin;
@@ -33,7 +32,6 @@ import static main.java.elementalmp4.sebutils.modules.DiscordModule.getBodyUrl;
 
 public class DiscordListener extends ListenerAdapter {
 
-    private static final long PROFILE_LOOKUP_TIMEOUT_SECONDS = 5;
     private final JDA jda;
 
     public DiscordListener(JDA jda) {
@@ -89,10 +87,8 @@ public class DiscordListener extends ListenerAdapter {
         UUID userId = UUID.fromString(id.split(":")[3]);
         if (id.startsWith("sebutils:access:approve")) {
             approveAccessRequest(userId, event);
-            cleanup(userId);
         } else if (id.startsWith("sebutils:access:deny")) {
             denyAccessRequest(userId, event);
-            cleanup(userId);
         } else {
             getPluginLogger().warning("Unknown interaction type: " + id);
         }
@@ -104,63 +100,43 @@ public class DiscordListener extends ListenerAdapter {
     }
 
     private void approveAccessRequest(UUID uuid, ButtonInteractionEvent event) {
-        OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
-
         Bukkit.getScheduler().runTask(getPlugin(), () -> {
+            OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
             player.setWhitelisted(true);
-            Bukkit.reloadWhitelist();
+            cleanup(uuid);
         });
 
-        PlayerProfile profile = Bukkit.createProfile(uuid);
-        profile.update()
-                .orTimeout(PROFILE_LOOKUP_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                .handle((updated, ex) -> {
-                    String name = (ex == null && updated.getName() != null) ? updated.getName() : uuid.toString();
-                    if (ex != null) {
-                        getPlugin().getLogger().warning("Profile lookup failed for " + uuid + ": " + ex.getMessage());
-                    }
-
-                    MessageEmbed approvedEmbed = new EmbedBuilder()
-                            .setColor(Color.GREEN)
-                            .setTitle("Access Granted")
-                            .setImage(getBodyUrl(uuid))
-                            .setDescription("**" + name + "** has been granted access to the server")
-                            .build();
-                    event.getMessage().editMessageEmbeds(approvedEmbed).setComponents().queue();
-                    return null;
-                });
+        String name = PendingAccessService.getUsernameFromPendingAccessRequest(uuid).orElse(uuid.toString());
+        MessageEmbed approvedEmbed = new EmbedBuilder()
+                .setColor(Color.GREEN)
+                .setTitle("Access Granted")
+                .setImage(getBodyUrl(uuid))
+                .setDescription("**" + name + "** has been granted access to the server")
+                .build();
+        event.getMessage().editMessageEmbeds(approvedEmbed).setComponents().queue();
     }
 
     private void denyAccessRequest(UUID uuid, ButtonInteractionEvent event) {
-        PlayerProfile profile = Bukkit.createProfile(uuid);
-
         Bukkit.getScheduler().runTask(getPlugin(), () -> {
+            PlayerProfile profile = Bukkit.createProfile(uuid);
             Bukkit.getBanList(BanListType.PROFILE).addBan(
                     profile,
                     "Your access request was rejected.",
                     (Instant) null,
                     "Server Access Requests"
             );
+            cleanup(uuid);
         });
 
-        profile.update()
-                .orTimeout(PROFILE_LOOKUP_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                .handle((updated, ex) -> {
-                    String name = (ex == null && updated.getName() != null) ? updated.getName() : uuid.toString();
-                    if (ex != null) {
-                        getPlugin().getLogger().warning("Profile lookup failed for " + uuid + ": " + ex.getMessage());
-                    }
-
-                    MessageEmbed deniedEmbed = new EmbedBuilder()
-                            .setColor(Color.RED)
-                            .setTitle("Access Denied")
-                            .setImage(getBodyUrl(uuid))
-                            .setDescription("**" + name + "** has been denied access to the server")
-                            .setFooter(uuid.toString())
-                            .build();
-                    event.getMessage().editMessageEmbeds(deniedEmbed).setComponents().queue();
-                    return null;
-                });
+        String name = PendingAccessService.getUsernameFromPendingAccessRequest(uuid).orElse(uuid.toString());
+        MessageEmbed deniedEmbed = new EmbedBuilder()
+                .setColor(Color.RED)
+                .setTitle("Access Denied")
+                .setImage(getBodyUrl(uuid))
+                .setDescription("**" + name + "** has been denied access to the server")
+                .setFooter(uuid.toString())
+                .build();
+        event.getMessage().editMessageEmbeds(deniedEmbed).setComponents().queue();
     }
 
     private boolean hasApprovalRole(Member member) {

@@ -7,6 +7,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static main.java.elementalmp4.sebutils.SebUtils.getPluginLogger;
+
 public final class StatusCache {
 
     private static final Set<UUID> WHITELIST = ConcurrentHashMap.newKeySet();
@@ -21,15 +23,27 @@ public final class StatusCache {
     }
 
     public synchronized static void refresh() {
-        WHITELIST.clear();
-        BANNED.clear();
+        Set<UUID> newWhitelist = ConcurrentHashMap.newKeySet();
+        Set<UUID> newBanlist = ConcurrentHashMap.newKeySet();
 
         for (OfflinePlayer player : Bukkit.getWhitelistedPlayers()) {
-            WHITELIST.add(player.getUniqueId());
+            if (!WHITELIST.contains(player.getUniqueId())) {
+                getPluginLogger().info("Adding %s to whitelist cache".formatted(player.getUniqueId()));
+            }
+            newWhitelist.add(player.getUniqueId());
         }
 
         for (OfflinePlayer player : Bukkit.getBannedPlayers()) {
             BANNED.add(player.getUniqueId());
+            if (!BANNED.contains(player.getUniqueId())) {
+                getPluginLogger().info("Adding %s to whitelist cache".formatted(player.getUniqueId()));
+            }
+            newBanlist.add(player.getUniqueId());
         }
+
+        WHITELIST.clear();
+        BANNED.clear();
+        WHITELIST.addAll(newWhitelist);
+        BANNED.addAll(newBanlist);
     }
 }
