@@ -160,4 +160,17 @@ public class DiscordModule extends AbstractModule {
         approvalButtons.add(Button.danger("sebutils:access:deny:" + uuid, "Deny"));
         return approvalButtons;
     }
+
+    public void sendDeathMessage(Player player, String message) {
+        if (!GlobalConfigService.getAsBoolean(GlobalConfig.DISCORD_ENABLED)) {
+            return;
+        }
+
+        String channelId = GlobalConfigService.getValue(GlobalConfig.DISCORD_CHAT_CHANNEL);
+        MessageEmbed deathEmbed = new EmbedBuilder()
+                .setColor(Color.DARK_GRAY)
+                .setAuthor(message, getHeadUrl(player), getHeadUrl(player))
+                .build();
+        sendEmbed(deathEmbed, channelId);
+    }
 }
