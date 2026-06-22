@@ -87,8 +87,9 @@ public class GraveListener implements Listener {
 
         deathBlock.setMetadata(GRAVE_LABEL_META, new FixedMetadataValue(SebUtils.getPlugin(), armorStand.getUniqueId().toString()));
         deathBlock.setMetadata(INVENTORY_CONTENTS_META, new FixedMetadataValue(SebUtils.getPlugin(), itemStackArrayToBase64(player.getInventory().getContents())));
-
-        deathBlock.setMetadata(EXPERIENCE_META, new FixedMetadataValue(SebUtils.getPlugin(), player.getTotalExperience()));
+        
+        float[] experienceData = new float[]{player.getExp(), (float) player.getLevel()};
+        deathBlock.setMetadata(EXPERIENCE_META, new FixedMetadataValue(SebUtils.getPlugin(), experienceData));
 
         // Clean slate, in case KeepInventory is true
         player.setExp(0);
@@ -138,8 +139,9 @@ public class GraveListener implements Listener {
         }
 
         // Restore experience
-        int experience = clickedBlock.getMetadata(EXPERIENCE_META).get(0).asInt();
-        player.giveExp(experience);
+        float[] experienceData = (float[]) clickedBlock.getMetadata(EXPERIENCE_META).get(0).value();
+        player.setExp(experienceData[0]);
+        player.setLevel((int) experienceData[1]);
 
         player.playSound(player.getLocation(), Sound.ITEM_BUNDLE_DROP_CONTENTS, 10, 1);
         clickedBlock.setType(Material.AIR);
