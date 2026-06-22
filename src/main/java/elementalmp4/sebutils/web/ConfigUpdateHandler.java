@@ -5,6 +5,7 @@ import io.javalin.http.Handler;
 import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.modules.AbstractModule;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
+import main.java.elementalmp4.sebutils.service.WebAuthService;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
@@ -12,13 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static main.java.elementalmp4.sebutils.SebUtils.getModuleManager;
-import static main.java.elementalmp4.sebutils.web.WebPermissions.requireOp;
 
 public class ConfigUpdateHandler implements Handler {
 
     @Override
     public void handle(@NotNull Context ctx) throws Exception {
-        if (!requireOp(ctx)) return;
+        if (!WebAuthService.hasAuthenticated(ctx)) {
+            return;
+        }
         JSONObject configChanges = new JSONObject(ctx.body());
         for (String key : configChanges.keySet()) {
             if (!GlobalConfigService.listConfig().containsKey(key)) {
@@ -30,7 +32,11 @@ public class ConfigUpdateHandler implements Handler {
         for (String key : configChanges.keySet()) {
             String value = configChanges.getString(key);
             GlobalConfig config = GlobalConfig.getByKey(key);
-            if (value.equals("REDACTED")) continue;
+
+            if (value.equals("REDACTED")) {
+                continue;
+            }
+
             if (!value.equals(GlobalConfigService.getValue(config))) {
                 GlobalConfigService.set(config, value);
                 if (config.getConfiguredModule() != null) {
@@ -41,9 +47,11 @@ public class ConfigUpdateHandler implements Handler {
 
         List<Class<? extends AbstractModule>> done = new ArrayList<>();
         for (Class<? extends AbstractModule> module: modulesRequiringAttention) {
-            if (done.contains(module)) continue;
-            GlobalConfig toggle = getModuleManager().getToggle(module);
+            if (done.contains(module)) {
+                continue;
+            }
 
+            GlobalConfig toggle = getModuleManager().getToggle(module);
             if (GlobalConfigService.getAsBoolean(toggle)) {
                 getModuleManager().restart(module);
             } else {

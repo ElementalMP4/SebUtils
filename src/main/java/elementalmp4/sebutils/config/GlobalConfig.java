@@ -35,6 +35,7 @@ public enum GlobalConfig {
     WEB_BIND("Web Server Bind", "web_bind", "0.0.0.0", DataType.STRING, "Web", WebServerModule.class),
     WEB_PORT("Web Server Port", "web_port", "2289", DataType.NUMBER, "Web", WebServerModule.class),
     WEB_ENABLED("Web Server Enabled", "web_enabled", "true", DataType.TOGGLE, "Web", WebServerModule.class),
+    WEB_TOTP_TOKEN("Web TOTP Token", "web_totp_token", UNSET_VALUE, DataType.SECURE_STRING, "Web", WebServerModule.class),
     MAP_ENABLED("Map Enabled", "map_enabled", "false", DataType.TOGGLE, "Web", MapModule.class);
 
     private final String key;

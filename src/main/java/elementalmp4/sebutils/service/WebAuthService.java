@@ -1,126 +1,237 @@
 package main.java.elementalmp4.sebutils.service;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import dev.samstevens.totp.code.CodeGenerator;
+import dev.samstevens.totp.code.CodeVerifier;
+import dev.samstevens.totp.code.DefaultCodeGenerator;
+import dev.samstevens.totp.code.DefaultCodeVerifier;
+import dev.samstevens.totp.secret.DefaultSecretGenerator;
+import dev.samstevens.totp.secret.SecretGenerator;
+import dev.samstevens.totp.time.SystemTimeProvider;
+import dev.samstevens.totp.time.TimeProvider;
+import io.javalin.http.Context;
+import main.java.elementalmp4.sebutils.config.GlobalConfig;
+import main.java.elementalmp4.sebutils.entity.Session;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.sql.*;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.*;
 
 import static main.java.elementalmp4.sebutils.SebUtils.getDatabaseConnection;
+import static main.java.elementalmp4.sebutils.SebUtils.getPluginLogger;
 
 public class WebAuthService {
+    private static final TimeProvider timeProvider = new SystemTimeProvider();
+    private static final CodeGenerator codeGenerator = new DefaultCodeGenerator();
+    private static final SecretGenerator secretGenerator = new DefaultSecretGenerator(64);
+    private static final CodeVerifier verifier = new DefaultCodeVerifier(codeGenerator, timeProvider);
+    private static final SecureRandom secureRandom = new SecureRandom();
+    private static final Duration SESSION_TTL = Duration.ofDays(30);
 
-    private static final SecureRandom RNG = new SecureRandom();
-    private static final String CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    private static final int OTP_LENGTH = 6;
-
-    // OTPs stay in-memory
-    private static final Map<String, String> otps = new ConcurrentHashMap<>();
-
-    public static String generateOtpForUser(String username) {
-        String otp = randomString(OTP_LENGTH);
-        otps.put(username, otp);
-        return otp;
-    }
-
-    public static synchronized String verifyOtpAndIssueToken(String username, String otp) {
-        String expected = otps.get(username);
-        if (expected == null || !expected.equals(otp)) {
+    public static synchronized String verifyOtpAndIssueToken(String otp, String ip, String userAgent) {
+        String secret = GlobalConfigService.getValue(GlobalConfig.WEB_TOTP_TOKEN);
+        if (!verifier.isValidCode(secret, otp)) {
             return null;
         }
 
-        otps.remove(username);
+        String token = generateToken();
+        insert(UUID.randomUUID(), hashToken(token), Instant.now().plus(SESSION_TTL), ip, userAgent);
+        return token;
+    }
 
-        UUID token = UUID.randomUUID();
+    public static boolean validateToken(String token) {
+        if (token == null || token.isEmpty()) {
+            return false;
+        }
 
-        // Store token in DB
+        Optional<Session> session = findActiveByHash(hashToken(token));
+        session.ifPresent(s -> touch(s.getId()));
+        return session.isPresent();
+    }
+
+    public static void revokeToken(String token) {
+        if (token != null) {
+            revoke(hashToken(token));
+        }
+    }
+
+    private static String generateToken() {
+        byte[] bytes = new byte[32];
+        secureRandom.nextBytes(bytes);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+    }
+
+    private static String hashToken(String token) {
+        try {
+            byte[] hash = MessageDigest.getInstance("SHA-256").digest(token.getBytes(StandardCharsets.UTF_8));
+            return HexFormat.of().formatHex(hash);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static boolean hasAuthenticated(Context ctx) {
+        Boolean ok = ctx.attribute("userHasBeenAuthenticated");
+        if (ok == null || !ok) {
+            ctx.status(403).result("OP required");
+            return false;
+        }
+        return true;
+    }
+
+    public static void ensureLoginTokenExists() {
+        if (GlobalConfigService.getValue(GlobalConfig.WEB_TOTP_TOKEN).equals(GlobalConfigService.UNSET_VALUE)) {
+            String token = secretGenerator.generate();
+            GlobalConfigService.set(GlobalConfig.WEB_TOTP_TOKEN, token);
+        }
+
+        printTotpQrCode();
+    }
+
+    public static void printTotpQrCode() {
+        String secret = GlobalConfigService.getValue(GlobalConfig.WEB_TOTP_TOKEN);
+        String uri    = "otpauth://totp/SebUtils"
+                + "?secret=" + secret
+                + "&issuer=" + URLEncoder.encode("SebUtils", StandardCharsets.UTF_8)
+                + "&algorithm=SHA1"
+                + "&digits=6"
+                + "&period=30";
+
+        try {
+            Map<EncodeHintType, Object> hints = new EnumMap<>(EncodeHintType.class);
+            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.M);
+            hints.put(EncodeHintType.MARGIN, 1);
+
+            BitMatrix matrix = new QRCodeWriter().encode(uri, BarcodeFormat.QR_CODE, 0, 0, hints);
+            getPluginLogger().info("In order to access the SebUtils web dashboard, scan this QR code in your authenticator app:\n");
+            getPluginLogger().info(stringifyQrMatrix(matrix));
+
+        } catch (WriterException e) {
+            throw new RuntimeException("Failed to generate TOTP QR code", e);
+        }
+    }
+
+    private static String stringifyQrMatrix(BitMatrix matrix) {
+        int width  = matrix.getWidth();
+        int height = matrix.getHeight();
+        StringBuilder output = new StringBuilder();
+        output.append("\n");
+        for (int y = 0; y < height; y += 2) {
+            StringBuilder line = new StringBuilder();
+            for (int x = 0; x < width; x++) {
+                boolean top    = matrix.get(x, y);
+                boolean bottom = (y + 1 < height) && matrix.get(x, y + 1);
+
+                if (top && bottom)       line.append('█');
+                else if (top)            line.append('▀');
+                else if (bottom)         line.append('▄');
+                else                     line.append(' ');
+            }
+            output.append(line).append("\n");
+        }
+        return output.toString();
+    }
+
+    public static void insert(UUID id, String tokenHash, Instant expiresAt, String ip, String userAgent) {
+        String sql = "INSERT INTO web_sessions (id, token_hash, expires_at, ip_address, user_agent) VALUES (?, ?, ?, ?, ?)";
+
         try (Connection conn = getDatabaseConnection();
-             PreparedStatement ps = conn.prepareStatement(
-                     """
-                             INSERT INTO web_auth_tokens (username, token)
-                             VALUES (?, ?)
-                             ON CONFLICT (username)
-                             DO UPDATE SET token = EXCLUDED.token, issued_at = NOW()
-                             """
-             )) {
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, username);
-            ps.setObject(2, token);
+            ps.setObject(1, id);
+            ps.setString(2, tokenHash);
+            ps.setTimestamp(3, Timestamp.from(expiresAt));
+            ps.setString(4, ip);
+            ps.setString(5, userAgent);
             ps.executeUpdate();
 
         } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException(e);
         }
-
-        Player player = Bukkit.getPlayer(username);
-        if (player != null) {
-            player.sendMessage(
-                    Component.text(
-                            "You can now access the web dashboard!",
-                            NamedTextColor.GREEN
-                    )
-            );
-        }
-
-        return token.toString();
     }
 
-    /**
-     * Returns the username for a valid token, or null if invalid
-     */
-    public static String validateToken(String token) {
-        if (token == null) return null;
+    public static Optional<Session> findActiveByHash(String tokenHash) {
+        String sql = "SELECT id, expires_at FROM web_sessions WHERE token_hash = ? AND revoked = false AND expires_at > now()";
 
         try (Connection conn = getDatabaseConnection();
-             PreparedStatement ps = conn.prepareStatement(
-                     "SELECT username FROM web_auth_tokens WHERE token = ?"
-             )) {
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setObject(1, UUID.fromString(token));
+            ps.setString(1, tokenHash);
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getString("username");
+                    return Optional.of(new Session(rs));
                 }
+                return Optional.empty();
             }
 
-        } catch (IllegalArgumentException ignored) {
-            // Invalid UUID string
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-
-        return null;
     }
 
-    public static synchronized void invalidateTokenForUser(String username) {
-        try (Connection conn = getDatabaseConnection();
-             PreparedStatement ps = conn.prepareStatement(
-                     "DELETE FROM web_auth_tokens WHERE username = ?"
-             )) {
+    public static void touch(UUID sessionId) {
+        String sql = "UPDATE web_sessions SET last_used_at = now() WHERE id = ?";
 
-            ps.setString(1, username);
+        try (Connection conn = getDatabaseConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setObject(1, sessionId);
             ps.executeUpdate();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
-    private static String randomString(int length) {
-        StringBuilder sb = new StringBuilder(length);
-        for (int i = 0; i < length; i++) {
-            sb.append(CHARSET.charAt(RNG.nextInt(CHARSET.length())));
+    public static void revoke(String tokenHash) {
+        String sql = "UPDATE web_sessions SET revoked = true WHERE token_hash = ?";
+
+        try (Connection conn = getDatabaseConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, tokenHash);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        return sb.toString();
+    }
+
+    public static void revokeAll() {
+        String sql = "UPDATE web_sessions SET revoked = true WHERE revoked = false";
+
+        try (Connection conn = getDatabaseConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void deleteExpired() {
+        String sql = "DELETE FROM web_sessions WHERE expires_at < now() - interval '7 days'";
+
+        try (Connection conn = getDatabaseConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

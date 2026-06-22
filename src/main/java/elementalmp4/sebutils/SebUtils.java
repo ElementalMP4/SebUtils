@@ -6,6 +6,7 @@ import main.java.elementalmp4.sebutils.command.AbstractCommand;
 import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.modules.*;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
+import main.java.elementalmp4.sebutils.service.WebAuthService;
 import main.java.elementalmp4.sebutils.utils.ConsoleColours;
 import main.java.elementalmp4.sebutils.utils.ReflectiveInstantiator;
 import main.java.elementalmp4.sebutils.utils.StatusCache;
@@ -87,9 +88,9 @@ public class SebUtils extends JavaPlugin {
             getServer().getPluginManager().registerEvents(listener, this);
         }
 
-        // Fill the cache immediately, and also schedule a refresh task
-        StatusCache.refresh();
-        getScheduler().runTaskTimer(this, StatusCache::refresh, 20L * 30, 20L * 30);
+        WebAuthService.ensureLoginTokenExists();
+
+        getScheduler().runTaskTimer(this, StatusCache::refresh, 0, 20L * 30);
         logger.info(ConsoleColours.GREEN + "Ready!" + ConsoleColours.RESET);
     }
 

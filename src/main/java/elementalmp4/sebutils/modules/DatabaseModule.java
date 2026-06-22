@@ -29,10 +29,12 @@ public class DatabaseModule extends AbstractModule {
                 "CREATE TABLE IF NOT EXISTS graves (grave_id TEXT, grave_owner TEXT, pos_x INTEGER, pos_y INTEGER, pos_z INTEGER, world TEXT);");
         MIGRATIONS.put("pvp toggles",
                 "CREATE TABLE IF NOT EXISTS pvp_toggles (username TEXT, toggle BOOLEAN);");
-        MIGRATIONS.put("web auth",
-                "CREATE TABLE IF NOT EXISTS web_auth_tokens (username TEXT PRIMARY KEY, token UUID NOT NULL UNIQUE, issued_at TIMESTAMPTZ NOT NULL DEFAULT NOW());");
         MIGRATIONS.put("pending access list",
                 "CREATE TABLE IF NOT EXISTS pending_access (uuid UUID PRIMARY KEY, username TEXT NOT NULL);");
+        MIGRATIONS.put("web dashboard sessions",
+                "CREATE TABLE IF NOT EXISTS web_sessions (id UUID PRIMARY KEY, token_hash TEXT NOT NULL UNIQUE, created_at TIMESTAMPTZ NOT NULL DEFAULT now(), expires_at TIMESTAMPTZ NOT NULL, last_used_at TIMESTAMPTZ NOT NULL DEFAULT now(), revoked BOOLEAN NOT NULL DEFAULT false, ip_address TEXT, user_agent TEXT);");
+        MIGRATIONS.put("web dashboard session index",
+                "CREATE INDEX IF NOT EXISTS idx_web_sessions_token_hash ON web_sessions(token_hash);");
     }
 
     private HikariDataSource dataSource;

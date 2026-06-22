@@ -1,6 +1,7 @@
 package main.java.elementalmp4.sebutils.modules;
 
 import io.javalin.Javalin;
+import main.java.elementalmp4.sebutils.config.DataType;
 import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
 import main.java.elementalmp4.sebutils.service.WebAuthService;
@@ -11,7 +12,6 @@ import java.util.List;
 
 import static main.java.elementalmp4.sebutils.SebUtils.getModuleManager;
 import static main.java.elementalmp4.sebutils.SebUtils.getPluginLogger;
-import static main.java.elementalmp4.sebutils.web.WebPermissions.requireOp;
 
 public class WebServerModule extends AbstractModule {
 
@@ -36,50 +36,64 @@ public class WebServerModule extends AbstractModule {
             }
 
             String token = ctx.cookie("web_token");
-            String user = WebAuthService.validateToken(token);
-            if (user == null) {
+            if (!WebAuthService.validateToken(token)) {
                 if (path.startsWith("/api")) {
-                    ctx.status(401);
-                    ctx.result("Invalid token");
+                    ctx.status(401).result("Invalid token");
                 } else {
                     ctx.redirect("/login.html");
                 }
                 ctx.skipRemainingHandlers();
-            } else {
-                ctx.attribute("authenticatedUser", user);
+                return;
             }
+
+            ctx.attribute("userHasBeenAuthenticated", true);
         });
 
         app.post("/login", ctx -> {
-            String username = ctx.formParam("username");
             String otp = ctx.formParam("otp");
-            if (username == null || otp == null) {
+            if (otp == null) {
                 ctx.status(400).result("Missing username or otp");
                 return;
             }
 
-            String token = WebAuthService.verifyOtpAndIssueToken(username, otp);
+            String token = WebAuthService.verifyOtpAndIssueToken(otp, ctx.ip(), ctx.userAgent());
             if (token == null) {
                 ctx.status(401).result("Invalid OTP");
                 ctx.skipRemainingHandlers();
             } else {
-                String cookie = "web_token=" + token + "; HttpOnly; Path=/; SameSite=Strict";
+                String cookie = "web_token=" + token
+                        + "; HttpOnly"
+                        + "; Path=/"
+                        + "; SameSite=Strict"
+                        + "; Secure"
+                        + "; Max-Age=" + (30 * 24 * 60 * 60);
+
                 ctx.res().addHeader("Set-Cookie", cookie);
                 ctx.redirect("/");
             }
+        });
+
+        app.post("/logout", ctx -> {
+            WebAuthService.revokeToken(ctx.cookie("web_token"));
+            ctx.removeCookie("web_token", "/");
+            ctx.redirect("/login.html");
         });
 
         app.get("/health", ctx -> ctx.result("OK"));
         app.get("/status", ctx -> ctx.result("Logged in"));
 
         app.get("/api/config", ctx -> {
-            if (!requireOp(ctx)) return;
+            if (!WebAuthService.hasAuthenticated(ctx)) {
+                return;
+            }
             ctx.json(GlobalConfigService.listConfig());
         });
 
         for (GlobalConfig conf : GlobalConfig.values()) {
             app.get("/api/config/" + conf.getKey(), ctx -> {
-                if (!requireOp(ctx)) return;
+                if (!WebAuthService.hasAuthenticated(ctx)) {
+                    return;
+                }
                 ctx.json(GlobalConfigService.getAsConfig(conf));
             });
         }
