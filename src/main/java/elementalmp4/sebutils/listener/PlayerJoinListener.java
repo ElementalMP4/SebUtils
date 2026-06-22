@@ -10,6 +10,7 @@ import main.java.elementalmp4.sebutils.service.NicknameService;
 import main.java.elementalmp4.sebutils.service.PVPToggleService;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -23,7 +24,9 @@ public class PlayerJoinListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         boolean discordRunning = GlobalConfigService.getAsBoolean(GlobalConfig.DISCORD_ENABLED);
-        if (discordRunning) getModuleManager().get(DiscordModule.class).sendJoinMessage(event.getPlayer());
+        if (discordRunning) {
+            getModuleManager().get(DiscordModule.class).sendJoinMessage(event.getPlayer());
+        }
         PVPToggleService.cachePlayer(event.getPlayer().getName());
 
         // Cache profile before sending join message
@@ -48,7 +51,9 @@ public class PlayerJoinListener implements Listener {
         PVPToggleService.removePlayerCache(event.getPlayer().getName());
 
         boolean discordRunning = GlobalConfigService.getAsBoolean(GlobalConfig.DISCORD_ENABLED);
-        if (discordRunning) getModuleManager().get(DiscordModule.class).sendLeaveMessage(event.getPlayer());
+        if (discordRunning) {
+            getModuleManager().get(DiscordModule.class).sendLeaveMessage(event.getPlayer());
+        }
 
         boolean ollamaRunning = GlobalConfigService.getAsBoolean(GlobalConfig.OLLAMA_ENABLED);
         if (ollamaRunning) getModuleManager().get(OllamaModule.class).clearConversation(event.getPlayer().getName());

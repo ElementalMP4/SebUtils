@@ -65,7 +65,6 @@ public class WebServerModule extends AbstractModule {
                         + "; HttpOnly"
                         + "; Path=/"
                         + "; SameSite=Strict"
-                        + "; Secure"
                         + "; Max-Age=" + (30 * 24 * 60 * 60);
 
                 ctx.res().addHeader("Set-Cookie", cookie);
