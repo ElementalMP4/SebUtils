@@ -100,7 +100,7 @@ public class TeleportService {
         player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 10, 1);
         Random random = new Random();
         for (int i = 0; i < 20; i++) {
-            player.spawnParticle(Particle.COPPER_FIRE_FLAME, random.nextFloat(), random.nextFloat(), random.nextFloat(), 1);
+            player.spawnParticle(Particle.COPPER_FIRE_FLAME, player.getLocation(), 1, random.nextFloat(), random.nextFloat(), random.nextFloat());
         }
     }
 }
