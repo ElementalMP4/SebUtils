@@ -174,7 +174,3 @@ commands:
     description: "Ask ChatGPSTEVE a question"
     usage: "/ask [question]"
     permission: "sebutils.ai"
-  register:
-    description: "Generate a one-time password for web dashboard login"
-    usage: "/register"
-    permission: "sebutils.web"
