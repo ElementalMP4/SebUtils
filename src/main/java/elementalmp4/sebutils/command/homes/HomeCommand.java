@@ -19,7 +19,6 @@ public class HomeCommand extends AbstractCommand {
         String homeName = args.length == 0 ? "default" : args[0];
         if (HomeService.userHasHome(commandSender.getName(), homeName)) {
             Player player = (Player) commandSender;
-            commandSender.sendMessage(Component.text("Teleporting...", NamedTextColor.GOLD));
             HomeService.teleportUserHome(player, homeName);
         } else {
             if (args.length == 0) commandSender.sendMessage(Component.text("You haven't set any homes!", NamedTextColor.RED));
