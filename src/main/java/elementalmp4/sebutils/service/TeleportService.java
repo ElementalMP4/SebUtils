@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -97,6 +98,9 @@ public class TeleportService {
 
     public static void playTeleportEffects(Player player) {
         player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 10, 1);
-        player.spawnParticle(Particle.SOUL_FIRE_FLAME, player.getLocation(), 20);
+        Random random = new Random();
+        for (int i = 0; i < 20; i++) {
+            player.spawnParticle(Particle.COPPER_FIRE_FLAME, random.nextFloat(), random.nextFloat(), random.nextFloat(), 1);
+        }
     }
 }
