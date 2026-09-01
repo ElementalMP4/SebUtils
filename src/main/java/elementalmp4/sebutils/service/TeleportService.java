@@ -8,6 +8,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
@@ -98,9 +99,23 @@ public class TeleportService {
 
     public static void playTeleportEffects(Player player) {
         player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 10, 1);
-        Random random = new Random();
-        for (int i = 0; i < 20; i++) {
-            player.spawnParticle(Particle.COPPER_FIRE_FLAME, player.getLocation(), 1, random.nextFloat(), random.nextFloat(), random.nextFloat());
+        for (int i = 0; i < 40; i++) {
+            double angle = (2 * Math.PI / 40) * i;
+            double radius = 0.8;
+            double y = (i / 40.0) * 2.0;
+
+            double x = Math.cos(angle) * radius;
+            double z = Math.sin(angle) * radius;
+
+            Location particleLocation = player.getLocation().clone().add(x, y, z);
+
+            player.spawnParticle(
+                    Particle.COPPER_FIRE_FLAME,
+                    particleLocation,
+                    1,
+                    0, 0, 0,
+                    0
+            );
         }
     }
 }
