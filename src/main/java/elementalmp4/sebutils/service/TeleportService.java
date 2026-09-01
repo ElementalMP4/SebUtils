@@ -99,19 +99,35 @@ public class TeleportService {
 
     public static void playTeleportEffects(Player player) {
         player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 10, 1);
-        for (int i = 0; i < 40; i++) {
-            double angle = (2 * Math.PI / 40) * i;
-            double radius = 0.8;
-            double y = (i / 40.0) * 2.0;
 
-            double x = Math.cos(angle) * radius;
-            double z = Math.sin(angle) * radius;
+        int particles = 80;
+        double radius = 0.8;
+        double height = 2.0;
 
-            Location particleLocation = player.getLocation().clone().add(x, y, z);
+        for (int i = 0; i < particles; i++) {
+            double angle = (4 * Math.PI / particles) * i;
+            double y = (i / (double) particles) * height;
+
+            double x1 = Math.cos(angle) * radius;
+            double z1 = Math.sin(angle) * radius;
+
+            double x2 = Math.cos(-angle) * radius;
+            double z2 = Math.sin(-angle) * radius;
+
+            Location particle1 = player.getLocation().clone().add(x1, y, z1);
+            Location particle2 = player.getLocation().clone().add(x2, y, z2);
 
             player.spawnParticle(
                     Particle.COPPER_FIRE_FLAME,
-                    particleLocation,
+                    particle1,
+                    1,
+                    0, 0, 0,
+                    0
+            );
+
+            player.spawnParticle(
+                    Particle.SOUL_FIRE_FLAME,
+                    particle2,
                     1,
                     0, 0, 0,
                     0
