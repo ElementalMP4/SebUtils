@@ -1,7 +1,6 @@
 package main.java.elementalmp4.sebutils.modules;
 
 import io.javalin.Javalin;
-import main.java.elementalmp4.sebutils.config.DataType;
 import main.java.elementalmp4.sebutils.config.GlobalConfig;
 import main.java.elementalmp4.sebutils.service.GlobalConfigService;
 import main.java.elementalmp4.sebutils.service.WebAuthService;

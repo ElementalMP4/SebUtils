@@ -75,9 +75,19 @@ public class SebUtils extends JavaPlugin {
                 .findAnnotatedClasses(SebUtilsCommand.class, AbstractCommand.class)
                 .getInstances();
         for (AbstractCommand command : commands) {
+            if (command == null) {
+                throw new RuntimeException("Unexpectedly met a null command");
+            }
+
             PluginCommand pCommand = getCommand(command.getCommandName());
+            if (pCommand == null) {
+                throw new RuntimeException("Unexpectedly met a null PluginCommand (" + command.getCommandName() + ")");
+            }
+
             pCommand.setExecutor(command);
-            if (command.getTabCompleter() != null) pCommand.setTabCompleter(command.getTabCompleter());
+            if (command.getTabCompleter() != null) {
+                pCommand.setTabCompleter(command.getTabCompleter());
+            }
         }
 
         logger.info(ConsoleColours.YELLOW + "Registering listeners");
