@@ -105,14 +105,16 @@ public class TeleportService {
         double height = 2.0;
 
         for (int i = 0; i < particles; i++) {
-            double angle = (4 * Math.PI / particles) * i;
+            double angle1 = (4 * Math.PI / particles) * i;
+            double angle2 = angle1 + Math.PI;
+
             double y = (i / (double) particles) * height;
 
-            double x1 = Math.cos(angle) * radius;
-            double z1 = Math.sin(angle) * radius;
+            double x1 = Math.cos(angle1) * radius;
+            double z1 = Math.sin(angle1) * radius;
 
-            double x2 = Math.cos(-angle) * radius;
-            double z2 = Math.sin(-angle) * radius;
+            double x2 = Math.cos(-angle2) * radius;
+            double z2 = Math.sin(-angle2) * radius;
 
             Location particle1 = player.getLocation().clone().add(x1, y, z1);
             Location particle2 = player.getLocation().clone().add(x2, y, z2);
