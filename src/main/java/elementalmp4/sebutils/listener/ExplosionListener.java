@@ -25,7 +25,7 @@ public class ExplosionListener implements Listener {
     public void onEntityExplodeEvent(ExplosionPrimeEvent e) {
         Location l = e.getEntity().getLocation();
         if (tntDisabled() || blockIsInPlot(l)) {
-            if (e.getEntityType().equals(EntityType.TNT)) {
+            if (e.getEntityType().equals(EntityType.TNT) || e.getEntityType().equals(EntityType.END_CRYSTAL)) {
                 spawnFireworks(e.getEntity().getLocation(), 10, 10);
                 e.setCancelled(true);
             } else if (e.getEntityType().equals(EntityType.CREEPER)) {
