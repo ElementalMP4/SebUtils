@@ -14,12 +14,12 @@ import org.bukkit.command.TabCompleter;
 import java.util.Set;
 
 @SebUtilsCommand
-public class AllowTntCommand extends AbstractCommand {
+public class AllowExplosionsCommand extends AbstractCommand {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
         if (args.length == 0) {
             boolean tntEnabled = GlobalConfigService.getAsBoolean(GlobalConfig.TNT_EXPLODES);
-            Component message = Component.text("TNT is currently ").append(format(tntEnabled));
+            Component message = Component.text("Explosions are currently ").append(format(tntEnabled));
             commandSender.sendMessage(message);
             return true;
         }
@@ -30,7 +30,7 @@ public class AllowTntCommand extends AbstractCommand {
         }
 
         GlobalConfigService.set(GlobalConfig.TNT_EXPLODES, args[0]);
-        Component message = Component.text("TNT is now ").append(format(Boolean.parseBoolean(args[0])));
+        Component message = Component.text("Explosions are now ").append(format(Boolean.parseBoolean(args[0])));
         commandSender.sendMessage(message);
         return true;
     }
@@ -41,7 +41,7 @@ public class AllowTntCommand extends AbstractCommand {
 
     @Override
     public String getCommandName() {
-        return "allowtnt";
+        return "allowexplosions";
     }
 
     @Override

@@ -96,9 +96,9 @@ commands:
     permission: "sebutils.nicknames"
     aliases:
       - "nick"
-  allowtnt:
-    description: "Enable or disable TNT explosions"
-    usage: "/allowtnt [true/false]"
+  allowexplosions:
+    description: "Enable or disable explosions"
+    usage: "/allowexplosions [true/false]"
     permission: "sebutils.admin"
   enablepvptoggle:
     description: "Configure individual player PVP toggles. If enabled, players will be able to choose whether or not they have PVP enabled."
