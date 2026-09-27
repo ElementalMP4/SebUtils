@@ -12,6 +12,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.inventory.meta.FireworkMeta;
@@ -25,13 +26,24 @@ public class ExplosionListener implements Listener {
     public void onEntityExplodeEvent(ExplosionPrimeEvent e) {
         Location l = e.getEntity().getLocation();
         if (tntDisabled() || blockIsInPlot(l)) {
-            if (e.getEntityType().equals(EntityType.TNT) || e.getEntityType().equals(EntityType.END_CRYSTAL)) {
+            if (e.getEntityType().equals(EntityType.TNT)) {
                 spawnFireworks(e.getEntity().getLocation(), 10, 10);
                 e.setCancelled(true);
             } else if (e.getEntityType().equals(EntityType.CREEPER)) {
                 spawnFireworks(e.getEntity().getLocation(), 6, 5);
                 ((Creeper) e.getEntity()).setHealth(0);
                 e.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEntityExplode(EntityExplodeEvent e) {
+        if (e.getEntityType().equals(EntityType.END_CRYSTAL)) {
+            Location l = e.getLocation();
+
+            if (tntDisabled() || blockIsInPlot(l)) {
+                e.blockList().clear();
             }
         }
     }
